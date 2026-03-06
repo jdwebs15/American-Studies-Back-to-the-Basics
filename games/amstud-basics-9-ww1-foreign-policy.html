@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AMSTUD Basics 9 — Foreign Policy & WWI</title>
+<link rel="stylesheet" href="../styles.css"/>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<a class="back-link" href="../index.html">← Back to Hub</a>
+
+<header class="hero">
+
+<div class="kicker">
+Legend Mastery Series • American Studies
+</div>
+
+<h1>AMSTUD Basics 9 — Foreign Policy & WWI</h1>
+
+<p class="sub">
+Back-to-the-Basics mastery covering U.S. imperialism, the Spanish-American War,
+and the causes and consequences of World War I.
+</p>
+
+<div class="pills">
+<span class="pill">36 questions</span>
+<span class="pill">Auto-submit</span>
+<span class="pill">Auto-advance</span>
+<span class="pill">Hint system</span>
+<span class="pill">100% required</span>
+</div>
+
+</header>
+
+
+<section class="panel">
+
+<h2>Start Game</h2>
+
+<div class="start-form">
+
+<label>Student Name</label>
+<input id="studentName" type="text" placeholder="Enter first and last name">
+
+<button id="startBtn" class="btn primary">Start Game</button>
+
+</div>
+
+</section>
+
+
+<section id="gameArea" class="panel game-area">
+
+<div class="tracker">
+
+<div class="chip">Question <span id="progress"></span></div>
+<div class="chip">Correct <span id="correct"></span></div>
+<div class="chip">Attempts <span id="attempts"></span></div>
+<div class="chip">Accuracy <span id="accuracy"></span></div>
+
+</div>
+
+
+<div class="question-card">
+
+<div class="q-num" id="qNum"></div>
+
+<h3 id="questionText"></h3>
+
+<div id="choices"></div>
+
+<div id="feedback" class="msg"></div>
+
+</div>
+
+</section>
+
+
+<section id="summary" class="panel summary">
+
+<h2>Completion Ticket</h2>
+
+<div class="ticket">
+
+<div>Student: <span id="ticketStudent"></span></div>
+<div>Passed: <span id="ticketPassed"></span></div>
+<div>Accuracy: <span id="ticketAccuracy"></span></div>
+<div>Correct: <span id="ticketCorrect"></span></div>
+<div>Attempts: <span id="ticketAttempts"></span></div>
+<div>Start Time: <span id="ticketStart"></span></div>
+<div>End Time: <span id="ticketEnd"></span></div>
+
+</div>
+
+<button onclick="location.reload()" class="btn primary">
+Restart Game
+</button>
+
+</section>
+
+</div>
+
+
+<script>
+
+const questions = [
+
+{
+q:"Imperialism is best defined as",
+a:[
+"a nation expanding its power through territorial or political control",
+"a country isolating itself from world affairs",
+"a policy of economic equality",
+"a system of democratic voting"
+],
+c:0,
+h:"Imperialism involves extending power beyond a nation’s borders."
+},
+
+{
+q:"Which war marked the beginning of U.S. imperial expansion overseas?",
+a:[
+"Spanish-American War",
+"Civil War",
+"World War I",
+"Mexican-American War"
+],
+c:0,
+h:"This conflict occurred in 1898."
+},
+
+{
+q:"After the Spanish-American War the United States gained control of",
+a:[
+"Puerto Rico and the Philippines",
+"Germany and Austria",
+"Canada and Mexico",
+"France and Italy"
+],
+c:0,
+h:"These territories were former Spanish colonies."
+},
+
+{
+q:"The explosion of which ship helped spark the Spanish-American War?",
+a:[
+"USS Maine",
+"USS Arizona",
+"USS Missouri",
+"USS Constitution"
+],
+c:0,
+h:"The explosion occurred in Havana Harbor."
+},
+
+{
+q:"Which idea encouraged American imperialism in the late 1800s?",
+a:[
+"belief that powerful nations should expand influence",
+"complete isolation from global trade",
+"rejection of foreign markets",
+"support for colonial independence"
+],
+c:0,
+h:"Some believed strong nations had a duty to expand."
+},
+
+{
+q:"The immediate cause of World War I was",
+a:[
+"assassination of Archduke Franz Ferdinand",
+"attack on Pearl Harbor",
+"Zimmermann Telegram",
+"German invasion of Russia"
+],
+c:0,
+h:"The assassination occurred in 1914."
+},
+
+{
+q:"Which system of alliances helped spread World War I across Europe?",
+a:[
+"military alliances between major European powers",
+"trade alliances only",
+"scientific alliances",
+"religious alliances"
+],
+c:0,
+h:"Countries pledged to defend one another."
+},
+
+{
+q:"Militarism refers to",
+a:[
+"the belief that a nation should maintain a strong military",
+"economic cooperation between countries",
+"democratic elections",
+"religious influence in politics"
+],
+c:0,
+h:"Think military power and preparation for war."
+},
+
+{
+q:"Nationalism contributed to World War I by",
+a:[
+"increasing pride and rivalry between nations",
+"reducing international conflict",
+"encouraging neutrality",
+"ending imperialism"
+],
+c:0,
+h:"National pride sometimes led to competition."
+},
+
+{
+q:"At the beginning of World War I the United States adopted a policy of",
+a:[
+"neutrality",
+"militarism",
+"imperial conquest",
+"alliances with Germany"
+],
+c:0,
+h:"The U.S. attempted to stay out of the war initially."
+},
+
+{
+q:"Which German policy angered the United States during WWI?",
+a:[
+"unrestricted submarine warfare",
+"free trade agreements",
+"peace treaties",
+"military alliances"
+],
+c:0,
+h:"German U-boats attacked ships without warning."
+},
+
+{
+q:"The sinking of which passenger ship angered Americans during WWI?",
+a:[
+"Lusitania",
+"Titanic",
+"Mayflower",
+"Monitor"
+],
+c:0,
+h:"This ship was sunk by a German submarine."
+},
+
+{
+q:"The Zimmermann Telegram proposed an alliance between Germany and",
+a:[
+"Mexico",
+"Canada",
+"Japan",
+"Spain"
+],
+c:0,
+h:"Germany encouraged this nation to attack the U.S."
+},
+
+{
+q:"The Zimmermann Telegram helped push the United States toward",
+a:[
+"entering World War I",
+"declaring neutrality",
+"ending imperialism",
+"joining Germany"
+],
+c:0,
+h:"It outraged Americans."
+},
+
+{
+q:"The United States entered World War I in",
+a:[
+"1917",
+"1914",
+"1918",
+"1920"
+],
+c:0,
+h:"It joined near the end of the war."
+},
+
+{
+q:"The main purpose of the Allied Powers was to",
+a:[
+"defeat the Central Powers",
+"expand imperialism worldwide",
+"establish communism",
+"end nationalism"
+],
+c:0,
+h:"The Allies opposed Germany and its partners."
+},
+
+{
+q:"Which nations were part of the Central Powers?",
+a:[
+"Germany and Austria-Hungary",
+"Britain and France",
+"United States and Britain",
+"Russia and France"
+],
+c:0,
+h:"These were the main opposing powers."
+},
+
+{
+q:"American involvement in WWI helped",
+a:[
+"turn the balance of the war in favor of the Allies",
+"end imperialism",
+"start the Civil War",
+"eliminate alliances"
+],
+c:0,
+h:"Fresh troops and resources were important."
+},
+
+{
+q:"World War I officially ended in",
+a:[
+"1918",
+"1914",
+"1925",
+"1939"
+],
+c:0,
+h:"The armistice was signed November 11."
+},
+
+{
+q:"Which document formally ended the war between Germany and the Allies?",
+a:[
+"Treaty of Versailles",
+"Treaty of Paris",
+"Atlantic Charter",
+"Treaty of Ghent"
+],
+c:0,
+h:"Signed in 1919."
+},
+
+{
+q:"The Treaty of Versailles placed heavy penalties on",
+a:[
+"Germany",
+"France",
+"United States",
+"Russia"
+],
+c:0,
+h:"The defeated nation was blamed for the war."
+},
+
+{
+q:"One consequence of World War I was",
+a:[
+"political instability in Europe",
+"end of all alliances",
+"elimination of imperialism",
+"world peace"
+],
+c:0,
+h:"The war created many tensions."
+},
+
+{
+q:"U.S. imperial expansion demonstrated that America",
+a:[
+"was becoming a global power",
+"was withdrawing from world affairs",
+"rejected international trade",
+"ended military involvement abroad"
+],
+c:0,
+h:"Control of overseas territories showed growing influence."
+},
+
+{
+q:"Which territory became an American possession after the Spanish-American War?",
+a:[
+"Philippines",
+"Brazil",
+"Argentina",
+"Peru"
+],
+c:0,
+h:"It remained under U.S. control for decades."
+},
+
+{
+q:"The Spanish-American War lasted",
+a:[
+"a short period in 1898",
+"ten years",
+"five years",
+"twenty years"
+],
+c:0,
+h:"It was a brief conflict."
+},
+
+{
+q:"The causes of World War I are often summarized with the acronym",
+a:[
+"M.A.I.N.",
+"N.A.T.O.",
+"O.P.E.C.",
+"E.U."
+],
+c:0,
+h:"Militarism, Alliances, Imperialism, Nationalism."
+},
+
+{
+q:"Which word represents the 'I' in the causes of WWI acronym MAIN?",
+a:[
+"Imperialism",
+"Isolation",
+"Independence",
+"Inflation"
+],
+c:0,
+h:"Competition for colonies."
+},
+
+{
+q:"Which word represents the 'A' in MAIN?",
+a:[
+"Alliances",
+"Armies",
+"Authority",
+"Autonomy"
+],
+c:0,
+h:"Countries promised to defend each other."
+},
+
+{
+q:"Which word represents the 'N' in MAIN?",
+a:[
+"Nationalism",
+"Neutrality",
+"Navigation",
+"Negotiation"
+],
+c:0,
+h:"Strong pride in one's nation."
+},
+
+{
+q:"Which word represents the 'M' in MAIN?",
+a:[
+"Militarism",
+"Monarchy",
+"Migration",
+"Manufacturing"
+],
+c:0,
+h:"Strong military buildup."
+},
+
+{
+q:"The Spanish-American War demonstrated that the United States",
+a:[
+"was willing to use military power abroad",
+"had abandoned foreign policy",
+"ended global influence",
+"became isolationist"
+],
+c:0,
+h:"It marked a new foreign policy direction."
+},
+
+{
+q:"A major long-term effect of WWI was",
+a:[
+"reshaping international politics and borders",
+"ending nationalism forever",
+"eliminating imperialism",
+"ending alliances"
+],
+c:0,
+h:"The war dramatically changed global politics."
+},
+
+{
+q:"Which country joined the Allies near the end of WWI?",
+a:[
+"United States",
+"Germany",
+"Austria-Hungary",
+"Turkey"
+],
+c:0,
+h:"Its entry helped secure Allied victory."
+},
+
+{
+q:"World War I is often called",
+a:[
+"The Great War",
+"The Cold War",
+"The Seven Years War",
+"The American War"
+],
+c:0,
+h:"This name was used before WWII occurred."
+},
+
+{
+q:"The shift toward imperialism showed that the United States",
+a:[
+"was expanding its influence beyond its borders",
+"was abandoning foreign involvement",
+"was ending global trade",
+"was reducing military power"
+],
+c:0,
+h:"Imperialism means extending national influence abroad."
+}
+
+];
+
+let student="";
+let index=0;
+let correct=0;
+let attempts=0;
+let startTime;
+
+const studentName=document.getElementById("studentName");
+const startBtn=document.getElementById("startBtn");
+const gameArea=document.getElementById("gameArea");
+const progress=document.getElementById("progress");
+const correctText=document.getElementById("correct");
+const attemptText=document.getElementById("attempts");
+const accuracyText=document.getElementById("accuracy");
+
+const qNum=document.getElementById("qNum");
+const qText=document.getElementById("questionText");
+const choicesDiv=document.getElementById("choices");
+const feedback=document.getElementById("feedback");
+
+startBtn.onclick=()=>{
+
+student=studentName.value.trim();
+
+if(!student){
+alert("Enter your name first");
+return;
+}
+
+startTime=new Date();
+
+document.querySelector(".panel").style.display="none";
+gameArea.style.display="block";
+
+render();
+
+};
+
+function render(){
+
+const q=questions[index];
+
+progress.textContent=`${index+1}/${questions.length}`;
+correctText.textContent=correct;
+attemptText.textContent=attempts;
+accuracyText.textContent=`${attempts?Math.round(correct/attempts*100):100}%`;
+
+qNum.textContent=`Question ${index+1}`;
+qText.textContent=q.q;
+
+choicesDiv.innerHTML="";
+
+q.a.forEach((choice,i)=>{
+
+const btn=document.createElement("button");
+
+btn.className="choice";
+btn.textContent=choice;
+
+btn.onclick=()=>check(i);
+
+choicesDiv.appendChild(btn);
+
+});
+
+}
+
+function check(i){
+
+attempts++;
+
+const q=questions[index];
+
+if(i===q.c){
+
+correct++;
+
+index++;
+
+if(index===questions.length){
+
+finish();
+return;
+
+}
+
+render();
+
+}else{
+
+feedback.className="msg bad show";
+feedback.innerHTML=`Hint: ${q.h}`;
+
+}
+
+}
+
+function finish(){
+
+const end=new Date();
+const accuracy=Math.round(correct/attempts*100);
+const passed=accuracy===100;
+
+document.getElementById("summary").style.display="block";
+
+document.getElementById("ticketStudent").textContent=student;
+document.getElementById("ticketPassed").textContent=passed?"YES":"NO";
+document.getElementById("ticketAccuracy").textContent=`${accuracy}%`;
+document.getElementById("ticketCorrect").textContent=`${correct}/${questions.length}`;
+document.getElementById("ticketAttempts").textContent=attempts;
+document.getElementById("ticketStart").textContent=startTime;
+document.getElementById("ticketEnd").textContent=end;
+
+gameArea.style.display="none";
+
+}
+
+</script>
+
+</body>
+</html>
