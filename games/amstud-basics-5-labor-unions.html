@@ -1,0 +1,1197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AMSTUD Basics 5 — Labor, Unions & Laissez-Faire</title>
+<link rel="stylesheet" href="../styles.css"/>
+<style>
+  :root{
+    --bg:#0b1220;
+    --panel:#111a2f;
+    --panel2:#0f1730;
+    --text:#e7eefc;
+    --muted:#a8b4cf;
+    --line:rgba(255,255,255,.10);
+    --line2:rgba(255,255,255,.16);
+    --accent:#7aa2ff;
+    --accent2:#5c86ff;
+    --good:#2bd576;
+    --bad:#ff5c7a;
+    --warn:#ffd166;
+    --shadow:0 18px 55px rgba(0,0,0,.40);
+    --radius:18px;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:
+      radial-gradient(circle at top, rgba(122,162,255,.10), transparent 28%),
+      linear-gradient(180deg, #0b1220, #09101d);
+    color:var(--text);
+    min-height:100vh;
+  }
+  .wrap{
+    width:min(1100px,92vw);
+    margin:0 auto;
+    padding:24px 0 56px;
+  }
+  .topbar{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:16px;
+    flex-wrap:wrap;
+  }
+  .back-link{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    text-decoration:none;
+    color:var(--text);
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:12px;
+    padding:10px 14px;
+    font-weight:700;
+  }
+  .top-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .btn{
+    appearance:none;
+    border:none;
+    cursor:pointer;
+    text-decoration:none;
+    font-weight:800;
+    font-size:14px;
+    border-radius:12px;
+    padding:11px 14px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:120px;
+    transition:transform .14s ease, opacity .14s ease, background .14s ease, border-color .14s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn.primary{ background:var(--accent); color:#fff; }
+  .btn.primary:hover{ background:var(--accent2); }
+  .btn.secondary{
+    background:rgba(255,255,255,.05);
+    color:var(--text);
+    border:1px solid rgba(255,255,255,.10);
+  }
+  .btn.secondary:hover{
+    background:rgba(255,255,255,.08);
+    border-color:rgba(255,255,255,.16);
+  }
+  .hero{
+    background:linear-gradient(180deg, rgba(17,26,47,.96), rgba(15,23,48,.96));
+    border:1px solid var(--line2);
+    border-radius:24px;
+    box-shadow:var(--shadow);
+    padding:24px;
+    margin-bottom:18px;
+  }
+  .kicker{
+    font-size:12px;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+    color:var(--accent);
+    font-weight:800;
+    margin-bottom:10px;
+  }
+  h1{
+    margin:0 0 10px;
+    font-size:clamp(28px,4vw,42px);
+    line-height:1.08;
+  }
+  .sub{
+    margin:0;
+    color:var(--muted);
+    line-height:1.6;
+    max-width:900px;
+  }
+  .pills{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:16px;
+  }
+  .pill{
+    background:rgba(122,162,255,.12);
+    color:#dce7ff;
+    border:1px solid rgba(122,162,255,.22);
+    border-radius:999px;
+    padding:8px 12px;
+    font-size:13px;
+    font-weight:700;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:360px 1fr;
+    gap:18px;
+    align-items:start;
+  }
+  .panel{
+    background:linear-gradient(180deg, rgba(17,26,47,.98), rgba(12,19,38,.98));
+    border:1px solid var(--line);
+    border-radius:20px;
+    box-shadow:var(--shadow);
+    padding:18px;
+  }
+  .panel h2{
+    margin:0 0 12px;
+    font-size:22px;
+  }
+  .start-form{
+    display:grid;
+    gap:12px;
+  }
+  label{
+    font-size:13px;
+    color:var(--muted);
+    font-weight:700;
+  }
+  input[type="text"]{
+    width:100%;
+    background:rgba(255,255,255,.04);
+    color:var(--text);
+    border:1px solid var(--line2);
+    border-radius:14px;
+    padding:12px 14px;
+    font-size:15px;
+    outline:none;
+  }
+  input[type="text"]:focus{
+    border-color:rgba(122,162,255,.55);
+    box-shadow:0 0 0 3px rgba(122,162,255,.12);
+  }
+  .meta{
+    display:grid;
+    gap:10px;
+    margin-top:12px;
+  }
+  .meta-row{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    padding:10px 12px;
+    border-radius:12px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.06);
+  }
+  .meta-row span:first-child{ color:var(--muted); }
+  .meta-row span:last-child{
+    font-family:var(--mono);
+    text-align:right;
+  }
+  .mini-note{
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.5;
+    margin:12px 0 0;
+  }
+  .game-area{ display:none; }
+  .game-head{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  .tracker{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .tracker .chip{
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:999px;
+    padding:8px 12px;
+    font-size:13px;
+    font-weight:700;
+  }
+  .question-card{
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;
+    padding:18px;
+  }
+  .q-num{
+    color:var(--accent);
+    font-size:12px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    font-weight:800;
+    margin-bottom:8px;
+  }
+  .question{
+    margin:0 0 14px;
+    font-size:22px;
+    line-height:1.35;
+  }
+  .choices{
+    display:grid;
+    gap:10px;
+  }
+  .choice{
+    text-align:left;
+    width:100%;
+    background:rgba(255,255,255,.04);
+    color:var(--text);
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:14px;
+    padding:14px 15px;
+    font-size:15px;
+    cursor:pointer;
+    transition:transform .12s ease, border-color .12s ease, background .12s ease;
+  }
+  .choice:hover{
+    transform:translateY(-1px);
+    border-color:rgba(122,162,255,.35);
+    background:rgba(255,255,255,.06);
+  }
+  .choice.selected{
+    border-color:rgba(122,162,255,.60);
+    background:rgba(122,162,255,.12);
+  }
+  .choice.correct{
+    border-color:rgba(43,213,118,.60);
+    background:rgba(43,213,118,.12);
+  }
+  .choice.incorrect{
+    border-color:rgba(255,92,122,.60);
+    background:rgba(255,92,122,.12);
+  }
+  .msg{
+    display:none;
+    margin-top:14px;
+    border-radius:14px;
+    padding:12px 14px;
+    line-height:1.5;
+    font-size:14px;
+    border:1px solid transparent;
+  }
+  .msg.show{ display:block; }
+  .msg.good{
+    background:rgba(43,213,118,.10);
+    border-color:rgba(43,213,118,.28);
+    color:#d4f7e3;
+  }
+  .msg.bad{
+    background:rgba(255,209,102,.10);
+    border-color:rgba(255,209,102,.28);
+    color:#ffe9af;
+  }
+  .summary{
+    display:none;
+  }
+  .ticket{
+    margin-top:12px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;
+    padding:18px;
+  }
+  .ticket h3{
+    margin:0 0 12px;
+    font-size:22px;
+  }
+  .ticket-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+  }
+  .ticket-row{
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:12px;
+    padding:10px 12px;
+  }
+  .ticket-label{
+    color:var(--muted);
+    font-size:12px;
+    margin-bottom:4px;
+    text-transform:uppercase;
+    letter-spacing:.8px;
+    font-weight:800;
+  }
+  .ticket-value{
+    font-family:var(--mono);
+    word-break:break-word;
+  }
+  .pass-banner, .not-pass-banner{
+    margin-top:14px;
+    padding:14px 16px;
+    border-radius:14px;
+    font-weight:800;
+  }
+  .pass-banner{
+    background:rgba(43,213,118,.12);
+    border:1px solid rgba(43,213,118,.28);
+    color:#d4f7e3;
+  }
+  .not-pass-banner{
+    background:rgba(255,92,122,.12);
+    border:1px solid rgba(255,92,122,.28);
+    color:#ffd6df;
+  }
+  .footer-note{
+    margin-top:14px;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.5;
+  }
+  @media (max-width: 900px){
+    .grid{ grid-template-columns:1fr; }
+  }
+  @media (max-width: 640px){
+    .wrap{ width:min(94vw,1100px); }
+    .hero, .panel{ padding:16px; }
+    .question{ font-size:20px; }
+    .ticket-grid{ grid-template-columns:1fr; }
+    .top-actions{ width:100%; }
+    .top-actions .btn{ flex:1 1 auto; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <a class="back-link" href="../index.html">← Back to Hub</a>
+    <div class="top-actions">
+      <button id="restartTopBtn" class="btn secondary">Restart Game</button>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="kicker">Legend Mastery Series • American Studies • CS 9</div>
+    <h1>AMSTUD Basics 5 — Labor, Unions & Laissez-Faire</h1>
+    <p class="sub">
+      Back-to-the-Basics mastery on labor organizations, working conditions, monopolies, trusts,
+      laissez-faire policy, strikes, boycotts, collective bargaining, and violence toward organized labor.
+    </p>
+    <div class="pills">
+      <span class="pill">35 questions</span>
+      <span class="pill">Auto-submit on click</span>
+      <span class="pill">Auto-advance on correct</span>
+      <span class="pill">Hint on incorrect</span>
+      <span class="pill">100% required</span>
+    </div>
+  </section>
+
+  <div class="grid">
+    <aside class="panel">
+      <h2>Start Game</h2>
+      <div id="startScreen">
+        <div class="start-form">
+          <div>
+            <label for="studentName">Student Name</label>
+            <input id="studentName" type="text" placeholder="Enter first and last name"/>
+          </div>
+          <button id="startBtn" class="btn primary">Start Game</button>
+        </div>
+
+        <div class="meta">
+          <div class="meta-row"><span>Topic</span><span>Labor, Unions & Laissez-Faire</span></div>
+          <div class="meta-row"><span>Content Statement</span><span>CS 9</span></div>
+          <div class="meta-row"><span>Questions</span><span id="questionCountLabel">35</span></div>
+          <div class="meta-row"><span>Passing Requirement</span><span>100%</span></div>
+        </div>
+
+        <p class="mini-note">
+          Students must enter a name before beginning. The game tracks start time, end time, elapsed time,
+          score, and accuracy. Refreshing or pressing restart resets the entire attempt.
+        </p>
+      </div>
+
+      <div id="liveMeta" style="display:none">
+        <div class="meta">
+          <div class="meta-row"><span>Student</span><span id="liveStudent">—</span></div>
+          <div class="meta-row"><span>Started</span><span id="liveStarted">—</span></div>
+          <div class="meta-row"><span>Current Time</span><span id="liveNow">—</span></div>
+          <div class="meta-row"><span>Elapsed</span><span id="liveElapsed">00:00</span></div>
+        </div>
+        <p class="mini-note">
+          Wrong answers do count against accuracy. The game only advances when the correct answer is selected.
+        </p>
+      </div>
+    </aside>
+
+    <main>
+      <section id="gameArea" class="panel game-area">
+        <div class="game-head">
+          <div>
+            <h2 style="margin:0 0 6px;">Game in Progress</h2>
+            <div style="color:var(--muted);font-size:14px;">Choose the best answer. Incorrect answers trigger a hint.</div>
+          </div>
+          <div class="tracker">
+            <div class="chip">Question: <span id="progressText">1 / 35</span></div>
+            <div class="chip">Correct: <span id="correctText">0</span></div>
+            <div class="chip">Attempts: <span id="attemptText">0</span></div>
+            <div class="chip">Accuracy: <span id="accuracyText">100%</span></div>
+          </div>
+        </div>
+
+        <div class="question-card">
+          <div class="q-num" id="qNum">Question 1</div>
+          <h3 class="question" id="questionText"></h3>
+          <div class="choices" id="choicesWrap"></div>
+          <div id="feedbackGood" class="msg good"></div>
+          <div id="feedbackBad" class="msg bad"></div>
+        </div>
+      </section>
+
+      <section id="summaryArea" class="panel summary">
+        <h2 style="margin-top:0;">Completion Ticket</h2>
+        <div id="passBanner" class="pass-banner" style="display:none;">
+          Mastery achieved. This ticket shows a 100% completion.
+        </div>
+        <div id="notPassBanner" class="not-pass-banner" style="display:none;">
+          Game complete, but the attempt did not reach 100% accuracy. Restart and try again for a passing ticket.
+        </div>
+
+        <div class="ticket">
+          <h3>AMSTUD Basics 5 — Labor, Unions & Laissez-Faire</h3>
+          <div class="ticket-grid">
+            <div class="ticket-row">
+              <div class="ticket-label">Student</div>
+              <div class="ticket-value" id="ticketStudent"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">Passed</div>
+              <div class="ticket-value" id="ticketPassed"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">Accuracy</div>
+              <div class="ticket-value" id="ticketAccuracy"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">Correct Answers</div>
+              <div class="ticket-value" id="ticketCorrect"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">Total Attempts</div>
+              <div class="ticket-value" id="ticketAttempts"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">Start Time</div>
+              <div class="ticket-value" id="ticketStart"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">End Time</div>
+              <div class="ticket-value" id="ticketEnd"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">Elapsed Time</div>
+              <div class="ticket-value" id="ticketElapsed"></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button id="restartBottomBtn" class="btn primary">Restart Game</button>
+          <button id="printBtn" class="btn secondary">Print Ticket</button>
+        </div>
+
+        <div class="footer-note">
+          Passing ticket requires 100% accuracy because Back to the Basics is designed as a rote-mastery exercise.
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    question: "What economic policy says government should interfere as little as possible in business?",
+    choices: [
+      "Laissez-faire",
+      "Collective bargaining",
+      "Progressivism",
+      "Socialism"
+    ],
+    answer: 0,
+    hint: "This policy favored limited government regulation of the economy."
+  },
+  {
+    question: "Labor organizations grew mainly because many workers faced",
+    choices: [
+      "safe, well-regulated workplaces",
+      "unregulated and dangerous working conditions",
+      "guaranteed pensions and short hours",
+      "automatic ownership in factories"
+    ],
+    answer: 1,
+    hint: "CS 9 begins with the lack of regulation in workplaces."
+  },
+  {
+    question: "A monopoly is a business that",
+    choices: [
+      "controls an entire market or industry",
+      "shares equal power with all competitors",
+      "operates only as a labor union",
+      "is owned by local government"
+    ],
+    answer: 0,
+    hint: "Think one company dominating competition."
+  },
+  {
+    question: "A trust was used during industrialization to",
+    choices: [
+      "increase competition",
+      "combine companies and reduce competition",
+      "protect labor unions",
+      "ban factory production"
+    ],
+    answer: 1,
+    hint: "Trusts helped large businesses gain more control."
+  },
+  {
+    question: "Which group formed to improve wages, hours, and working conditions?",
+    choices: [
+      "Labor unions",
+      "Trusts",
+      "Monopolies",
+      "Political machines"
+    ],
+    answer: 0,
+    hint: "These organizations represented workers."
+  },
+  {
+    question: "Which best describes collective bargaining?",
+    choices: [
+      "Workers negotiating as a group with employers",
+      "Owners merging companies into one trust",
+      "Government taking over all factories",
+      "Farmers trading crops overseas"
+    ],
+    answer: 0,
+    hint: "The key is workers acting together in negotiations."
+  },
+  {
+    question: "A strike occurs when workers",
+    choices: [
+      "stop working to pressure employers",
+      "buy more company stock",
+      "merge their businesses",
+      "campaign for judges"
+    ],
+    answer: 0,
+    hint: "It is a work stoppage used to force change."
+  },
+  {
+    question: "A boycott is when people",
+    choices: [
+      "refuse to buy or use goods as protest",
+      "take over a factory by force",
+      "elect union officers",
+      "petition for new territories"
+    ],
+    answer: 0,
+    hint: "This tactic uses consumers and refusal to purchase."
+  },
+  {
+    question: "Which was a common goal of organized labor?",
+    choices: [
+      "Safer working conditions",
+      "Longer hours for less pay",
+      "Less workplace regulation",
+      "More child labor"
+    ],
+    answer: 0,
+    hint: "Unions pushed for reform, not harsher conditions."
+  },
+  {
+    question: "Which was another common demand of labor unions?",
+    choices: [
+      "Higher wages",
+      "Elimination of all factories",
+      "A return to monarchies",
+      "More monopolies"
+    ],
+    answer: 0,
+    hint: "Workers wanted better pay for their labor."
+  },
+  {
+    question: "Which workplace issue most directly encouraged labor organizing?",
+    choices: [
+      "Dangerous factories",
+      "Too many paid vacations",
+      "Excessive workplace democracy",
+      "Free college education"
+    ],
+    answer: 0,
+    hint: "Unsafe conditions were a major reason unions formed."
+  },
+  {
+    question: "Laissez-faire policies generally benefited",
+    choices: [
+      "big business owners",
+      "organized labor first",
+      "factory inspectors",
+      "consumer safety groups"
+    ],
+    answer: 0,
+    hint: "Limited regulation often favored employers and corporations."
+  },
+  {
+    question: "One result of laissez-faire policy was that government often",
+    choices: [
+      "did little to regulate business practices",
+      "strictly controlled every industry",
+      "banned monopolies immediately",
+      "outlawed all private property"
+    ],
+    answer: 0,
+    hint: "The policy emphasized noninterference."
+  },
+  {
+    question: "Violence toward organized labor means that",
+    choices: [
+      "supporters of unions were sometimes attacked or repressed",
+      "all labor reforms were passed peacefully",
+      "unions controlled the military",
+      "workers were never opposed"
+    ],
+    answer: 0,
+    hint: "CS 9 specifically mentions violence against labor supporters."
+  },
+  {
+    question: "Which tactic would most likely be used by a labor union?",
+    choices: [
+      "Strike",
+      "Trust agreement",
+      "Monopoly merger",
+      "Imperialist expansion"
+    ],
+    answer: 0,
+    hint: "This is one of the named labor tactics in the standard."
+  },
+  {
+    question: "Which condition best reflects unregulated factory labor in the late 1800s?",
+    choices: [
+      "Long hours and unsafe machinery",
+      "Short hours and guaranteed overtime rules",
+      "Universal pensions and vacation leave",
+      "Government-enforced safety codes everywhere"
+    ],
+    answer: 0,
+    hint: "Think harsh industrial working conditions."
+  },
+  {
+    question: "Which best explains why workers joined unions?",
+    choices: [
+      "They wanted more power to improve workplace conditions",
+      "They wanted to create monopolies",
+      "They wanted fewer rights at work",
+      "They wanted no bargaining power"
+    ],
+    answer: 0,
+    hint: "Unions gave workers collective strength."
+  },
+  {
+    question: "What does organized labor refer to?",
+    choices: [
+      "Workers acting together through unions",
+      "Business owners controlling industry",
+      "Government regulators in Washington",
+      "Farmers creating territorial governments"
+    ],
+    answer: 0,
+    hint: "It means workers organized for common goals."
+  },
+  {
+    question: "Which is most closely associated with monopolies and trusts?",
+    choices: [
+      "Big business concentration",
+      "Labor solidarity",
+      "Judicial independence",
+      "Women’s suffrage"
+    ],
+    answer: 0,
+    hint: "These terms refer to large-scale business control."
+  },
+  {
+    question: "Which best matches the term laissez-faire?",
+    choices: [
+      "Hands-off economic regulation",
+      "Government ownership of all industry",
+      "Union control of Congress",
+      "High tariffs on labor unions"
+    ],
+    answer: 0,
+    hint: "It means letting business operate with minimal government interference."
+  },
+  {
+    question: "A major criticism of laissez-faire was that it",
+    choices: [
+      "allowed abuses by big business and poor working conditions",
+      "created too much labor protection",
+      "eliminated all industrial growth",
+      "gave too much power to unions"
+    ],
+    answer: 0,
+    hint: "The lack of regulation often hurt workers."
+  },
+  {
+    question: "Which reform would labor unions most likely support?",
+    choices: [
+      "Fewer working hours",
+      "Longer shifts with lower pay",
+      "More child labor",
+      "Less job safety"
+    ],
+    answer: 0,
+    hint: "Unions sought humane working conditions."
+  },
+  {
+    question: "Which term best describes negotiations between labor leaders and employers?",
+    choices: [
+      "Collective bargaining",
+      "Monopoly formation",
+      "Laissez-faire",
+      "Imperialism"
+    ],
+    answer: 0,
+    hint: "This is the union negotiation process."
+  },
+  {
+    question: "If workers refuse to buy products from a company until it improves conditions, they are using a",
+    choices: [
+      "boycott",
+      "trust",
+      "lockout",
+      "merger"
+    ],
+    answer: 0,
+    hint: "This tactic uses consumer pressure."
+  },
+  {
+    question: "If workers stop showing up to work to pressure management, they are using a",
+    choices: [
+      "strike",
+      "tariff",
+      "monopoly",
+      "referendum"
+    ],
+    answer: 0,
+    hint: "This tactic halts production."
+  },
+  {
+    question: "Which statement best summarizes the labor side of CS 9?",
+    choices: [
+      "Workers organized to fight poor conditions and low power",
+      "Workers generally opposed all reform",
+      "Workers wanted more monopolies",
+      "Workers supported all laissez-faire practices"
+    ],
+    answer: 0,
+    hint: "This standard is about labor responding to industrial abuses."
+  },
+  {
+    question: "Which statement best summarizes the business side of CS 9?",
+    choices: [
+      "Big business often benefited from limited regulation",
+      "Big business was fully controlled by unions",
+      "Big business rejected all monopolies",
+      "Big business ended industrialization"
+    ],
+    answer: 0,
+    hint: "Laissez-faire tended to favor large business interests."
+  },
+  {
+    question: "A trust and a monopoly are similar because both",
+    choices: [
+      "reduce competition",
+      "protect union members",
+      "expand voting rights",
+      "increase farm output"
+    ],
+    answer: 0,
+    hint: "Both concentrate economic power."
+  },
+  {
+    question: "Which term best fits the effort to get employers to talk with workers as a group?",
+    choices: [
+      "Collective bargaining",
+      "Laissez-faire",
+      "Mechanization",
+      "Urbanization"
+    ],
+    answer: 0,
+    hint: "The word 'collective' is the clue."
+  },
+  {
+    question: "Which of these would most likely have been opposed by labor unions?",
+    choices: [
+      "Unsafe working conditions",
+      "Higher wages",
+      "Shorter hours",
+      "Improved factory safety"
+    ],
+    answer: 0,
+    hint: "Unions fought against this problem."
+  },
+  {
+    question: "Which group would be most likely to support laissez-faire in the late 1800s?",
+    choices: [
+      "Big business owners",
+      "Unionized factory workers",
+      "Workplace safety inspectors",
+      "Organized boycotters"
+    ],
+    answer: 0,
+    hint: "Less regulation usually favored employers."
+  },
+  {
+    question: "Which tactic relies on workers acting together rather than individually?",
+    choices: [
+      "Union organizing",
+      "Individual resignation only",
+      "Private business merger",
+      "Judicial appointment"
+    ],
+    answer: 0,
+    hint: "This is the essence of organized labor."
+  },
+  {
+    question: "Which phrase best fits the idea of labor reform?",
+    choices: [
+      "Improving wages, hours, and safety",
+      "Expanding monopolies",
+      "Eliminating all negotiations",
+      "Removing all worker protections"
+    ],
+    answer: 0,
+    hint: "Think the core goals of organized labor."
+  },
+  {
+    question: "Which is NOT a labor-union tactic named in CS 9?",
+    choices: [
+      "Collective bargaining",
+      "Strikes",
+      "Boycotts",
+      "Judicial review"
+    ],
+    answer: 3,
+    hint: "Three are labor tactics; one is a constitutional court power."
+  },
+  {
+    question: "Why did supporters of organized labor often face resistance?",
+    choices: [
+      "Their efforts threatened powerful business interests",
+      "They wanted less power for workers",
+      "They supported unsafe conditions",
+      "They opposed all factory jobs"
+    ],
+    answer: 0,
+    hint: "Reform often challenged those who held economic power."
+  },
+  {
+    question: "The strongest summary of CS 9 is that labor unions developed because",
+    choices: [
+      "workers responded to industrial abuses while big business benefited from laissez-faire policies",
+      "workers were already fully protected by law",
+      "monopolies and trusts were created by unions",
+      "violence disappeared from labor disputes"
+    ],
+    answer: 0,
+    hint: "That is the core conflict of the standard."
+  }
+];
+
+const studentNameInput = document.getElementById('studentName');
+const startBtn = document.getElementById('startBtn');
+const startScreen = document.getElementById('startScreen');
+const liveMeta = document.getElementById('liveMeta');
+const gameArea = document.getElementById('gameArea');
+const summaryArea = document.getElementById('summaryArea');
+
+const questionCountLabel = document.getElementById('questionCountLabel');
+questionCountLabel.textContent = String(questions.length);
+
+const liveStudent = document.getElementById('liveStudent');
+const liveStarted = document.getElementById('liveStarted');
+const liveNow = document.getElementById('liveNow');
+const liveElapsed = document.getElementById('liveElapsed');
+
+const progressText = document.getElementById('progressText');
+const correctText = document.getElementById('correctText');
+const attemptText = document.getElementById('attemptText');
+const accuracyText = document.getElementById('accuracyText');
+
+const qNum = document.getElementById('qNum');
+const questionText = document.getElementById('questionText');
+const choicesWrap = document.getElementById('choicesWrap');
+const feedbackGood = document.getElementById('feedbackGood');
+const feedbackBad = document.getElementById('feedbackBad');
+
+const ticketStudent = document.getElementById('ticketStudent');
+const ticketPassed = document.getElementById('ticketPassed');
+const ticketAccuracy = document.getElementById('ticketAccuracy');
+const ticketCorrect = document.getElementById('ticketCorrect');
+const ticketAttempts = document.getElementById('ticketAttempts');
+const ticketStart = document.getElementById('ticketStart');
+const ticketEnd = document.getElementById('ticketEnd');
+const ticketElapsed = document.getElementById('ticketElapsed');
+const passBanner = document.getElementById('passBanner');
+const notPassBanner = document.getElementById('notPassBanner');
+
+const restartTopBtn = document.getElementById('restartTopBtn');
+const restartBottomBtn = document.getElementById('restartBottomBtn');
+const printBtn = document.getElementById('printBtn');
+
+let studentName = "";
+let currentIndex = 0;
+let correctCount = 0;
+let attempts = 0;
+let startTime = null;
+let endTime = null;
+let timer = null;
+let locked = false;
+
+function shuffleArray(arr){
+  const a = arr.map(x => x);
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function prepareQuestions(){
+  return questions.map(q => {
+    const choices = q.choices.map((text, index) => ({ text, isCorrect: index === q.answer }));
+    const shuffled = shuffleArray(choices);
+    return {
+      question: q.question,
+      hint: q.hint,
+      choices: shuffled,
+      answer: shuffled.findIndex(c => c.isCorrect)
+    };
+  });
+}
+
+let gameQuestions = prepareQuestions();
+
+function formatDateTime(date){
+  return date.toLocaleString([], {
+    year:'numeric',
+    month:'2-digit',
+    day:'2-digit',
+    hour:'numeric',
+    minute:'2-digit',
+    second:'2-digit'
+  });
+}
+
+function formatElapsed(ms){
+  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  const hours = Math.floor(minutes / 60);
+  const remMinutes = minutes % 60;
+  if(hours > 0){
+    return `${String(hours).padStart(2,'0')}:${String(remMinutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+  }
+  return `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+}
+
+function updateLiveTime(){
+  if(!startTime) return;
+  const now = new Date();
+  liveNow.textContent = formatDateTime(now);
+  liveElapsed.textContent = formatElapsed(now - startTime);
+}
+
+function getAccuracy(){
+  if(attempts === 0) return 100;
+  return Math.round((correctCount / attempts) * 100);
+}
+
+function updateTracker(){
+  progressText.textContent = `${Math.min(currentIndex + 1, gameQuestions.length)} / ${gameQuestions.length}`;
+  correctText.textContent = String(correctCount);
+  attemptText.textContent = String(attempts);
+  accuracyText.textContent = `${getAccuracy()}%`;
+}
+
+function clearFeedback(){
+  feedbackGood.className = 'msg good';
+  feedbackGood.textContent = '';
+  feedbackBad.className = 'msg bad';
+  feedbackBad.textContent = '';
+}
+
+function renderQuestion(){
+  clearFeedback();
+  locked = false;
+  updateTracker();
+
+  const q = gameQuestions[currentIndex];
+  qNum.textContent = `Question ${currentIndex + 1}`;
+  questionText.textContent = q.question;
+  choicesWrap.innerHTML = '';
+
+  q.choices.forEach((choice, index) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.type = 'button';
+    btn.innerHTML = `<strong>${String.fromCharCode(65 + index)}.</strong> ${choice.text}`;
+    btn.addEventListener('click', () => handleChoice(index, btn));
+    choicesWrap.appendChild(btn);
+  });
+}
+
+function handleChoice(index, btnEl){
+  if(locked) return;
+  locked = true;
+  attempts++;
+
+  const q = gameQuestions[currentIndex];
+  const choiceButtons = [...document.querySelectorAll('.choice')];
+  choiceButtons.forEach(btn => btn.disabled = true);
+  btnEl.classList.add('selected');
+
+  if(index === q.answer){
+    correctCount++;
+    btnEl.classList.add('correct');
+    feedbackGood.textContent = 'Correct. Advancing to the next question...';
+    feedbackGood.classList.add('show');
+    updateTracker();
+
+    setTimeout(() => {
+      currentIndex++;
+      if(currentIndex >= gameQuestions.length){
+        finishGame();
+      } else {
+        renderQuestion();
+      }
+    }, 650);
+  } else {
+    btnEl.classList.add('incorrect');
+    const correctBtn = choiceButtons[q.answer];
+    if(correctBtn) correctBtn.classList.add('correct');
+
+    feedbackBad.innerHTML = `<strong>Hint:</strong> ${q.hint}<br><br>Select the highlighted correct answer to continue.`;
+    feedbackBad.classList.add('show');
+    updateTracker();
+
+    choiceButtons.forEach((btn, i) => {
+      btn.disabled = false;
+      if(i === index) btn.disabled = true;
+    });
+    locked = false;
+  }
+}
+
+function startGame(){
+  const name = studentNameInput.value.trim();
+  if(!name){
+    alert('Please enter a student name before starting.');
+    studentNameInput.focus();
+    return;
+  }
+
+  studentName = name;
+  currentIndex = 0;
+  correctCount = 0;
+  attempts = 0;
+  startTime = new Date();
+  endTime = null;
+
+  gameQuestions = prepareQuestions();
+
+  startScreen.style.display = 'none';
+  liveMeta.style.display = 'block';
+  gameArea.style.display = 'block';
+  summaryArea.style.display = 'none';
+
+  liveStudent.textContent = studentName;
+  liveStarted.textContent = formatDateTime(startTime);
+  updateLiveTime();
+  if(timer) clearInterval(timer);
+  timer = setInterval(updateLiveTime, 1000);
+
+  renderQuestion();
+}
+
+function finishGame(){
+  endTime = new Date();
+  if(timer) clearInterval(timer);
+
+  const accuracy = getAccuracy();
+  const passed = accuracy === 100 && correctCount === gameQuestions.length;
+
+  gameArea.style.display = 'none';
+  summaryArea.style.display = 'block';
+
+  ticketStudent.textContent = studentName;
+  ticketPassed.textContent = passed ? 'YES' : 'NO';
+  ticketAccuracy.textContent = `${accuracy}%`;
+  ticketCorrect.textContent = `${correctCount} / ${gameQuestions.length}`;
+  ticketAttempts.textContent = String(attempts);
+  ticketStart.textContent = formatDateTime(startTime);
+  ticketEnd.textContent = formatDateTime(endTime);
+  ticketElapsed.textContent = formatElapsed(endTime - startTime);
+
+  passBanner.style.display = passed ? 'block' : 'none';
+  notPassBanner.style.display = passed ? 'none' : 'block';
+}
+
+function restartGame(){
+  if(timer) clearInterval(timer);
+  studentName = "";
+  currentIndex = 0;
+  correctCount = 0;
+  attempts = 0;
+  startTime = null;
+  endTime = null;
+  locked = false;
+
+  gameQuestions = prepareQuestions();
+
+  studentNameInput.value = '';
+  startScreen.style.display = 'block';
+  liveMeta.style.display = 'none';
+  gameArea.style.display = 'none';
+  summaryArea.style.display = 'none';
+
+  liveStudent.textContent = '—';
+  liveStarted.textContent = '—';
+  liveNow.textContent = '—';
+  liveElapsed.textContent = '00:00';
+
+  clearFeedback();
+  updateTracker();
+  studentNameInput.focus();
+}
+
+startBtn.addEventListener('click', startGame);
+studentNameInput.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') startGame();
+});
+
+restartTopBtn.addEventListener('click', restartGame);
+restartBottomBtn.addEventListener('click', restartGame);
+printBtn.addEventListener('click', () => window.print());
+
+window.addEventListener('beforeunload', () => {
+  if(timer) clearInterval(timer);
+});
+
+updateTracker();
+</script>
+</body>
+</html>
