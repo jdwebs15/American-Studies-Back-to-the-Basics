@@ -1,0 +1,975 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AMSTUD Basics 8 — Post-Reconstruction Racism</title>
+<link rel="stylesheet" href="../styles.css"/>
+<style>
+  :root{
+    --bg:#0b1220;
+    --panel:#111a2f;
+    --panel2:#0f1730;
+    --text:#e7eefc;
+    --muted:#a8b4cf;
+    --line:rgba(255,255,255,.10);
+    --line2:rgba(255,255,255,.16);
+    --accent:#7aa2ff;
+    --accent2:#5c86ff;
+    --good:#2bd576;
+    --bad:#ff5c7a;
+    --warn:#ffd166;
+    --shadow:0 18px 55px rgba(0,0,0,.40);
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:
+      radial-gradient(circle at top, rgba(122,162,255,.10), transparent 28%),
+      linear-gradient(180deg, #0b1220, #09101d);
+    color:var(--text);
+    min-height:100vh;
+  }
+  .wrap{width:min(1100px,92vw);margin:0 auto;padding:24px 0 56px;}
+  .topbar{
+    display:flex;gap:12px;align-items:center;justify-content:space-between;
+    margin-bottom:16px;flex-wrap:wrap;
+  }
+  .back-link{
+    display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);
+    border-radius:12px;padding:10px 14px;font-weight:700;
+  }
+  .top-actions{display:flex;gap:10px;flex-wrap:wrap;}
+  .btn{
+    appearance:none;border:none;cursor:pointer;text-decoration:none;font-weight:800;font-size:14px;
+    border-radius:12px;padding:11px 14px;display:inline-flex;align-items:center;justify-content:center;
+    min-width:120px;transition:transform .14s ease, opacity .14s ease, background .14s ease, border-color .14s ease;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn.primary{background:var(--accent);color:#fff;}
+  .btn.primary:hover{background:var(--accent2);}
+  .btn.secondary{
+    background:rgba(255,255,255,.05);color:var(--text);border:1px solid rgba(255,255,255,.10);
+  }
+  .btn.secondary:hover{
+    background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);
+  }
+  .hero{
+    background:linear-gradient(180deg, rgba(17,26,47,.96), rgba(15,23,48,.96));
+    border:1px solid var(--line2);border-radius:24px;box-shadow:var(--shadow);
+    padding:24px;margin-bottom:18px;
+  }
+  .kicker{
+    font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);
+    font-weight:800;margin-bottom:10px;
+  }
+  h1{margin:0 0 10px;font-size:clamp(28px,4vw,42px);line-height:1.08;}
+  .sub{margin:0;color:var(--muted);line-height:1.6;max-width:900px;}
+  .pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+  .pill{
+    background:rgba(122,162,255,.12);color:#dce7ff;border:1px solid rgba(122,162,255,.22);
+    border-radius:999px;padding:8px 12px;font-size:13px;font-weight:700;
+  }
+  .grid{display:grid;grid-template-columns:360px 1fr;gap:18px;align-items:start;}
+  .panel{
+    background:linear-gradient(180deg, rgba(17,26,47,.98), rgba(12,19,38,.98));
+    border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:18px;
+  }
+  .panel h2{margin:0 0 12px;font-size:22px;}
+  .start-form{display:grid;gap:12px;}
+  label{font-size:13px;color:var(--muted);font-weight:700;}
+  input[type="text"]{
+    width:100%;background:rgba(255,255,255,.04);color:var(--text);
+    border:1px solid var(--line2);border-radius:14px;padding:12px 14px;font-size:15px;outline:none;
+  }
+  input[type="text"]:focus{
+    border-color:rgba(122,162,255,.55);box-shadow:0 0 0 3px rgba(122,162,255,.12);
+  }
+  .meta{display:grid;gap:10px;margin-top:12px;}
+  .meta-row{
+    display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:12px;
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
+  }
+  .meta-row span:first-child{color:var(--muted);}
+  .meta-row span:last-child{font-family:var(--mono);text-align:right;}
+  .mini-note{color:var(--muted);font-size:13px;line-height:1.5;margin:12px 0 0;}
+  .game-area{display:none;}
+  .game-head{
+    display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  .tracker{display:flex;flex-wrap:wrap;gap:10px;}
+  .tracker .chip{
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+    border-radius:999px;padding:8px 12px;font-size:13px;font-weight:700;
+  }
+  .question-card{
+    background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;padding:18px;
+  }
+  .q-num{
+    color:var(--accent);font-size:12px;letter-spacing:1px;text-transform:uppercase;
+    font-weight:800;margin-bottom:8px;
+  }
+  .question{margin:0 0 14px;font-size:22px;line-height:1.35;}
+  .choices{display:grid;gap:10px;}
+  .choice{
+    text-align:left;width:100%;background:rgba(255,255,255,.04);color:var(--text);
+    border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:14px 15px;
+    font-size:15px;cursor:pointer;transition:transform .12s ease, border-color .12s ease, background .12s ease;
+  }
+  .choice:hover{
+    transform:translateY(-1px);border-color:rgba(122,162,255,.35);background:rgba(255,255,255,.06);
+  }
+  .choice.selected{border-color:rgba(122,162,255,.60);background:rgba(122,162,255,.12);}
+  .choice.correct{border-color:rgba(43,213,118,.60);background:rgba(43,213,118,.12);}
+  .choice.incorrect{border-color:rgba(255,92,122,.60);background:rgba(255,92,122,.12);}
+  .msg{
+    display:none;margin-top:14px;border-radius:14px;padding:12px 14px;line-height:1.5;
+    font-size:14px;border:1px solid transparent;
+  }
+  .msg.show{display:block;}
+  .msg.good{
+    background:rgba(43,213,118,.10);border-color:rgba(43,213,118,.28);color:#d4f7e3;
+  }
+  .msg.bad{
+    background:rgba(255,209,102,.10);border-color:rgba(255,209,102,.28);color:#ffe9af;
+  }
+  .summary{display:none;}
+  .ticket{
+    margin-top:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;padding:18px;
+  }
+  .ticket h3{margin:0 0 12px;font-size:22px;}
+  .ticket-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+  .ticket-row{
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
+    border-radius:12px;padding:10px 12px;
+  }
+  .ticket-label{
+    color:var(--muted);font-size:12px;margin-bottom:4px;text-transform:uppercase;
+    letter-spacing:.8px;font-weight:800;
+  }
+  .ticket-value{font-family:var(--mono);word-break:break-word;}
+  .pass-banner,.not-pass-banner{
+    margin-top:14px;padding:14px 16px;border-radius:14px;font-weight:800;
+  }
+  .pass-banner{
+    background:rgba(43,213,118,.12);border:1px solid rgba(43,213,118,.28);color:#d4f7e3;
+  }
+  .not-pass-banner{
+    background:rgba(255,92,122,.12);border:1px solid rgba(255,92,122,.28);color:#ffd6df;
+  }
+  .footer-note{margin-top:14px;color:var(--muted);font-size:13px;line-height:1.5;}
+  @media (max-width: 900px){ .grid{grid-template-columns:1fr;} }
+  @media (max-width: 640px){
+    .wrap{width:min(94vw,1100px);}
+    .hero,.panel{padding:16px;}
+    .question{font-size:20px;}
+    .ticket-grid{grid-template-columns:1fr;}
+    .top-actions{width:100%;}
+    .top-actions .btn{flex:1 1 auto;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <a class="back-link" href="../index.html">← Back to Hub</a>
+    <div class="top-actions">
+      <button id="restartTopBtn" class="btn secondary">Restart Game</button>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="kicker">Legend Mastery Series • American Studies • CS 12</div>
+    <h1>AMSTUD Basics 8 — Post-Reconstruction Racism</h1>
+    <p class="sub">
+      Back-to-the-Basics mastery on the end of Reconstruction, removal of federal troops,
+      reemergence of old southern power structures, Jim Crow laws, segregation, limited ballot access,
+      Plessy v. Ferguson, and KKK violence.
+    </p>
+    <div class="pills">
+      <span class="pill">35 questions</span>
+      <span class="pill">Auto-submit on click</span>
+      <span class="pill">Auto-advance on correct</span>
+      <span class="pill">Hint on incorrect</span>
+      <span class="pill">100% required</span>
+    </div>
+  </section>
+
+  <div class="grid">
+    <aside class="panel">
+      <h2>Start Game</h2>
+      <div id="startScreen">
+        <div class="start-form">
+          <div>
+            <label for="studentName">Student Name</label>
+            <input id="studentName" type="text" placeholder="Enter first and last name"/>
+          </div>
+          <button id="startBtn" class="btn primary">Start Game</button>
+        </div>
+
+        <div class="meta">
+          <div class="meta-row"><span>Topic</span><span>Post-Reconstruction Racism</span></div>
+          <div class="meta-row"><span>Content Statement</span><span>CS 12</span></div>
+          <div class="meta-row"><span>Questions</span><span id="questionCountLabel">35</span></div>
+          <div class="meta-row"><span>Passing Requirement</span><span>100%</span></div>
+        </div>
+
+        <p class="mini-note">
+          Students must enter a name before beginning. The game tracks start time, end time, elapsed time,
+          score, and accuracy. Refreshing or pressing restart resets the entire attempt.
+        </p>
+      </div>
+
+      <div id="liveMeta" style="display:none">
+        <div class="meta">
+          <div class="meta-row"><span>Student</span><span id="liveStudent">—</span></div>
+          <div class="meta-row"><span>Started</span><span id="liveStarted">—</span></div>
+          <div class="meta-row"><span>Current Time</span><span id="liveNow">—</span></div>
+          <div class="meta-row"><span>Elapsed</span><span id="liveElapsed">00:00</span></div>
+        </div>
+        <p class="mini-note">
+          Wrong answers do count against accuracy. The game only advances when the correct answer is selected.
+        </p>
+      </div>
+    </aside>
+
+    <main>
+      <section id="gameArea" class="panel game-area">
+        <div class="game-head">
+          <div>
+            <h2 style="margin:0 0 6px;">Game in Progress</h2>
+            <div style="color:var(--muted);font-size:14px;">Choose the best answer. Incorrect answers trigger a hint.</div>
+          </div>
+          <div class="tracker">
+            <div class="chip">Question: <span id="progressText">1 / 35</span></div>
+            <div class="chip">Correct: <span id="correctText">0</span></div>
+            <div class="chip">Attempts: <span id="attemptText">0</span></div>
+            <div class="chip">Accuracy: <span id="accuracyText">100%</span></div>
+          </div>
+        </div>
+
+        <div class="question-card">
+          <div class="q-num" id="qNum">Question 1</div>
+          <h3 class="question" id="questionText"></h3>
+          <div class="choices" id="choicesWrap"></div>
+          <div id="feedbackGood" class="msg good"></div>
+          <div id="feedbackBad" class="msg bad"></div>
+        </div>
+      </section>
+
+      <section id="summaryArea" class="panel summary">
+        <h2 style="margin-top:0;">Completion Ticket</h2>
+        <div id="passBanner" class="pass-banner" style="display:none;">
+          Mastery achieved. This ticket shows a 100% completion.
+        </div>
+        <div id="notPassBanner" class="not-pass-banner" style="display:none;">
+          Game complete, but the attempt did not reach 100% accuracy. Restart and try again for a passing ticket.
+        </div>
+
+        <div class="ticket">
+          <h3>AMSTUD Basics 8 — Post-Reconstruction Racism</h3>
+          <div class="ticket-grid">
+            <div class="ticket-row"><div class="ticket-label">Student</div><div class="ticket-value" id="ticketStudent"></div></div>
+            <div class="ticket-row"><div class="ticket-label">Passed</div><div class="ticket-value" id="ticketPassed"></div></div>
+            <div class="ticket-row"><div class="ticket-label">Accuracy</div><div class="ticket-value" id="ticketAccuracy"></div></div>
+            <div class="ticket-row"><div class="ticket-label">Correct Answers</div><div class="ticket-value" id="ticketCorrect"></div></div>
+            <div class="ticket-row"><div class="ticket-label">Total Attempts</div><div class="ticket-value" id="ticketAttempts"></div></div>
+            <div class="ticket-row"><div class="ticket-label">Start Time</div><div class="ticket-value" id="ticketStart"></div></div>
+            <div class="ticket-row"><div class="ticket-label">End Time</div><div class="ticket-value" id="ticketEnd"></div></div>
+            <div class="ticket-row"><div class="ticket-label">Elapsed Time</div><div class="ticket-value" id="ticketElapsed"></div></div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button id="restartBottomBtn" class="btn primary">Restart Game</button>
+          <button id="printBtn" class="btn secondary">Print Ticket</button>
+        </div>
+
+        <div class="footer-note">
+          Passing ticket requires 100% accuracy because Back to the Basics is designed as a rote-mastery exercise.
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    question: "Which event helped mark the end of Reconstruction in the South?",
+    choices: [
+      "Removal of federal troops",
+      "Passage of the Homestead Act",
+      "Ratification of the 19th Amendment",
+      "Creation of the Federal Reserve"
+    ],
+    answer: 0,
+    hint: "The standard says this helped old political structures reemerge."
+  },
+  {
+    question: "After Reconstruction ended, control of many southern state governments returned to the",
+    choices: [
+      "Democratic Party",
+      "Republican Party",
+      "Populist Party",
+      "Whig Party"
+    ],
+    answer: 0,
+    hint: "The standards name this party directly."
+  },
+  {
+    question: "Many reforms enacted by Republican Reconstruction governments were",
+    choices: [
+      "repealed",
+      "expanded immediately",
+      "made permanent nationwide",
+      "adopted by the Supreme Court as amendments"
+    ],
+    answer: 0,
+    hint: "The standard says many of these reforms were undone."
+  },
+  {
+    question: "What term describes the system of state and local laws enforcing racial discrimination after Reconstruction?",
+    choices: [
+      "Jim Crow laws",
+      "Homestead laws",
+      "Neutrality Acts",
+      "Sherman laws"
+    ],
+    answer: 0,
+    hint: "This is the key phrase in CS 12."
+  },
+  {
+    question: "Jim Crow laws enforced which of the following?",
+    choices: [
+      "Racial segregation",
+      "Women’s suffrage",
+      "Labor strikes",
+      "Industrial regulation"
+    ],
+    answer: 0,
+    hint: "This was one of their main purposes."
+  },
+  {
+    question: "One way Jim Crow laws limited African American political power was through",
+    choices: [
+      "limited ballot access",
+      "direct election of senators",
+      "free public schooling",
+      "equal jury service"
+    ],
+    answer: 0,
+    hint: "The standards list this specific practice."
+  },
+  {
+    question: "Jim Crow laws also included",
+    choices: [
+      "prohibition of interracial marriage",
+      "desegregation of public schools",
+      "equal housing protections",
+      "expanded civil rights enforcement"
+    ],
+    answer: 0,
+    hint: "This is one of the listed discriminatory policies."
+  },
+  {
+    question: "Under Jim Crow, African Americans had",
+    choices: [
+      "limited protection of civil rights",
+      "full equality under the law",
+      "guaranteed ballot access",
+      "equal public accommodations everywhere"
+    ],
+    answer: 0,
+    hint: "The standards use this exact phrase."
+  },
+  {
+    question: "Which Supreme Court case affirmed segregation?",
+    choices: [
+      "Plessy v. Ferguson",
+      "Brown v. Board of Education",
+      "Marbury v. Madison",
+      "Gideon v. Wainwright"
+    ],
+    answer: 0,
+    hint: "CS 12 names this case directly."
+  },
+  {
+    question: "Plessy v. Ferguson is most closely associated with the idea that segregation was",
+    choices: [
+      "constitutional",
+      "abolished immediately",
+      "limited to railroads only",
+      "struck down in the 1890s"
+    ],
+    answer: 0,
+    hint: "The ruling upheld segregation rather than ending it."
+  },
+  {
+    question: "Which organization brought increased violence against African Americans after Reconstruction?",
+    choices: [
+      "Ku Klux Klan",
+      "American Federation of Labor",
+      "Interstate Commerce Commission",
+      "Muckrakers"
+    ],
+    answer: 0,
+    hint: "The standard names this group specifically."
+  },
+  {
+    question: "The Ku Klux Klan used violence primarily to",
+    choices: [
+      "intimidate African Americans and maintain white supremacy",
+      "support Reconstruction reforms",
+      "promote labor reform",
+      "expand voting rights"
+    ],
+    answer: 0,
+    hint: "Its purpose was intimidation and racial control."
+  },
+  {
+    question: "Old political and social structures reemerged in the South mainly after",
+    choices: [
+      "the end of Reconstruction",
+      "the New Deal",
+      "World War I",
+      "the Progressive Era"
+    ],
+    answer: 0,
+    hint: "This is the starting point for CS 12."
+  },
+  {
+    question: "Which phrase best describes institutionalized racism?",
+    choices: [
+      "Racial discrimination built into laws and systems",
+      "Only private prejudice with no legal support",
+      "Equal treatment under the law",
+      "Voluntary social integration"
+    ],
+    answer: 0,
+    hint: "The standard says discrimination became institutionalized."
+  },
+  {
+    question: "Following Reconstruction, southern racial discrimination became more permanent because it was",
+    choices: [
+      "written into state laws and local ordinances",
+      "rejected by all state governments",
+      "limited to a few private businesses",
+      "made illegal by the Supreme Court"
+    ],
+    answer: 0,
+    hint: "Think legal enforcement, not just custom."
+  },
+  {
+    question: "Which of the following is NOT listed as part of Jim Crow discrimination in the standards?",
+    choices: [
+      "Expansion of interracial voting coalitions",
+      "Racial segregation",
+      "Limited ballot access",
+      "Prohibition of interracial marriage"
+    ],
+    answer: 0,
+    hint: "Three are listed directly in the standards; one is not."
+  },
+  {
+    question: "What happened to African American civil rights after Reconstruction in much of the South?",
+    choices: [
+      "Protections were restricted and weakened",
+      "Protections immediately expanded everywhere",
+      "Civil rights became fully enforced",
+      "Voting access was guaranteed without barriers"
+    ],
+    answer: 0,
+    hint: "The standard says protection of civil rights became limited."
+  },
+  {
+    question: "Which best summarizes the political effect of removing federal troops from the South?",
+    choices: [
+      "It weakened federal enforcement of Reconstruction changes",
+      "It strengthened Black voting protections",
+      "It increased Republican control of the South",
+      "It ended segregation laws"
+    ],
+    answer: 0,
+    hint: "Without troops, Reconstruction reforms lost protection."
+  },
+  {
+    question: "The return of Democratic control in southern states after Reconstruction helped lead to",
+    choices: [
+      "the repeal of many Reconstruction reforms",
+      "full racial equality",
+      "immediate desegregation",
+      "the end of violence by white supremacist groups"
+    ],
+    answer: 0,
+    hint: "The standards link party control to reversal of reforms."
+  },
+  {
+    question: "Which practice most directly limited African American participation in elections?",
+    choices: [
+      "Limited ballot access",
+      "Public sanitation reform",
+      "Protective tariffs",
+      "Collective bargaining"
+    ],
+    answer: 0,
+    hint: "This is the political discrimination phrase in CS 12."
+  },
+  {
+    question: "What was one broad purpose of Jim Crow laws?",
+    choices: [
+      "To preserve white supremacy after Reconstruction",
+      "To strengthen Reconstruction reforms",
+      "To regulate monopolies",
+      "To protect labor unions"
+    ],
+    answer: 0,
+    hint: "They were designed to restore racial hierarchy."
+  },
+  {
+    question: "Which court decision made legalized segregation seem more secure in the late 1800s?",
+    choices: [
+      "Plessy v. Ferguson",
+      "Brown v. Board of Education",
+      "McCulloch v. Maryland",
+      "Tinker v. Des Moines"
+    ],
+    answer: 0,
+    hint: "This case upheld segregation."
+  },
+  {
+    question: "Racial segregation means",
+    choices: [
+      "keeping racial groups separated by law or custom",
+      "equal treatment in public facilities",
+      "shared housing and schools",
+      "expanded access to voting"
+    ],
+    answer: 0,
+    hint: "Think separate facilities and services."
+  },
+  {
+    question: "Which statement best describes post-Reconstruction southern society according to CS 12?",
+    choices: [
+      "Discrimination became entrenched in law and daily life",
+      "Racial equality was achieved quickly",
+      "Federal troops permanently protected civil rights",
+      "Violence against African Americans declined sharply"
+    ],
+    answer: 0,
+    hint: "The standard emphasizes institutionalized discrimination."
+  },
+  {
+    question: "The rise of nativist organizations alongside the KKK contributed to",
+    choices: [
+      "increased violence against African Americans",
+      "expanded civil rights enforcement",
+      "the collapse of segregation laws",
+      "the repeal of Plessy v. Ferguson"
+    ],
+    answer: 0,
+    hint: "The standards say these groups increased violence."
+  },
+  {
+    question: "Which best explains why CS 12 uses the word institutionalized?",
+    choices: [
+      "Because racism was enforced by law and public systems",
+      "Because racism existed only in private homes",
+      "Because prejudice had no political effects",
+      "Because discrimination ended with Reconstruction"
+    ],
+    answer: 0,
+    hint: "Institutions include laws, courts, and government structures."
+  },
+  {
+    question: "Which example best reflects a post-Reconstruction racist practice?",
+    choices: [
+      "Segregated public facilities",
+      "Integrated voting access",
+      "Equal civil rights enforcement",
+      "Open interracial marriage rights"
+    ],
+    answer: 0,
+    hint: "This is one of the clearest Jim Crow practices."
+  },
+  {
+    question: "Which was a direct social consequence of the rise of the Ku Klux Klan?",
+    choices: [
+      "Greater fear and intimidation among African Americans",
+      "Immediate expansion of equal rights",
+      "Federal protection of voting access",
+      "The end of local racial ordinances"
+    ],
+    answer: 0,
+    hint: "Violence was meant to terrorize and suppress."
+  },
+  {
+    question: "Why is Plessy v. Ferguson important in this unit?",
+    choices: [
+      "It showed the Supreme Court supporting segregation",
+      "It ended Jim Crow laws",
+      "It guaranteed equal voting rights",
+      "It overturned southern state governments"
+    ],
+    answer: 0,
+    hint: "The Court affirmed segregation rather than stopping it."
+  },
+  {
+    question: "Which phrase best captures the effect of Jim Crow on African Americans?",
+    choices: [
+      "Systematic legal discrimination",
+      "Full constitutional equality in practice",
+      "Expanded federal protection",
+      "Universal public office holding"
+    ],
+    answer: 0,
+    hint: "This was discrimination backed by law."
+  },
+  {
+    question: "Which of the following would a white supremacist group like the KKK most likely oppose?",
+    choices: [
+      "African American civil rights and political participation",
+      "Racial segregation",
+      "Ballot restrictions",
+      "Interracial marriage bans"
+    ],
+    answer: 0,
+    hint: "The KKK worked against equality, not for it."
+  },
+  {
+    question: "What most clearly connects the end of Reconstruction to Jim Crow?",
+    choices: [
+      "The weakening of federal enforcement allowed discriminatory southern systems to return",
+      "Federal troops stayed permanently and enforced equality",
+      "Southern governments became more committed to civil rights",
+      "The Supreme Court immediately banned segregation"
+    ],
+    answer: 0,
+    hint: "Think withdrawal of protection followed by discriminatory restoration."
+  },
+  {
+    question: "Which is the best summary of CS 12?",
+    choices: [
+      "After Reconstruction, racist political and social systems reemerged and were enforced through law and violence",
+      "After Reconstruction, the South became fully equal and integrated",
+      "Post-Reconstruction racism was limited to private opinion only",
+      "Industrialization ended most racial conflict in the South"
+    ],
+    answer: 0,
+    hint: "This combines the two core pieces: law and violence."
+  },
+  {
+    question: "The strongest overall takeaway from CS 12 is that post-Reconstruction America",
+    choices: [
+      "institutionalized racism through state power, court support, and white supremacist violence",
+      "completed the goals of Reconstruction",
+      "eliminated legal discrimination",
+      "expanded equal access to southern politics"
+    ],
+    answer: 0,
+    hint: "Think legal systems, courts, and terror working together."
+  },
+  {
+    question: "Which of these best represents a legal barrier rather than a violent one?",
+    choices: [
+      "Limited ballot access",
+      "KKK intimidation",
+      "Mob attacks",
+      "Night riding"
+    ],
+    answer: 0,
+    hint: "One is built into the law and election system."
+  }
+];
+
+const studentNameInput = document.getElementById('studentName');
+const startBtn = document.getElementById('startBtn');
+const startScreen = document.getElementById('startScreen');
+const liveMeta = document.getElementById('liveMeta');
+const gameArea = document.getElementById('gameArea');
+const summaryArea = document.getElementById('summaryArea');
+
+const questionCountLabel = document.getElementById('questionCountLabel');
+questionCountLabel.textContent = String(questions.length);
+
+const liveStudent = document.getElementById('liveStudent');
+const liveStarted = document.getElementById('liveStarted');
+const liveNow = document.getElementById('liveNow');
+const liveElapsed = document.getElementById('liveElapsed');
+
+const progressText = document.getElementById('progressText');
+const correctText = document.getElementById('correctText');
+const attemptText = document.getElementById('attemptText');
+const accuracyText = document.getElementById('accuracyText');
+
+const qNum = document.getElementById('qNum');
+const questionText = document.getElementById('questionText');
+const choicesWrap = document.getElementById('choicesWrap');
+const feedbackGood = document.getElementById('feedbackGood');
+const feedbackBad = document.getElementById('feedbackBad');
+
+const ticketStudent = document.getElementById('ticketStudent');
+const ticketPassed = document.getElementById('ticketPassed');
+const ticketAccuracy = document.getElementById('ticketAccuracy');
+const ticketCorrect = document.getElementById('ticketCorrect');
+const ticketAttempts = document.getElementById('ticketAttempts');
+const ticketStart = document.getElementById('ticketStart');
+const ticketEnd = document.getElementById('ticketEnd');
+const ticketElapsed = document.getElementById('ticketElapsed');
+const passBanner = document.getElementById('passBanner');
+const notPassBanner = document.getElementById('notPassBanner');
+
+const restartTopBtn = document.getElementById('restartTopBtn');
+const restartBottomBtn = document.getElementById('restartBottomBtn');
+const printBtn = document.getElementById('printBtn');
+
+let studentName = "";
+let currentIndex = 0;
+let correctCount = 0;
+let attempts = 0;
+let startTime = null;
+let endTime = null;
+let timer = null;
+let locked = false;
+
+function shuffleArray(arr){
+  const a = arr.map(x => x);
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function prepareQuestions(){
+  return questions.map(q => {
+    const choices = q.choices.map((text, index) => ({ text, isCorrect: index === q.answer }));
+    const shuffled = shuffleArray(choices);
+    return {
+      question: q.question,
+      hint: q.hint,
+      choices: shuffled,
+      answer: shuffled.findIndex(c => c.isCorrect)
+    };
+  });
+}
+
+let gameQuestions = prepareQuestions();
+
+function formatDateTime(date){
+  return date.toLocaleString([], {
+    year:'numeric',
+    month:'2-digit',
+    day:'2-digit',
+    hour:'numeric',
+    minute:'2-digit',
+    second:'2-digit'
+  });
+}
+
+function formatElapsed(ms){
+  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  const hours = Math.floor(minutes / 60);
+  const remMinutes = minutes % 60;
+  if(hours > 0){
+    return `${String(hours).padStart(2,'0')}:${String(remMinutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+  }
+  return `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+}
+
+function updateLiveTime(){
+  if(!startTime) return;
+  const now = new Date();
+  liveNow.textContent = formatDateTime(now);
+  liveElapsed.textContent = formatElapsed(now - startTime);
+}
+
+function getAccuracy(){
+  if(attempts === 0) return 100;
+  return Math.round((correctCount / attempts) * 100);
+}
+
+function updateTracker(){
+  progressText.textContent = `${Math.min(currentIndex + 1, gameQuestions.length)} / ${gameQuestions.length}`;
+  correctText.textContent = String(correctCount);
+  attemptText.textContent = String(attempts);
+  accuracyText.textContent = `${getAccuracy()}%`;
+}
+
+function clearFeedback(){
+  feedbackGood.className = 'msg good';
+  feedbackGood.textContent = '';
+  feedbackBad.className = 'msg bad';
+  feedbackBad.textContent = '';
+}
+
+function renderQuestion(){
+  clearFeedback();
+  locked = false;
+  updateTracker();
+
+  const q = gameQuestions[currentIndex];
+  qNum.textContent = `Question ${currentIndex + 1}`;
+  questionText.textContent = q.question;
+  choicesWrap.innerHTML = '';
+
+  q.choices.forEach((choice, index) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.type = 'button';
+    btn.innerHTML = `<strong>${String.fromCharCode(65 + index)}.</strong> ${choice.text}`;
+    btn.addEventListener('click', () => handleChoice(index, btn));
+    choicesWrap.appendChild(btn);
+  });
+}
+
+function handleChoice(index, btnEl){
+  if(locked) return;
+  locked = true;
+  attempts++;
+
+  const q = gameQuestions[currentIndex];
+  const choiceButtons = [...document.querySelectorAll('.choice')];
+  choiceButtons.forEach(btn => btn.disabled = true);
+  btnEl.classList.add('selected');
+
+  if(index === q.answer){
+    correctCount++;
+    btnEl.classList.add('correct');
+    feedbackGood.textContent = 'Correct. Advancing to the next question...';
+    feedbackGood.classList.add('show');
+    updateTracker();
+
+    setTimeout(() => {
+      currentIndex++;
+      if(currentIndex >= gameQuestions.length){
+        finishGame();
+      } else {
+        renderQuestion();
+      }
+    }, 650);
+  } else {
+    btnEl.classList.add('incorrect');
+    const correctBtn = choiceButtons[q.answer];
+    if(correctBtn) correctBtn.classList.add('correct');
+
+    feedbackBad.innerHTML = `<strong>Hint:</strong> ${q.hint}<br><br>Select the highlighted correct answer to continue.`;
+    feedbackBad.classList.add('show');
+    updateTracker();
+
+    choiceButtons.forEach((btn, i) => {
+      btn.disabled = false;
+      if(i === index) btn.disabled = true;
+    });
+    locked = false;
+  }
+}
+
+function startGame(){
+  const name = studentNameInput.value.trim();
+  if(!name){
+    alert('Please enter a student name before starting.');
+    studentNameInput.focus();
+    return;
+  }
+
+  studentName = name;
+  currentIndex = 0;
+  correctCount = 0;
+  attempts = 0;
+  startTime = new Date();
+  endTime = null;
+
+  gameQuestions = prepareQuestions();
+
+  startScreen.style.display = 'none';
+  liveMeta.style.display = 'block';
+  gameArea.style.display = 'block';
+  summaryArea.style.display = 'none';
+
+  liveStudent.textContent = studentName;
+  liveStarted.textContent = formatDateTime(startTime);
+  updateLiveTime();
+  if(timer) clearInterval(timer);
+  timer = setInterval(updateLiveTime, 1000);
+
+  renderQuestion();
+}
+
+function finishGame(){
+  endTime = new Date();
+  if(timer) clearInterval(timer);
+
+  const accuracy = getAccuracy();
+  const passed = accuracy === 100 && correctCount === gameQuestions.length;
+
+  gameArea.style.display = 'none';
+  summaryArea.style.display = 'block';
+
+  ticketStudent.textContent = studentName;
+  ticketPassed.textContent = passed ? 'YES' : 'NO';
+  ticketAccuracy.textContent = `${accuracy}%`;
+  ticketCorrect.textContent = `${correctCount} / ${gameQuestions.length}`;
+  ticketAttempts.textContent = String(attempts);
+  ticketStart.textContent = formatDateTime(startTime);
+  ticketEnd.textContent = formatDateTime(endTime);
+  ticketElapsed.textContent = formatElapsed(endTime - startTime);
+
+  passBanner.style.display = passed ? 'block' : 'none';
+  notPassBanner.style.display = passed ? 'none' : 'block';
+}
+
+function restartGame(){
+  if(timer) clearInterval(timer);
+  studentName = "";
+  currentIndex = 0;
+  correctCount = 0;
+  attempts = 0;
+  startTime = null;
+  endTime = null;
+  locked = false;
+
+  gameQuestions = prepareQuestions();
+
+  studentNameInput.value = '';
+  startScreen.style.display = 'block';
+  liveMeta.style.display = 'none';
+  gameArea.style.display = 'none';
+  summaryArea.style.display = 'none';
+
+  liveStudent.textContent = '—';
+  liveStarted.textContent = '—';
+  liveNow.textContent = '—';
+  liveElapsed.textContent = '00:00';
+
+  clearFeedback();
+  updateTracker();
+  studentNameInput.focus();
+}
+
+startBtn.addEventListener('click', startGame);
+studentNameInput.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') startGame();
+});
+
+restartTopBtn.addEventListener('click', restartGame);
+restartBottomBtn.addEventListener('click', restartGame);
+printBtn.addEventListener('click', () => window.print());
+
+window.addEventListener('beforeunload', () => {
+  if(timer) clearInterval(timer);
+});
+
+updateTracker();
+</script>
+</body>
+</html>
