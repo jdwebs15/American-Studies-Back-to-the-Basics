@@ -1,0 +1,1197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AMSTUD Basics 1 — Historical Thinking & Skills</title>
+<link rel="stylesheet" href="../styles.css"/>
+<style>
+  :root{
+    --bg:#0b1220;
+    --panel:#111a2f;
+    --panel2:#0f1730;
+    --text:#e7eefc;
+    --muted:#a8b4cf;
+    --line:rgba(255,255,255,.10);
+    --line2:rgba(255,255,255,.16);
+    --accent:#7aa2ff;
+    --accent2:#5c86ff;
+    --good:#2bd576;
+    --bad:#ff5c7a;
+    --warn:#ffd166;
+    --shadow:0 18px 55px rgba(0,0,0,.40);
+    --radius:18px;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:
+      radial-gradient(circle at top, rgba(122,162,255,.10), transparent 28%),
+      linear-gradient(180deg, #0b1220, #09101d);
+    color:var(--text);
+    min-height:100vh;
+  }
+  .wrap{
+    width:min(1100px,92vw);
+    margin:0 auto;
+    padding:24px 0 56px;
+  }
+  .topbar{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:16px;
+    flex-wrap:wrap;
+  }
+  .back-link{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    text-decoration:none;
+    color:var(--text);
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:12px;
+    padding:10px 14px;
+    font-weight:700;
+  }
+  .top-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .btn{
+    appearance:none;
+    border:none;
+    cursor:pointer;
+    text-decoration:none;
+    font-weight:800;
+    font-size:14px;
+    border-radius:12px;
+    padding:11px 14px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:120px;
+    transition:transform .14s ease, opacity .14s ease, background .14s ease, border-color .14s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn.primary{ background:var(--accent); color:#fff; }
+  .btn.primary:hover{ background:var(--accent2); }
+  .btn.secondary{
+    background:rgba(255,255,255,.05);
+    color:var(--text);
+    border:1px solid rgba(255,255,255,.10);
+  }
+  .btn.secondary:hover{
+    background:rgba(255,255,255,.08);
+    border-color:rgba(255,255,255,.16);
+  }
+  .hero{
+    background:linear-gradient(180deg, rgba(17,26,47,.96), rgba(15,23,48,.96));
+    border:1px solid var(--line2);
+    border-radius:24px;
+    box-shadow:var(--shadow);
+    padding:24px;
+    margin-bottom:18px;
+  }
+  .kicker{
+    font-size:12px;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+    color:var(--accent);
+    font-weight:800;
+    margin-bottom:10px;
+  }
+  h1{
+    margin:0 0 10px;
+    font-size:clamp(28px,4vw,42px);
+    line-height:1.08;
+  }
+  .sub{
+    margin:0;
+    color:var(--muted);
+    line-height:1.6;
+    max-width:900px;
+  }
+  .pills{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:16px;
+  }
+  .pill{
+    background:rgba(122,162,255,.12);
+    color:#dce7ff;
+    border:1px solid rgba(122,162,255,.22);
+    border-radius:999px;
+    padding:8px 12px;
+    font-size:13px;
+    font-weight:700;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:360px 1fr;
+    gap:18px;
+    align-items:start;
+  }
+  .panel{
+    background:linear-gradient(180deg, rgba(17,26,47,.98), rgba(12,19,38,.98));
+    border:1px solid var(--line);
+    border-radius:20px;
+    box-shadow:var(--shadow);
+    padding:18px;
+  }
+  .panel h2{
+    margin:0 0 12px;
+    font-size:22px;
+  }
+  .start-form{
+    display:grid;
+    gap:12px;
+  }
+  label{
+    font-size:13px;
+    color:var(--muted);
+    font-weight:700;
+  }
+  input[type="text"]{
+    width:100%;
+    background:rgba(255,255,255,.04);
+    color:var(--text);
+    border:1px solid var(--line2);
+    border-radius:14px;
+    padding:12px 14px;
+    font-size:15px;
+    outline:none;
+  }
+  input[type="text"]:focus{
+    border-color:rgba(122,162,255,.55);
+    box-shadow:0 0 0 3px rgba(122,162,255,.12);
+  }
+  .meta{
+    display:grid;
+    gap:10px;
+    margin-top:12px;
+  }
+  .meta-row{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    padding:10px 12px;
+    border-radius:12px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.06);
+  }
+  .meta-row span:first-child{ color:var(--muted); }
+  .meta-row span:last-child{
+    font-family:var(--mono);
+    text-align:right;
+  }
+  .mini-note{
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.5;
+    margin:12px 0 0;
+  }
+  .game-area{ display:none; }
+  .game-head{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  .tracker{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .tracker .chip{
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:999px;
+    padding:8px 12px;
+    font-size:13px;
+    font-weight:700;
+  }
+  .question-card{
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;
+    padding:18px;
+  }
+  .q-num{
+    color:var(--accent);
+    font-size:12px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    font-weight:800;
+    margin-bottom:8px;
+  }
+  .question{
+    margin:0 0 14px;
+    font-size:22px;
+    line-height:1.35;
+  }
+  .choices{
+    display:grid;
+    gap:10px;
+  }
+  .choice{
+    text-align:left;
+    width:100%;
+    background:rgba(255,255,255,.04);
+    color:var(--text);
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:14px;
+    padding:14px 15px;
+    font-size:15px;
+    cursor:pointer;
+    transition:transform .12s ease, border-color .12s ease, background .12s ease;
+  }
+  .choice:hover{
+    transform:translateY(-1px);
+    border-color:rgba(122,162,255,.35);
+    background:rgba(255,255,255,.06);
+  }
+  .choice.selected{
+    border-color:rgba(122,162,255,.60);
+    background:rgba(122,162,255,.12);
+  }
+  .choice.correct{
+    border-color:rgba(43,213,118,.60);
+    background:rgba(43,213,118,.12);
+  }
+  .choice.incorrect{
+    border-color:rgba(255,92,122,.60);
+    background:rgba(255,92,122,.12);
+  }
+  .msg{
+    display:none;
+    margin-top:14px;
+    border-radius:14px;
+    padding:12px 14px;
+    line-height:1.5;
+    font-size:14px;
+    border:1px solid transparent;
+  }
+  .msg.show{ display:block; }
+  .msg.good{
+    background:rgba(43,213,118,.10);
+    border-color:rgba(43,213,118,.28);
+    color:#d4f7e3;
+  }
+  .msg.bad{
+    background:rgba(255,209,102,.10);
+    border-color:rgba(255,209,102,.28);
+    color:#ffe9af;
+  }
+  .summary{
+    display:none;
+  }
+  .ticket{
+    margin-top:12px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;
+    padding:18px;
+  }
+  .ticket h3{
+    margin:0 0 12px;
+    font-size:22px;
+  }
+  .ticket-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+  }
+  .ticket-row{
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:12px;
+    padding:10px 12px;
+  }
+  .ticket-label{
+    color:var(--muted);
+    font-size:12px;
+    margin-bottom:4px;
+    text-transform:uppercase;
+    letter-spacing:.8px;
+    font-weight:800;
+  }
+  .ticket-value{
+    font-family:var(--mono);
+    word-break:break-word;
+  }
+  .pass-banner, .not-pass-banner{
+    margin-top:14px;
+    padding:14px 16px;
+    border-radius:14px;
+    font-weight:800;
+  }
+  .pass-banner{
+    background:rgba(43,213,118,.12);
+    border:1px solid rgba(43,213,118,.28);
+    color:#d4f7e3;
+  }
+  .not-pass-banner{
+    background:rgba(255,92,122,.12);
+    border:1px solid rgba(255,92,122,.28);
+    color:#ffd6df;
+  }
+  .footer-note{
+    margin-top:14px;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.5;
+  }
+  @media (max-width: 900px){
+    .grid{ grid-template-columns:1fr; }
+  }
+  @media (max-width: 640px){
+    .wrap{ width:min(94vw,1100px); }
+    .hero, .panel{ padding:16px; }
+    .question{ font-size:20px; }
+    .ticket-grid{ grid-template-columns:1fr; }
+    .top-actions{ width:100%; }
+    .top-actions .btn{ flex:1 1 auto; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <a class="back-link" href="../index.html">← Back to Hub</a>
+    <div class="top-actions">
+      <button id="restartTopBtn" class="btn secondary">Restart Game</button>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="kicker">Legend Mastery Series • American Studies • CS 1-3</div>
+    <h1>AMSTUD Basics 1 — Historical Thinking & Skills</h1>
+    <p class="sub">
+      Back-to-the-Basics mastery on source credibility, thesis and evidence, and cause-effect-sequence-correlation.
+      Students must answer every question correctly to earn a completion ticket.
+    </p>
+    <div class="pills">
+      <span class="pill">35 questions</span>
+      <span class="pill">Auto-submit on click</span>
+      <span class="pill">Auto-advance on correct</span>
+      <span class="pill">Hint on incorrect</span>
+      <span class="pill">100% required</span>
+    </div>
+  </section>
+
+  <div class="grid">
+    <aside class="panel">
+      <h2>Start Game</h2>
+      <div id="startScreen">
+        <div class="start-form">
+          <div>
+            <label for="studentName">Student Name</label>
+            <input id="studentName" type="text" placeholder="Enter first and last name"/>
+          </div>
+          <button id="startBtn" class="btn primary">Start Game</button>
+        </div>
+
+        <div class="meta">
+          <div class="meta-row"><span>Topic</span><span>Historical Thinking & Skills</span></div>
+          <div class="meta-row"><span>Content Statements</span><span>CS 1-3</span></div>
+          <div class="meta-row"><span>Questions</span><span id="questionCountLabel">35</span></div>
+          <div class="meta-row"><span>Passing Requirement</span><span>100%</span></div>
+        </div>
+
+        <p class="mini-note">
+          Students must enter a name before beginning. The game tracks start time, end time, elapsed time,
+          score, and accuracy. Refreshing or pressing restart resets the entire attempt.
+        </p>
+      </div>
+
+      <div id="liveMeta" style="display:none">
+        <div class="meta">
+          <div class="meta-row"><span>Student</span><span id="liveStudent">—</span></div>
+          <div class="meta-row"><span>Started</span><span id="liveStarted">—</span></div>
+          <div class="meta-row"><span>Current Time</span><span id="liveNow">—</span></div>
+          <div class="meta-row"><span>Elapsed</span><span id="liveElapsed">00:00</span></div>
+        </div>
+        <p class="mini-note">
+          Wrong answers do count against accuracy. The game only advances when the correct answer is selected.
+        </p>
+      </div>
+    </aside>
+
+    <main>
+      <section id="gameArea" class="panel game-area">
+        <div class="game-head">
+          <div>
+            <h2 style="margin:0 0 6px;">Game in Progress</h2>
+            <div style="color:var(--muted);font-size:14px;">Choose the best answer. Incorrect answers trigger a hint.</div>
+          </div>
+          <div class="tracker">
+            <div class="chip">Question: <span id="progressText">1 / 35</span></div>
+            <div class="chip">Correct: <span id="correctText">0</span></div>
+            <div class="chip">Attempts: <span id="attemptText">0</span></div>
+            <div class="chip">Accuracy: <span id="accuracyText">100%</span></div>
+          </div>
+        </div>
+
+        <div class="question-card">
+          <div class="q-num" id="qNum">Question 1</div>
+          <h3 class="question" id="questionText"></h3>
+          <div class="choices" id="choicesWrap"></div>
+          <div id="feedbackGood" class="msg good"></div>
+          <div id="feedbackBad" class="msg bad"></div>
+        </div>
+      </section>
+
+      <section id="summaryArea" class="panel summary">
+        <h2 style="margin-top:0;">Completion Ticket</h2>
+        <div id="passBanner" class="pass-banner" style="display:none;">
+          Mastery achieved. This ticket shows a 100% completion.
+        </div>
+        <div id="notPassBanner" class="not-pass-banner" style="display:none;">
+          Game complete, but the attempt did not reach 100% accuracy. Restart and try again for a passing ticket.
+        </div>
+
+        <div class="ticket">
+          <h3>AMSTUD Basics 1 — Historical Thinking & Skills</h3>
+          <div class="ticket-grid">
+            <div class="ticket-row">
+              <div class="ticket-label">Student</div>
+              <div class="ticket-value" id="ticketStudent"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">Passed</div>
+              <div class="ticket-value" id="ticketPassed"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">Accuracy</div>
+              <div class="ticket-value" id="ticketAccuracy"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">Correct Answers</div>
+              <div class="ticket-value" id="ticketCorrect"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">Total Attempts</div>
+              <div class="ticket-value" id="ticketAttempts"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">Start Time</div>
+              <div class="ticket-value" id="ticketStart"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">End Time</div>
+              <div class="ticket-value" id="ticketEnd"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">Elapsed Time</div>
+              <div class="ticket-value" id="ticketElapsed"></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button id="restartBottomBtn" class="btn primary">Restart Game</button>
+          <button id="printBtn" class="btn secondary">Print Ticket</button>
+        </div>
+
+        <div class="footer-note">
+          Passing ticket requires 100% accuracy because Back to the Basics is designed as a rote-mastery exercise.
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    question: "Which factor would most weaken the credibility of a historical source?",
+    choices: [
+      "The author cites multiple reliable sources",
+      "The source is internally consistent",
+      "The author uses stereotypes and unsupported claims",
+      "The source agrees with other credible evidence"
+    ],
+    answer: 2,
+    hint: "Credibility drops when bias replaces evidence."
+  },
+  {
+    question: "Which source would most likely be a primary source for studying the Great Depression?",
+    choices: [
+      "A modern textbook chapter summarizing the 1930s",
+      "A diary written by a worker who lost his job in 1931",
+      "A documentary produced in 2020",
+      "A historian's website article comparing recessions"
+    ],
+    answer: 1,
+    hint: "Primary sources come from the time period being studied."
+  },
+  {
+    question: "A historian checks whether several reliable sources support the same claim. What skill is the historian using?",
+    choices: [
+      "Corroboration",
+      "Guesswork",
+      "Generalization",
+      "Memorization"
+    ],
+    answer: 0,
+    hint: "Think: confirming information across sources."
+  },
+  {
+    question: "When evaluating a source, why does a historian consider the author's perspective?",
+    choices: [
+      "To determine the page length of the source",
+      "To understand how the author's viewpoint may shape the account",
+      "To make sure the source is entertaining",
+      "To decide whether the source uses formal grammar"
+    ],
+    answer: 1,
+    hint: "Perspective can influence how events are described."
+  },
+  {
+    question: "Which is the best example of a secondary source?",
+    choices: [
+      "A speech delivered in 1917",
+      "A letter written by a factory worker in 1902",
+      "A scholarly book analyzing the causes of World War I",
+      "A photograph taken during the Dust Bowl"
+    ],
+    answer: 2,
+    hint: "Secondary sources interpret the past after the fact."
+  },
+  {
+    question: "Which source would be least useful for verifying a historical claim about unemployment during the New Deal?",
+    choices: [
+      "Federal unemployment statistics from the 1930s",
+      "A political cartoon with no data",
+      "A report from a government agency",
+      "A newspaper article citing job numbers"
+    ],
+    answer: 1,
+    hint: "Look for the choice with the least concrete evidence."
+  },
+  {
+    question: "Why might an oral history be limited as a historical source?",
+    choices: [
+      "It cannot contain any useful information",
+      "It may reflect memory errors or personal bias",
+      "It is always a secondary source",
+      "It can only be used for ancient history"
+    ],
+    answer: 1,
+    hint: "Human memory is valuable, but not perfect."
+  },
+  {
+    question: "Which factor best supports the reliability of a historical source?",
+    choices: [
+      "It uses emotional language to persuade readers",
+      "It has no clear author",
+      "It provides evidence that aligns with other credible sources",
+      "It became popular on social media"
+    ],
+    answer: 2,
+    hint: "Reliable sources are backed by evidence and corroboration."
+  },
+  {
+    question: "A photograph from a historical event can be useful because it",
+    choices: [
+      "always explains every cause of the event",
+      "provides visual evidence from the time period",
+      "is free from all bias",
+      "automatically proves every claim about the event"
+    ],
+    answer: 1,
+    hint: "Photographs can capture visual details from the moment."
+  },
+  {
+    question: "Which question best helps evaluate a source's credibility?",
+    choices: [
+      "Was the source written in a large font?",
+      "Does the source agree with other credible evidence?",
+      "Is the source short enough to read quickly?",
+      "Was the source found first in an internet search?"
+    ],
+    answer: 1,
+    hint: "Credibility involves comparison with trusted evidence."
+  },
+  {
+    question: "What is the main purpose of a historical thesis?",
+    choices: [
+      "To list random facts about the past",
+      "To provide a meaningful interpretation supported by evidence",
+      "To repeat a source word-for-word",
+      "To avoid taking a position"
+    ],
+    answer: 1,
+    hint: "A thesis is an argument or interpretation, not a fact list."
+  },
+  {
+    question: "Which of the following best describes how historians support a thesis?",
+    choices: [
+      "By ignoring evidence that disagrees with them",
+      "By relying on opinion alone",
+      "By using evidence to support or refute a position",
+      "By choosing only the shortest sources"
+    ],
+    answer: 2,
+    hint: "The standards emphasize evidence-based explanation."
+  },
+  {
+    question: "Which source could a historian use as evidence when forming a thesis?",
+    choices: [
+      "Only modern encyclopedia entries",
+      "Only sources that agree with one another",
+      "Artifacts, documents, eyewitness accounts, and photographs",
+      "Only sources created by government officials"
+    ],
+    answer: 2,
+    hint: "Evidence can come from many kinds of historical sources."
+  },
+  {
+    question: "Why do historians compare evidence from multiple sources?",
+    choices: [
+      "To avoid using any primary sources",
+      "To refine explanations of past events",
+      "To make sure every source is identical",
+      "To eliminate the need for a thesis"
+    ],
+    answer: 1,
+    hint: "Comparing sources helps strengthen or revise explanations."
+  },
+  {
+    question: "If a historian cites sources in an essay, the historian is",
+    choices: [
+      "showing where the supporting evidence came from",
+      "proving the essay is a primary source",
+      "removing the need for analysis",
+      "guaranteeing every source is unbiased"
+    ],
+    answer: 0,
+    hint: "Citation connects the argument to evidence."
+  },
+  {
+    question: "Which statement is the best example of a thesis?",
+    choices: [
+      "The Great Migration happened during the 20th century.",
+      "Factories existed in many northern cities.",
+      "The Great Migration reshaped northern cities by increasing industrial labor and transforming urban culture.",
+      "Many people moved from place to place in American history."
+    ],
+    answer: 2,
+    hint: "The best thesis interprets significance, not just states a fact."
+  },
+  {
+    question: "Which action would weaken a historian's argument?",
+    choices: [
+      "Acknowledging conflicting evidence",
+      "Using multiple relevant sources",
+      "Ignoring evidence that challenges the thesis",
+      "Explaining how evidence supports the claim"
+    ],
+    answer: 2,
+    hint: "A strong argument deals with evidence honestly."
+  },
+  {
+    question: "A historian claims industrialization increased urbanization and then uses census data and factory records to prove it. This shows",
+    choices: [
+      "use of evidence to support a thesis",
+      "bias without documentation",
+      "correlation without any claim",
+      "a refusal to interpret history"
+    ],
+    answer: 0,
+    hint: "The historian made an argument and backed it with evidence."
+  },
+  {
+    question: "Which choice best explains why a thesis matters in historical writing?",
+    choices: [
+      "It replaces the need for evidence",
+      "It tells the reader how the evidence is significant in a larger context",
+      "It prevents the historian from revising an argument",
+      "It is simply a list of dates"
+    ],
+    answer: 1,
+    hint: "The model curriculum says a thesis explains significance."
+  },
+  {
+    question: "Which would be the strongest evidence for a thesis about working conditions in factories?",
+    choices: [
+      "A travel brochure from a resort town",
+      "A factory inspection report and worker testimony",
+      "A modern ad for work boots",
+      "A map showing U.S. climate zones"
+    ],
+    answer: 1,
+    hint: "Use evidence directly tied to factories and labor conditions."
+  },
+  {
+    question: "Cause and effect analysis in history asks",
+    choices: [
+      "what happened and what resulted from it",
+      "whether the event was popular",
+      "which source is shortest",
+      "how to avoid using dates"
+    ],
+    answer: 0,
+    hint: "Cause leads to effect."
+  },
+  {
+    question: "Sequence in history refers to",
+    choices: [
+      "the order in which events happen",
+      "whether an event is good or bad",
+      "the popularity of a historical figure",
+      "the color of artifacts"
+    ],
+    answer: 0,
+    hint: "Sequence is about chronological order."
+  },
+  {
+    question: "Correlation in historical analysis asks historians to examine",
+    choices: [
+      "whether events are related to one another",
+      "whether an event happened first or last only",
+      "whether a source has photographs",
+      "whether a person is famous today"
+    ],
+    answer: 0,
+    hint: "Correlation is about relationship, not necessarily direct causation."
+  },
+  {
+    question: "Which is the best example of a short-term cause?",
+    choices: [
+      "A law passed just before a protest begins",
+      "A pattern of discrimination that lasted decades",
+      "A cultural tradition carried over centuries",
+      "A long era of migration over generations"
+    ],
+    answer: 0,
+    hint: "Short-term causes happen closer to the event."
+  },
+  {
+    question: "Which is the best example of a long-term cause?",
+    choices: [
+      "A speech delivered the day before an election",
+      "A sudden storm during a battle",
+      "Years of sectional disagreement over slavery",
+      "A single newspaper headline"
+    ],
+    answer: 2,
+    hint: "Long-term causes build over time."
+  },
+  {
+    question: "Why do historians analyze both long-term and short-term causes?",
+    choices: [
+      "Because major events usually result from more than one factor",
+      "Because only one cause can ever explain an event",
+      "Because short-term causes are always more important",
+      "Because long-term causes can be ignored"
+    ],
+    answer: 0,
+    hint: "The standards emphasize multiple causation."
+  },
+  {
+    question: "Which question best reflects sequence analysis?",
+    choices: [
+      "How did one event lead to another?",
+      "Was the source popular when published?",
+      "Which source used the best vocabulary?",
+      "Did the author have a college degree?"
+    ],
+    answer: 0,
+    hint: "Sequence traces the order and progression of events."
+  },
+  {
+    question: "Which situation best shows multiple causation?",
+    choices: [
+      "An event was caused by one speech alone",
+      "A migration was influenced by job demand and discriminatory laws",
+      "A battle happened because one soldier was late",
+      "A law passed for no reason"
+    ],
+    answer: 1,
+    hint: "Multiple causation means more than one cause contributed."
+  },
+  {
+    question: "If historians study the Great Migration, which would be considered an effect?",
+    choices: [
+      "The demand for workers in the North",
+      "The spread of Jim Crow laws in the South",
+      "The movement of African Americans into northern cities",
+      "The passage of a law before migration began"
+    ],
+    answer: 2,
+    hint: "An effect is a result that followed the causes."
+  },
+  {
+    question: "Which statement best distinguishes cause from correlation?",
+    choices: [
+      "Cause means two events occurred near each other; correlation means one led to the other",
+      "Cause means one event helped produce another; correlation means events are related without proving direct causation",
+      "Cause and correlation mean the exact same thing",
+      "Correlation can only be used in science, not history"
+    ],
+    answer: 1,
+    hint: "Correlation suggests relationship; cause explains production."
+  },
+  {
+    question: "A historian notes that factory growth and city population grew at the same time, but does not yet prove one caused the other. This is an example of",
+    choices: [
+      "correlation",
+      "thesis rejection",
+      "primary sourcing",
+      "bias analysis"
+    ],
+    answer: 0,
+    hint: "The events appear related, but causation is not yet proven."
+  },
+  {
+    question: "Which event analysis best demonstrates cause and effect?",
+    choices: [
+      "Studying a timeline without discussing outcomes",
+      "Explaining how industrial job opportunities encouraged migration to cities",
+      "Listing unrelated events from different centuries",
+      "Describing only the clothing of immigrants"
+    ],
+    answer: 1,
+    hint: "The question asks what caused something and what resulted."
+  },
+  {
+    question: "Which best explains why context matters when evaluating a source?",
+    choices: [
+      "A source's meaning can be shaped by when and why it was created",
+      "Context is only important in literature, not history",
+      "Context guarantees a source is unbiased",
+      "Context makes corroboration unnecessary"
+    ],
+    answer: 0,
+    hint: "Think about the circumstances of creation."
+  },
+  {
+    question: "Which source would be most credible for studying the exact wording of a law passed in 1964?",
+    choices: [
+      "A modern blog post summarizing the law",
+      "The original text of the law",
+      "A fictional film set in the 1960s",
+      "A textbook glossary entry"
+    ],
+    answer: 1,
+    hint: "For exact wording, use the original document."
+  },
+  {
+    question: "A source that lacks citations, was written long after the event, and conflicts with verified evidence should generally be seen as",
+    choices: [
+      "highly reliable",
+      "helpful because it is recent",
+      "less credible",
+      "a required primary source"
+    ],
+    answer: 2,
+    hint: "Missing evidence and contradictions reduce credibility."
+  },
+  {
+    question: "Which best shows a historian refining a thesis?",
+    choices: [
+      "Refusing to read new evidence",
+      "Changing an interpretation after comparing additional sources",
+      "Keeping the same claim no matter what evidence shows",
+      "Using only one document forever"
+    ],
+    answer: 1,
+    hint: "Historians revise interpretations when evidence warrants it."
+  }
+];
+
+const studentNameInput = document.getElementById('studentName');
+const startBtn = document.getElementById('startBtn');
+const startScreen = document.getElementById('startScreen');
+const liveMeta = document.getElementById('liveMeta');
+const gameArea = document.getElementById('gameArea');
+const summaryArea = document.getElementById('summaryArea');
+
+const questionCountLabel = document.getElementById('questionCountLabel');
+questionCountLabel.textContent = String(questions.length);
+
+const liveStudent = document.getElementById('liveStudent');
+const liveStarted = document.getElementById('liveStarted');
+const liveNow = document.getElementById('liveNow');
+const liveElapsed = document.getElementById('liveElapsed');
+
+const progressText = document.getElementById('progressText');
+const correctText = document.getElementById('correctText');
+const attemptText = document.getElementById('attemptText');
+const accuracyText = document.getElementById('accuracyText');
+
+const qNum = document.getElementById('qNum');
+const questionText = document.getElementById('questionText');
+const choicesWrap = document.getElementById('choicesWrap');
+const feedbackGood = document.getElementById('feedbackGood');
+const feedbackBad = document.getElementById('feedbackBad');
+
+const ticketStudent = document.getElementById('ticketStudent');
+const ticketPassed = document.getElementById('ticketPassed');
+const ticketAccuracy = document.getElementById('ticketAccuracy');
+const ticketCorrect = document.getElementById('ticketCorrect');
+const ticketAttempts = document.getElementById('ticketAttempts');
+const ticketStart = document.getElementById('ticketStart');
+const ticketEnd = document.getElementById('ticketEnd');
+const ticketElapsed = document.getElementById('ticketElapsed');
+const passBanner = document.getElementById('passBanner');
+const notPassBanner = document.getElementById('notPassBanner');
+
+const restartTopBtn = document.getElementById('restartTopBtn');
+const restartBottomBtn = document.getElementById('restartBottomBtn');
+const printBtn = document.getElementById('printBtn');
+
+let studentName = "";
+let currentIndex = 0;
+let correctCount = 0;
+let attempts = 0;
+let startTime = null;
+let endTime = null;
+let timer = null;
+let locked = false;
+
+function shuffleArray(arr){
+  const a = arr.map(x => x);
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function prepareQuestions(){
+  return questions.map(q => {
+    const choices = q.choices.map((text, index) => ({ text, isCorrect: index === q.answer }));
+    const shuffled = shuffleArray(choices);
+    return {
+      question: q.question,
+      hint: q.hint,
+      choices: shuffled,
+      answer: shuffled.findIndex(c => c.isCorrect)
+    };
+  });
+}
+
+let gameQuestions = prepareQuestions();
+
+function formatDateTime(date){
+  return date.toLocaleString([], {
+    year:'numeric',
+    month:'2-digit',
+    day:'2-digit',
+    hour:'numeric',
+    minute:'2-digit',
+    second:'2-digit'
+  });
+}
+
+function formatElapsed(ms){
+  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  const hours = Math.floor(minutes / 60);
+  const remMinutes = minutes % 60;
+  if(hours > 0){
+    return `${String(hours).padStart(2,'0')}:${String(remMinutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+  }
+  return `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+}
+
+function updateLiveTime(){
+  if(!startTime) return;
+  const now = new Date();
+  liveNow.textContent = formatDateTime(now);
+  liveElapsed.textContent = formatElapsed(now - startTime);
+}
+
+function getAccuracy(){
+  if(attempts === 0) return 100;
+  return Math.round((correctCount / attempts) * 100);
+}
+
+function updateTracker(){
+  progressText.textContent = `${Math.min(currentIndex + 1, gameQuestions.length)} / ${gameQuestions.length}`;
+  correctText.textContent = String(correctCount);
+  attemptText.textContent = String(attempts);
+  accuracyText.textContent = `${getAccuracy()}%`;
+}
+
+function clearFeedback(){
+  feedbackGood.className = 'msg good';
+  feedbackGood.textContent = '';
+  feedbackBad.className = 'msg bad';
+  feedbackBad.textContent = '';
+}
+
+function renderQuestion(){
+  clearFeedback();
+  locked = false;
+  updateTracker();
+
+  const q = gameQuestions[currentIndex];
+  qNum.textContent = `Question ${currentIndex + 1}`;
+  questionText.textContent = q.question;
+  choicesWrap.innerHTML = '';
+
+  q.choices.forEach((choice, index) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.type = 'button';
+    btn.innerHTML = `<strong>${String.fromCharCode(65 + index)}.</strong> ${choice.text}`;
+    btn.addEventListener('click', () => handleChoice(index, btn));
+    choicesWrap.appendChild(btn);
+  });
+}
+
+function handleChoice(index, btnEl){
+  if(locked) return;
+  locked = true;
+  attempts++;
+
+  const q = gameQuestions[currentIndex];
+  const choiceButtons = [...document.querySelectorAll('.choice')];
+  choiceButtons.forEach(btn => btn.disabled = true);
+  btnEl.classList.add('selected');
+
+  if(index === q.answer){
+    correctCount++;
+    btnEl.classList.add('correct');
+    feedbackGood.textContent = 'Correct. Advancing to the next question...';
+    feedbackGood.classList.add('show');
+    updateTracker();
+
+    setTimeout(() => {
+      currentIndex++;
+      if(currentIndex >= gameQuestions.length){
+        finishGame();
+      } else {
+        renderQuestion();
+      }
+    }, 650);
+  } else {
+    btnEl.classList.add('incorrect');
+    const correctBtn = choiceButtons[q.answer];
+    if(correctBtn) correctBtn.classList.add('correct');
+
+    feedbackBad.innerHTML = `<strong>Hint:</strong> ${q.hint}<br><br>Select the highlighted correct answer to continue.`;
+    feedbackBad.classList.add('show');
+    updateTracker();
+
+    choiceButtons.forEach((btn, i) => {
+      btn.disabled = false;
+      if(i === index) btn.disabled = true;
+    });
+    locked = false;
+  }
+}
+
+function startGame(){
+  const name = studentNameInput.value.trim();
+  if(!name){
+    alert('Please enter a student name before starting.');
+    studentNameInput.focus();
+    return;
+  }
+
+  studentName = name;
+  currentIndex = 0;
+  correctCount = 0;
+  attempts = 0;
+  startTime = new Date();
+  endTime = null;
+
+  gameQuestions = prepareQuestions();
+
+  startScreen.style.display = 'none';
+  liveMeta.style.display = 'block';
+  gameArea.style.display = 'block';
+  summaryArea.style.display = 'none';
+
+  liveStudent.textContent = studentName;
+  liveStarted.textContent = formatDateTime(startTime);
+  updateLiveTime();
+  if(timer) clearInterval(timer);
+  timer = setInterval(updateLiveTime, 1000);
+
+  renderQuestion();
+}
+
+function finishGame(){
+  endTime = new Date();
+  if(timer) clearInterval(timer);
+
+  const accuracy = getAccuracy();
+  const passed = accuracy === 100 && correctCount === gameQuestions.length;
+
+  gameArea.style.display = 'none';
+  summaryArea.style.display = 'block';
+
+  ticketStudent.textContent = studentName;
+  ticketPassed.textContent = passed ? 'YES' : 'NO';
+  ticketAccuracy.textContent = `${accuracy}%`;
+  ticketCorrect.textContent = `${correctCount} / ${gameQuestions.length}`;
+  ticketAttempts.textContent = String(attempts);
+  ticketStart.textContent = formatDateTime(startTime);
+  ticketEnd.textContent = formatDateTime(endTime);
+  ticketElapsed.textContent = formatElapsed(endTime - startTime);
+
+  passBanner.style.display = passed ? 'block' : 'none';
+  notPassBanner.style.display = passed ? 'none' : 'block';
+}
+
+function restartGame(){
+  if(timer) clearInterval(timer);
+  studentName = "";
+  currentIndex = 0;
+  correctCount = 0;
+  attempts = 0;
+  startTime = null;
+  endTime = null;
+  locked = false;
+
+  gameQuestions = prepareQuestions();
+
+  studentNameInput.value = '';
+  startScreen.style.display = 'block';
+  liveMeta.style.display = 'none';
+  gameArea.style.display = 'none';
+  summaryArea.style.display = 'none';
+
+  liveStudent.textContent = '—';
+  liveStarted.textContent = '—';
+  liveNow.textContent = '—';
+  liveElapsed.textContent = '00:00';
+
+  clearFeedback();
+  updateTracker();
+  studentNameInput.focus();
+}
+
+startBtn.addEventListener('click', startGame);
+studentNameInput.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') startGame();
+});
+
+restartTopBtn.addEventListener('click', restartGame);
+restartBottomBtn.addEventListener('click', restartGame);
+printBtn.addEventListener('click', () => window.print());
+
+window.addEventListener('beforeunload', () => {
+  if(timer) clearInterval(timer);
+});
+
+updateTracker();
+</script>
+</body>
+</html>
