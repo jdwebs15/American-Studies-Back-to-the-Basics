@@ -1,0 +1,1197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AMSTUD Basics 3 — Founding Documents II</title>
+<link rel="stylesheet" href="../styles.css"/>
+<style>
+  :root{
+    --bg:#0b1220;
+    --panel:#111a2f;
+    --panel2:#0f1730;
+    --text:#e7eefc;
+    --muted:#a8b4cf;
+    --line:rgba(255,255,255,.10);
+    --line2:rgba(255,255,255,.16);
+    --accent:#7aa2ff;
+    --accent2:#5c86ff;
+    --good:#2bd576;
+    --bad:#ff5c7a;
+    --warn:#ffd166;
+    --shadow:0 18px 55px rgba(0,0,0,.40);
+    --radius:18px;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:
+      radial-gradient(circle at top, rgba(122,162,255,.10), transparent 28%),
+      linear-gradient(180deg, #0b1220, #09101d);
+    color:var(--text);
+    min-height:100vh;
+  }
+  .wrap{
+    width:min(1100px,92vw);
+    margin:0 auto;
+    padding:24px 0 56px;
+  }
+  .topbar{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:16px;
+    flex-wrap:wrap;
+  }
+  .back-link{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    text-decoration:none;
+    color:var(--text);
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:12px;
+    padding:10px 14px;
+    font-weight:700;
+  }
+  .top-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .btn{
+    appearance:none;
+    border:none;
+    cursor:pointer;
+    text-decoration:none;
+    font-weight:800;
+    font-size:14px;
+    border-radius:12px;
+    padding:11px 14px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:120px;
+    transition:transform .14s ease, opacity .14s ease, background .14s ease, border-color .14s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn.primary{ background:var(--accent); color:#fff; }
+  .btn.primary:hover{ background:var(--accent2); }
+  .btn.secondary{
+    background:rgba(255,255,255,.05);
+    color:var(--text);
+    border:1px solid rgba(255,255,255,.10);
+  }
+  .btn.secondary:hover{
+    background:rgba(255,255,255,.08);
+    border-color:rgba(255,255,255,.16);
+  }
+  .hero{
+    background:linear-gradient(180deg, rgba(17,26,47,.96), rgba(15,23,48,.96));
+    border:1px solid var(--line2);
+    border-radius:24px;
+    box-shadow:var(--shadow);
+    padding:24px;
+    margin-bottom:18px;
+  }
+  .kicker{
+    font-size:12px;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+    color:var(--accent);
+    font-weight:800;
+    margin-bottom:10px;
+  }
+  h1{
+    margin:0 0 10px;
+    font-size:clamp(28px,4vw,42px);
+    line-height:1.08;
+  }
+  .sub{
+    margin:0;
+    color:var(--muted);
+    line-height:1.6;
+    max-width:900px;
+  }
+  .pills{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:16px;
+  }
+  .pill{
+    background:rgba(122,162,255,.12);
+    color:#dce7ff;
+    border:1px solid rgba(122,162,255,.22);
+    border-radius:999px;
+    padding:8px 12px;
+    font-size:13px;
+    font-weight:700;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:360px 1fr;
+    gap:18px;
+    align-items:start;
+  }
+  .panel{
+    background:linear-gradient(180deg, rgba(17,26,47,.98), rgba(12,19,38,.98));
+    border:1px solid var(--line);
+    border-radius:20px;
+    box-shadow:var(--shadow);
+    padding:18px;
+  }
+  .panel h2{
+    margin:0 0 12px;
+    font-size:22px;
+  }
+  .start-form{
+    display:grid;
+    gap:12px;
+  }
+  label{
+    font-size:13px;
+    color:var(--muted);
+    font-weight:700;
+  }
+  input[type="text"]{
+    width:100%;
+    background:rgba(255,255,255,.04);
+    color:var(--text);
+    border:1px solid var(--line2);
+    border-radius:14px;
+    padding:12px 14px;
+    font-size:15px;
+    outline:none;
+  }
+  input[type="text"]:focus{
+    border-color:rgba(122,162,255,.55);
+    box-shadow:0 0 0 3px rgba(122,162,255,.12);
+  }
+  .meta{
+    display:grid;
+    gap:10px;
+    margin-top:12px;
+  }
+  .meta-row{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    padding:10px 12px;
+    border-radius:12px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.06);
+  }
+  .meta-row span:first-child{ color:var(--muted); }
+  .meta-row span:last-child{
+    font-family:var(--mono);
+    text-align:right;
+  }
+  .mini-note{
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.5;
+    margin:12px 0 0;
+  }
+  .game-area{ display:none; }
+  .game-head{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  .tracker{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .tracker .chip{
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:999px;
+    padding:8px 12px;
+    font-size:13px;
+    font-weight:700;
+  }
+  .question-card{
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;
+    padding:18px;
+  }
+  .q-num{
+    color:var(--accent);
+    font-size:12px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    font-weight:800;
+    margin-bottom:8px;
+  }
+  .question{
+    margin:0 0 14px;
+    font-size:22px;
+    line-height:1.35;
+  }
+  .choices{
+    display:grid;
+    gap:10px;
+  }
+  .choice{
+    text-align:left;
+    width:100%;
+    background:rgba(255,255,255,.04);
+    color:var(--text);
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:14px;
+    padding:14px 15px;
+    font-size:15px;
+    cursor:pointer;
+    transition:transform .12s ease, border-color .12s ease, background .12s ease;
+  }
+  .choice:hover{
+    transform:translateY(-1px);
+    border-color:rgba(122,162,255,.35);
+    background:rgba(255,255,255,.06);
+  }
+  .choice.selected{
+    border-color:rgba(122,162,255,.60);
+    background:rgba(122,162,255,.12);
+  }
+  .choice.correct{
+    border-color:rgba(43,213,118,.60);
+    background:rgba(43,213,118,.12);
+  }
+  .choice.incorrect{
+    border-color:rgba(255,92,122,.60);
+    background:rgba(255,92,122,.12);
+  }
+  .msg{
+    display:none;
+    margin-top:14px;
+    border-radius:14px;
+    padding:12px 14px;
+    line-height:1.5;
+    font-size:14px;
+    border:1px solid transparent;
+  }
+  .msg.show{ display:block; }
+  .msg.good{
+    background:rgba(43,213,118,.10);
+    border-color:rgba(43,213,118,.28);
+    color:#d4f7e3;
+  }
+  .msg.bad{
+    background:rgba(255,209,102,.10);
+    border-color:rgba(255,209,102,.28);
+    color:#ffe9af;
+  }
+  .summary{
+    display:none;
+  }
+  .ticket{
+    margin-top:12px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;
+    padding:18px;
+  }
+  .ticket h3{
+    margin:0 0 12px;
+    font-size:22px;
+  }
+  .ticket-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+  }
+  .ticket-row{
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:12px;
+    padding:10px 12px;
+  }
+  .ticket-label{
+    color:var(--muted);
+    font-size:12px;
+    margin-bottom:4px;
+    text-transform:uppercase;
+    letter-spacing:.8px;
+    font-weight:800;
+  }
+  .ticket-value{
+    font-family:var(--mono);
+    word-break:break-word;
+  }
+  .pass-banner, .not-pass-banner{
+    margin-top:14px;
+    padding:14px 16px;
+    border-radius:14px;
+    font-weight:800;
+  }
+  .pass-banner{
+    background:rgba(43,213,118,.12);
+    border:1px solid rgba(43,213,118,.28);
+    color:#d4f7e3;
+  }
+  .not-pass-banner{
+    background:rgba(255,92,122,.12);
+    border:1px solid rgba(255,92,122,.28);
+    color:#ffd6df;
+  }
+  .footer-note{
+    margin-top:14px;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.5;
+  }
+  @media (max-width: 900px){
+    .grid{ grid-template-columns:1fr; }
+  }
+  @media (max-width: 640px){
+    .wrap{ width:min(94vw,1100px); }
+    .hero, .panel{ padding:16px; }
+    .question{ font-size:20px; }
+    .ticket-grid{ grid-template-columns:1fr; }
+    .top-actions{ width:100%; }
+    .top-actions .btn{ flex:1 1 auto; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <a class="back-link" href="../index.html">← Back to Hub</a>
+    <div class="top-actions">
+      <button id="restartTopBtn" class="btn secondary">Restart Game</button>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="kicker">Legend Mastery Series • American Studies • CS 6-7</div>
+    <h1>AMSTUD Basics 3 — Founding Documents II</h1>
+    <p class="sub">
+      Back-to-the-Basics mastery on the U.S. Constitution, Federalists, Anti-Federalists, the Bill of Rights,
+      and ways constitutional government changes over time.
+    </p>
+    <div class="pills">
+      <span class="pill">35 questions</span>
+      <span class="pill">Auto-submit on click</span>
+      <span class="pill">Auto-advance on correct</span>
+      <span class="pill">Hint on incorrect</span>
+      <span class="pill">100% required</span>
+    </div>
+  </section>
+
+  <div class="grid">
+    <aside class="panel">
+      <h2>Start Game</h2>
+      <div id="startScreen">
+        <div class="start-form">
+          <div>
+            <label for="studentName">Student Name</label>
+            <input id="studentName" type="text" placeholder="Enter first and last name"/>
+          </div>
+          <button id="startBtn" class="btn primary">Start Game</button>
+        </div>
+
+        <div class="meta">
+          <div class="meta-row"><span>Topic</span><span>Founding Documents II</span></div>
+          <div class="meta-row"><span>Content Statements</span><span>CS 6-7</span></div>
+          <div class="meta-row"><span>Questions</span><span id="questionCountLabel">35</span></div>
+          <div class="meta-row"><span>Passing Requirement</span><span>100%</span></div>
+        </div>
+
+        <p class="mini-note">
+          Students must enter a name before beginning. The game tracks start time, end time, elapsed time,
+          score, and accuracy. Refreshing or pressing restart resets the entire attempt.
+        </p>
+      </div>
+
+      <div id="liveMeta" style="display:none">
+        <div class="meta">
+          <div class="meta-row"><span>Student</span><span id="liveStudent">—</span></div>
+          <div class="meta-row"><span>Started</span><span id="liveStarted">—</span></div>
+          <div class="meta-row"><span>Current Time</span><span id="liveNow">—</span></div>
+          <div class="meta-row"><span>Elapsed</span><span id="liveElapsed">00:00</span></div>
+        </div>
+        <p class="mini-note">
+          Wrong answers do count against accuracy. The game only advances when the correct answer is selected.
+        </p>
+      </div>
+    </aside>
+
+    <main>
+      <section id="gameArea" class="panel game-area">
+        <div class="game-head">
+          <div>
+            <h2 style="margin:0 0 6px;">Game in Progress</h2>
+            <div style="color:var(--muted);font-size:14px;">Choose the best answer. Incorrect answers trigger a hint.</div>
+          </div>
+          <div class="tracker">
+            <div class="chip">Question: <span id="progressText">1 / 35</span></div>
+            <div class="chip">Correct: <span id="correctText">0</span></div>
+            <div class="chip">Attempts: <span id="attemptText">0</span></div>
+            <div class="chip">Accuracy: <span id="accuracyText">100%</span></div>
+          </div>
+        </div>
+
+        <div class="question-card">
+          <div class="q-num" id="qNum">Question 1</div>
+          <h3 class="question" id="questionText"></h3>
+          <div class="choices" id="choicesWrap"></div>
+          <div id="feedbackGood" class="msg good"></div>
+          <div id="feedbackBad" class="msg bad"></div>
+        </div>
+      </section>
+
+      <section id="summaryArea" class="panel summary">
+        <h2 style="margin-top:0;">Completion Ticket</h2>
+        <div id="passBanner" class="pass-banner" style="display:none;">
+          Mastery achieved. This ticket shows a 100% completion.
+        </div>
+        <div id="notPassBanner" class="not-pass-banner" style="display:none;">
+          Game complete, but the attempt did not reach 100% accuracy. Restart and try again for a passing ticket.
+        </div>
+
+        <div class="ticket">
+          <h3>AMSTUD Basics 3 — Founding Documents II</h3>
+          <div class="ticket-grid">
+            <div class="ticket-row">
+              <div class="ticket-label">Student</div>
+              <div class="ticket-value" id="ticketStudent"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">Passed</div>
+              <div class="ticket-value" id="ticketPassed"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">Accuracy</div>
+              <div class="ticket-value" id="ticketAccuracy"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">Correct Answers</div>
+              <div class="ticket-value" id="ticketCorrect"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">Total Attempts</div>
+              <div class="ticket-value" id="ticketAttempts"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">Start Time</div>
+              <div class="ticket-value" id="ticketStart"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">End Time</div>
+              <div class="ticket-value" id="ticketEnd"></div>
+            </div>
+            <div class="ticket-row">
+              <div class="ticket-label">Elapsed Time</div>
+              <div class="ticket-value" id="ticketElapsed"></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button id="restartBottomBtn" class="btn primary">Restart Game</button>
+          <button id="printBtn" class="btn secondary">Print Ticket</button>
+        </div>
+
+        <div class="footer-note">
+          Passing ticket requires 100% accuracy because Back to the Basics is designed as a rote-mastery exercise.
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    question: "What document established the foundations of the American nation and the relationship between the people and their government?",
+    choices: [
+      "Northwest Ordinance",
+      "U.S. Constitution",
+      "Emancipation Proclamation",
+      "Missouri Compromise"
+    ],
+    answer: 1,
+    hint: "CS 6 centers on the document that creates the national framework of government."
+  },
+  {
+    question: "Which feature of the Constitution strengthened the national government by dividing power into separate parts?",
+    choices: [
+      "Three branches of government",
+      "Nullification",
+      "Popular election of governors",
+      "Protective tariffs"
+    ],
+    answer: 0,
+    hint: "Think legislative, executive, and judicial."
+  },
+  {
+    question: "Federalism is the constitutional principle that divides power between",
+    choices: [
+      "the president and Congress only",
+      "the national government and state governments",
+      "courts and citizens only",
+      "the military and Congress"
+    ],
+    answer: 1,
+    hint: "This principle shares power across two levels of government."
+  },
+  {
+    question: "The Constitution gives Congress the power to levy taxes, raise armies, and regulate",
+    choices: [
+      "religion",
+      "commerce",
+      "education only",
+      "state constitutions"
+    ],
+    answer: 1,
+    hint: "This is one of the listed powers in CS 6."
+  },
+  {
+    question: "Which part of the Constitution allows the national government to formally change the document?",
+    choices: [
+      "The amendment process",
+      "The spoils system",
+      "Judicial appointments only",
+      "State nullification"
+    ],
+    answer: 0,
+    hint: "CS 6 says the Constitution includes the ability to amend itself."
+  },
+  {
+    question: "According to CS 6, the Constitution protects the rights of the people by establishing",
+    choices: [
+      "limited government",
+      "unlimited presidential power",
+      "rule by state governors",
+      "military oversight of elections"
+    ],
+    answer: 0,
+    hint: "Government is restricted so it cannot do whatever it wants."
+  },
+  {
+    question: "Which statement best reflects the Constitution's relationship between the people and government?",
+    choices: [
+      "Government gets its power from the consent of the people",
+      "Government receives its power from hereditary rulers",
+      "Government has no limits if Congress approves",
+      "Government does not need elections"
+    ],
+    answer: 0,
+    hint: "This echoes the idea that people are the source of political authority."
+  },
+  {
+    question: "The Constitution ensures that people have a role in government by",
+    choices: [
+      "allowing them to elect representatives",
+      "requiring military service for voting",
+      "appointing all legislators for life",
+      "letting judges write all laws"
+    ],
+    answer: 0,
+    hint: "Representative government is explicitly named in CS 6."
+  },
+  {
+    question: "Which branch of government makes laws under the constitutional structure?",
+    choices: [
+      "Judicial",
+      "Executive",
+      "Legislative",
+      "Military"
+    ],
+    answer: 2,
+    hint: "This is Congress's branch."
+  },
+  {
+    question: "Which constitutional principle helps prevent one branch from controlling the entire government?",
+    choices: [
+      "Separation of powers",
+      "Isolationism",
+      "Mercantilism",
+      "Popular election of judges"
+    ],
+    answer: 0,
+    hint: "The Constitution spreads authority across branches."
+  },
+  {
+    question: "The Federalists supported ratification of the Constitution because they wanted",
+    choices: [
+      "a stronger national government",
+      "complete state supremacy",
+      "no national taxation",
+      "no executive branch"
+    ],
+    answer: 0,
+    hint: "They believed the Articles were too weak."
+  },
+  {
+    question: "Which concern did Federalists say justified giving more power to the national government?",
+    choices: [
+      "Weaknesses of the Articles of Confederation",
+      "Too much power in the Supreme Court",
+      "Too many state constitutions",
+      "Lack of local school boards"
+    ],
+    answer: 0,
+    hint: "They wanted to fix problems such as no power to tax and weak national structure."
+  },
+  {
+    question: "Federalists supported the supremacy of",
+    choices: [
+      "state governments",
+      "county governments",
+      "the national government",
+      "military governors"
+    ],
+    answer: 2,
+    hint: "They favored national over state supremacy."
+  },
+  {
+    question: "Which clause did Federalists support because it helped the national government address national problems?",
+    choices: [
+      "Necessary and Proper Clause",
+      "Fugitive Slave Clause only",
+      "Three-Fifths Clause",
+      "Ex Post Facto Clause"
+    ],
+    answer: 0,
+    hint: "It helped Congress carry out its enumerated powers."
+  },
+  {
+    question: "Federalists favored national taxation because it would",
+    choices: [
+      "fund the central government",
+      "eliminate the judicial branch",
+      "weaken national defense",
+      "end the need for Congress"
+    ],
+    answer: 0,
+    hint: "They believed the national government needed stable revenue."
+  },
+  {
+    question: "Federalists supported a standing army because they wanted",
+    choices: [
+      "strong national defense",
+      "state control of war policy",
+      "to weaken the executive branch",
+      "to replace Congress"
+    ],
+    answer: 0,
+    hint: "They saw national defense as a national responsibility."
+  },
+  {
+    question: "Anti-Federalists opposed ratification mainly because they feared",
+    choices: [
+      "a strong central government would threaten liberty and state power",
+      "Congress was too weak to print money",
+      "the Constitution created too many town councils",
+      "the states had too little independence from counties"
+    ],
+    answer: 0,
+    hint: "Their core worry was centralized power."
+  },
+  {
+    question: "Anti-Federalists believed national taxation could become",
+    choices: [
+      "repressive",
+      "unnecessary for government",
+      "a power of the courts only",
+      "a state legislative duty only"
+    ],
+    answer: 0,
+    hint: "They feared abuse by a distant central government."
+  },
+  {
+    question: "What did Anti-Federalists fear about a standing army?",
+    choices: [
+      "It could be used against citizens",
+      "It would make states stronger",
+      "It would reduce federal power",
+      "It would create more local elections"
+    ],
+    answer: 0,
+    hint: "They worried about military force being turned inward."
+  },
+  {
+    question: "Anti-Federalists wanted to maintain a balance of power between",
+    choices: [
+      "cities and counties",
+      "the national government and the states",
+      "voters and judges only",
+      "the army and courts"
+    ],
+    answer: 1,
+    hint: "They opposed too much power moving upward to the center."
+  },
+  {
+    question: "Which position was most closely associated with Anti-Federalists?",
+    choices: [
+      "A Bill of Rights is necessary to protect individual liberty",
+      "No Bill of Rights is needed because the Constitution already protects liberty enough",
+      "National government should always dominate state governments",
+      "Standing armies should be expanded to police citizens"
+    ],
+    answer: 0,
+    hint: "This was one of their biggest ratification arguments."
+  },
+  {
+    question: "One result of the Federalist and Anti-Federalist debate was the adoption of the",
+    choices: [
+      "Monroe Doctrine",
+      "Bill of Rights",
+      "Emancipation Proclamation",
+      "Homestead Act"
+    ],
+    answer: 1,
+    hint: "This was the Anti-Federalists' major success."
+  },
+  {
+    question: "The Bill of Rights was added primarily to",
+    choices: [
+      "increase presidential term length",
+      "protect individual liberties and limit government power",
+      "expand Congress's power to tax",
+      "create state supreme courts"
+    ],
+    answer: 1,
+    hint: "This is nearly the exact language of CS 7."
+  },
+  {
+    question: "Which freedom is specifically included in the Bill of Rights?",
+    choices: [
+      "Freedom of speech",
+      "Freedom from voting",
+      "Freedom from paying any taxes",
+      "Freedom to ignore court orders"
+    ],
+    answer: 0,
+    hint: "Think First Amendment."
+  },
+  {
+    question: "Which protection is part of the Bill of Rights?",
+    choices: [
+      "Due process of law",
+      "Unlimited taxation",
+      "A national religion",
+      "Military control of state elections"
+    ],
+    answer: 0,
+    hint: "This protects fairness in legal proceedings."
+  },
+  {
+    question: "Which protection in the Bill of Rights limits government search power?",
+    choices: [
+      "Protection against illegal search and seizure",
+      "The power to declare war",
+      "The right to amend the Constitution",
+      "The power to levy tariffs"
+    ],
+    answer: 0,
+    hint: "This is a Fourth Amendment idea."
+  },
+  {
+    question: "Constitutional government changes over time through amendments to the",
+    choices: [
+      "Articles of Confederation",
+      "U.S. Constitution",
+      "Declaration of Independence",
+      "Northwest Ordinance only"
+    ],
+    answer: 1,
+    hint: "CS 7 begins by saying the Constitution has been amended in many ways."
+  },
+  {
+    question: "When the Supreme Court interprets the Constitution to clarify or extend its meaning, it changes government through",
+    choices: [
+      "judicial decisions",
+      "county ordinances",
+      "military orders",
+      "party platforms"
+    ],
+    answer: 0,
+    hint: "CS 7 names Supreme Court decisions as one source of change."
+  },
+  {
+    question: "The power of judicial review allows the Supreme Court to",
+    choices: [
+      "declare actions unconstitutional",
+      "write constitutional amendments by itself",
+      "collect national taxes",
+      "command the armed forces"
+    ],
+    answer: 0,
+    hint: "It can strike down actions of branches or states."
+  },
+  {
+    question: "Congress can change how constitutional government operates by passing",
+    choices: [
+      "legislation",
+      "foreign treaties only",
+      "state constitutions only",
+      "judicial opinions"
+    ],
+    answer: 0,
+    hint: "CS 7 says legislation builds on the constitutional framework."
+  },
+  {
+    question: "Which is an example of legislation building on constitutional principles?",
+    choices: [
+      "Civil rights acts",
+      "Royal charters",
+      "Colonial boycotts",
+      "Cabinet customs only"
+    ],
+    answer: 0,
+    hint: "The model curriculum gives this exact type of example."
+  },
+  {
+    question: "Which informal practice are students specifically expected to know under CS 7?",
+    choices: [
+      "Legislative oversight",
+      "Judicial activism",
+      "Filibuster reform",
+      "Direct primary elections"
+    ],
+    answer: 0,
+    hint: "The standards name one informal practice to know."
+  },
+  {
+    question: "Legislative oversight refers to Congress",
+    choices: [
+      "monitoring the executive branch for information and accountability",
+      "appointing all federal judges directly",
+      "controlling state constitutions",
+      "serving as the nation's highest court"
+    ],
+    answer: 0,
+    hint: "It grew from Congress's need for information when drafting laws."
+  },
+  {
+    question: "Which statement best summarizes CS 7?",
+    choices: [
+      "Constitutional government has stayed exactly the same since 1787",
+      "Constitutional government changes through amendments, court decisions, legislation, and informal practices",
+      "Only states can change constitutional meaning",
+      "The Bill of Rights ended all debate about government power"
+    ],
+    answer: 1,
+    hint: "This is the four-part list at the center of the standard."
+  },
+  {
+    question: "Which group originally argued that no Bill of Rights was necessary because the Constitution already limited power?",
+    choices: [
+      "Federalists",
+      "Anti-Federalists",
+      "Abolitionists",
+      "Populists"
+    ],
+    answer: 0,
+    hint: "They prioritized ratification first."
+  },
+  {
+    question: "Which statement best ties CS 6 and CS 7 together?",
+    choices: [
+      "The Constitution created the government, and later debates and developments shaped how that government protected rights and applied power over time",
+      "The Constitution replaced all need for later interpretation",
+      "Federalists and Anti-Federalists agreed on every issue immediately",
+      "The Bill of Rights ended constitutional change forever"
+    ],
+    answer: 0,
+    hint: "One standard is about the structure; the next is about debate and change."
+  }
+];
+
+const studentNameInput = document.getElementById('studentName');
+const startBtn = document.getElementById('startBtn');
+const startScreen = document.getElementById('startScreen');
+const liveMeta = document.getElementById('liveMeta');
+const gameArea = document.getElementById('gameArea');
+const summaryArea = document.getElementById('summaryArea');
+
+const questionCountLabel = document.getElementById('questionCountLabel');
+questionCountLabel.textContent = String(questions.length);
+
+const liveStudent = document.getElementById('liveStudent');
+const liveStarted = document.getElementById('liveStarted');
+const liveNow = document.getElementById('liveNow');
+const liveElapsed = document.getElementById('liveElapsed');
+
+const progressText = document.getElementById('progressText');
+const correctText = document.getElementById('correctText');
+const attemptText = document.getElementById('attemptText');
+const accuracyText = document.getElementById('accuracyText');
+
+const qNum = document.getElementById('qNum');
+const questionText = document.getElementById('questionText');
+const choicesWrap = document.getElementById('choicesWrap');
+const feedbackGood = document.getElementById('feedbackGood');
+const feedbackBad = document.getElementById('feedbackBad');
+
+const ticketStudent = document.getElementById('ticketStudent');
+const ticketPassed = document.getElementById('ticketPassed');
+const ticketAccuracy = document.getElementById('ticketAccuracy');
+const ticketCorrect = document.getElementById('ticketCorrect');
+const ticketAttempts = document.getElementById('ticketAttempts');
+const ticketStart = document.getElementById('ticketStart');
+const ticketEnd = document.getElementById('ticketEnd');
+const ticketElapsed = document.getElementById('ticketElapsed');
+const passBanner = document.getElementById('passBanner');
+const notPassBanner = document.getElementById('notPassBanner');
+
+const restartTopBtn = document.getElementById('restartTopBtn');
+const restartBottomBtn = document.getElementById('restartBottomBtn');
+const printBtn = document.getElementById('printBtn');
+
+let studentName = "";
+let currentIndex = 0;
+let correctCount = 0;
+let attempts = 0;
+let startTime = null;
+let endTime = null;
+let timer = null;
+let locked = false;
+
+function shuffleArray(arr){
+  const a = arr.map(x => x);
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function prepareQuestions(){
+  return questions.map(q => {
+    const choices = q.choices.map((text, index) => ({ text, isCorrect: index === q.answer }));
+    const shuffled = shuffleArray(choices);
+    return {
+      question: q.question,
+      hint: q.hint,
+      choices: shuffled,
+      answer: shuffled.findIndex(c => c.isCorrect)
+    };
+  });
+}
+
+let gameQuestions = prepareQuestions();
+
+function formatDateTime(date){
+  return date.toLocaleString([], {
+    year:'numeric',
+    month:'2-digit',
+    day:'2-digit',
+    hour:'numeric',
+    minute:'2-digit',
+    second:'2-digit'
+  });
+}
+
+function formatElapsed(ms){
+  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  const hours = Math.floor(minutes / 60);
+  const remMinutes = minutes % 60;
+  if(hours > 0){
+    return `${String(hours).padStart(2,'0')}:${String(remMinutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+  }
+  return `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+}
+
+function updateLiveTime(){
+  if(!startTime) return;
+  const now = new Date();
+  liveNow.textContent = formatDateTime(now);
+  liveElapsed.textContent = formatElapsed(now - startTime);
+}
+
+function getAccuracy(){
+  if(attempts === 0) return 100;
+  return Math.round((correctCount / attempts) * 100);
+}
+
+function updateTracker(){
+  progressText.textContent = `${Math.min(currentIndex + 1, gameQuestions.length)} / ${gameQuestions.length}`;
+  correctText.textContent = String(correctCount);
+  attemptText.textContent = String(attempts);
+  accuracyText.textContent = `${getAccuracy()}%`;
+}
+
+function clearFeedback(){
+  feedbackGood.className = 'msg good';
+  feedbackGood.textContent = '';
+  feedbackBad.className = 'msg bad';
+  feedbackBad.textContent = '';
+}
+
+function renderQuestion(){
+  clearFeedback();
+  locked = false;
+  updateTracker();
+
+  const q = gameQuestions[currentIndex];
+  qNum.textContent = `Question ${currentIndex + 1}`;
+  questionText.textContent = q.question;
+  choicesWrap.innerHTML = '';
+
+  q.choices.forEach((choice, index) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.type = 'button';
+    btn.innerHTML = `<strong>${String.fromCharCode(65 + index)}.</strong> ${choice.text}`;
+    btn.addEventListener('click', () => handleChoice(index, btn));
+    choicesWrap.appendChild(btn);
+  });
+}
+
+function handleChoice(index, btnEl){
+  if(locked) return;
+  locked = true;
+  attempts++;
+
+  const q = gameQuestions[currentIndex];
+  const choiceButtons = [...document.querySelectorAll('.choice')];
+  choiceButtons.forEach(btn => btn.disabled = true);
+  btnEl.classList.add('selected');
+
+  if(index === q.answer){
+    correctCount++;
+    btnEl.classList.add('correct');
+    feedbackGood.textContent = 'Correct. Advancing to the next question...';
+    feedbackGood.classList.add('show');
+    updateTracker();
+
+    setTimeout(() => {
+      currentIndex++;
+      if(currentIndex >= gameQuestions.length){
+        finishGame();
+      } else {
+        renderQuestion();
+      }
+    }, 650);
+  } else {
+    btnEl.classList.add('incorrect');
+    const correctBtn = choiceButtons[q.answer];
+    if(correctBtn) correctBtn.classList.add('correct');
+
+    feedbackBad.innerHTML = `<strong>Hint:</strong> ${q.hint}<br><br>Select the highlighted correct answer to continue.`;
+    feedbackBad.classList.add('show');
+    updateTracker();
+
+    choiceButtons.forEach((btn, i) => {
+      btn.disabled = false;
+      if(i === index) btn.disabled = true;
+    });
+    locked = false;
+  }
+}
+
+function startGame(){
+  const name = studentNameInput.value.trim();
+  if(!name){
+    alert('Please enter a student name before starting.');
+    studentNameInput.focus();
+    return;
+  }
+
+  studentName = name;
+  currentIndex = 0;
+  correctCount = 0;
+  attempts = 0;
+  startTime = new Date();
+  endTime = null;
+
+  gameQuestions = prepareQuestions();
+
+  startScreen.style.display = 'none';
+  liveMeta.style.display = 'block';
+  gameArea.style.display = 'block';
+  summaryArea.style.display = 'none';
+
+  liveStudent.textContent = studentName;
+  liveStarted.textContent = formatDateTime(startTime);
+  updateLiveTime();
+  if(timer) clearInterval(timer);
+  timer = setInterval(updateLiveTime, 1000);
+
+  renderQuestion();
+}
+
+function finishGame(){
+  endTime = new Date();
+  if(timer) clearInterval(timer);
+
+  const accuracy = getAccuracy();
+  const passed = accuracy === 100 && correctCount === gameQuestions.length;
+
+  gameArea.style.display = 'none';
+  summaryArea.style.display = 'block';
+
+  ticketStudent.textContent = studentName;
+  ticketPassed.textContent = passed ? 'YES' : 'NO';
+  ticketAccuracy.textContent = `${accuracy}%`;
+  ticketCorrect.textContent = `${correctCount} / ${gameQuestions.length}`;
+  ticketAttempts.textContent = String(attempts);
+  ticketStart.textContent = formatDateTime(startTime);
+  ticketEnd.textContent = formatDateTime(endTime);
+  ticketElapsed.textContent = formatElapsed(endTime - startTime);
+
+  passBanner.style.display = passed ? 'block' : 'none';
+  notPassBanner.style.display = passed ? 'none' : 'block';
+}
+
+function restartGame(){
+  if(timer) clearInterval(timer);
+  studentName = "";
+  currentIndex = 0;
+  correctCount = 0;
+  attempts = 0;
+  startTime = null;
+  endTime = null;
+  locked = false;
+
+  gameQuestions = prepareQuestions();
+
+  studentNameInput.value = '';
+  startScreen.style.display = 'block';
+  liveMeta.style.display = 'none';
+  gameArea.style.display = 'none';
+  summaryArea.style.display = 'none';
+
+  liveStudent.textContent = '—';
+  liveStarted.textContent = '—';
+  liveNow.textContent = '—';
+  liveElapsed.textContent = '00:00';
+
+  clearFeedback();
+  updateTracker();
+  studentNameInput.focus();
+}
+
+startBtn.addEventListener('click', startGame);
+studentNameInput.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') startGame();
+});
+
+restartTopBtn.addEventListener('click', restartGame);
+restartBottomBtn.addEventListener('click', restartGame);
+printBtn.addEventListener('click', () => window.print());
+
+window.addEventListener('beforeunload', () => {
+  if(timer) clearInterval(timer);
+});
+
+updateTracker();
+</script>
+</body>
+</html>
