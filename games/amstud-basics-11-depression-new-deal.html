@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AMSTUD Basics 11 — Great Depression & New Deal</title>
+<link rel="stylesheet" href="../styles.css"/>
+<style>
+  :root{
+    --bg:#0b1220;
+    --panel:#111a2f;
+    --panel2:#0f1730;
+    --text:#e7eefc;
+    --muted:#a8b4cf;
+    --line:rgba(255,255,255,.10);
+    --line2:rgba(255,255,255,.16);
+    --accent:#7aa2ff;
+    --accent2:#5c86ff;
+    --good:#2bd576;
+    --bad:#ff5c7a;
+    --warn:#ffd166;
+    --shadow:0 18px 55px rgba(0,0,0,.40);
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:
+      radial-gradient(circle at top, rgba(122,162,255,.10), transparent 28%),
+      linear-gradient(180deg, #0b1220, #09101d);
+    color:var(--text);
+    min-height:100vh;
+  }
+  .wrap{width:min(1100px,92vw);margin:0 auto;padding:24px 0 56px;}
+  .topbar{
+    display:flex;gap:12px;align-items:center;justify-content:space-between;
+    margin-bottom:16px;flex-wrap:wrap;
+  }
+  .back-link{
+    display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);
+    border-radius:12px;padding:10px 14px;font-weight:700;
+  }
+  .top-actions{display:flex;gap:10px;flex-wrap:wrap;}
+  .btn{
+    appearance:none;border:none;cursor:pointer;text-decoration:none;font-weight:800;font-size:14px;
+    border-radius:12px;padding:11px 14px;display:inline-flex;align-items:center;justify-content:center;
+    min-width:120px;transition:transform .14s ease, opacity .14s ease, background .14s ease, border-color .14s ease;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn.primary{background:var(--accent);color:#fff;}
+  .btn.primary:hover{background:var(--accent2);}
+  .btn.secondary{
+    background:rgba(255,255,255,.05);color:var(--text);border:1px solid rgba(255,255,255,.10);
+  }
+  .btn.secondary:hover{
+    background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);
+  }
+  .hero{
+    background:linear-gradient(180deg, rgba(17,26,47,.96), rgba(15,23,48,.96));
+    border:1px solid var(--line2);border-radius:24px;box-shadow:var(--shadow);
+    padding:24px;margin-bottom:18px;
+  }
+  .kicker{
+    font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);
+    font-weight:800;margin-bottom:10px;
+  }
+  h1{margin:0 0 10px;font-size:clamp(28px,4vw,42px);line-height:1.08;}
+  .sub{margin:0;color:var(--muted);line-height:1.6;max-width:900px;}
+  .pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+  .pill{
+    background:rgba(122,162,255,.12);color:#dce7ff;border:1px solid rgba(122,162,255,.22);
+    border-radius:999px;padding:8px 12px;font-size:13px;font-weight:700;
+  }
+  .grid{display:grid;grid-template-columns:360px 1fr;gap:18px;align-items:start;}
+  .panel{
+    background:linear-gradient(180deg, rgba(17,26,47,.98), rgba(12,19,38,.98));
+    border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:18px;
+  }
+  .panel h2{margin:0 0 12px;font-size:22px;}
+  .start-form{display:grid;gap:12px;}
+  label{font-size:13px;color:var(--muted);font-weight:700;}
+  input[type="text"]{
+    width:100%;background:rgba(255,255,255,.04);color:var(--text);
+    border:1px solid var(--line2);border-radius:14px;padding:12px 14px;font-size:15px;outline:none;
+  }
+  input[type="text"]:focus{
+    border-color:rgba(122,162,255,.55);box-shadow:0 0 0 3px rgba(122,162,255,.12);
+  }
+  .meta{display:grid;gap:10px;margin-top:12px;}
+  .meta-row{
+    display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:12px;
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
+  }
+  .meta-row span:first-child{color:var(--muted);}
+  .meta-row span:last-child{font-family:var(--mono);text-align:right;}
+  .mini-note{color:var(--muted);font-size:13px;line-height:1.5;margin:12px 0 0;}
+  .game-area{display:none;}
+  .game-head{
+    display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  .tracker{display:flex;flex-wrap:wrap;gap:10px;}
+  .tracker .chip{
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+    border-radius:999px;padding:8px 12px;font-size:13px;font-weight:700;
+  }
+  .question-card{
+    background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;padding:18px;
+  }
+  .q-num{
+    color:var(--accent);font-size:12px;letter-spacing:1px;text-transform:uppercase;
+    font-weight:800;margin-bottom:8px;
+  }
+  .question{margin:0 0 14px;font-size:22px;line-height:1.35;}
+  .choices{display:grid;gap:10px;}
+  .choice{
+    text-align:left;width:100%;background:rgba(255,255,255,.04);color:var(--text);
+    border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:14px 15px;
+    font-size:15px;cursor:pointer;transition:transform .12s ease, border-color .12s ease, background .12s ease;
+  }
+  .choice:hover{
+    transform:translateY(-1px);border-color:rgba(122,162,255,.35);background:rgba(255,255,255,.06);
+  }
+  .choice.selected{border-color:rgba(122,162,255,.60);background:rgba(122,162,255,.12);}
+  .choice.correct{border-color:rgba(43,213,118,.60);background:rgba(43,213,118,.12);}
+  .choice.incorrect{border-color:rgba(255,92,122,.60);background:rgba(255,92,122,.12);}
+  .msg{
+    display:none;margin-top:14px;border-radius:14px;padding:12px 14px;line-height:1.5;
+    font-size:14px;border:1px solid transparent;
+  }
+  .msg.show{display:block;}
+  .msg.good{
+    background:rgba(43,213,118,.10);border-color:rgba(43,213,118,.28);color:#d4f7e3;
+  }
+  .msg.bad{
+    background:rgba(255,209,102,.10);border-color:rgba(255,209,102,.28);color:#ffe9af;
+  }
+  .summary{display:none;}
+  .ticket{
+    margin-top:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;padding:18px;
+  }
+  .ticket h3{margin:0 0 12px;font-size:22px;}
+  .ticket-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+  .ticket-row{
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
+    border-radius:12px;padding:10px 12px;
+  }
+  .ticket-label{
+    color:var(--muted);font-size:12px;margin-bottom:4px;text-transform:uppercase;
+    letter-spacing:.8px;font-weight:800;
+  }
+  .ticket-value{font-family:var(--mono);word-break:break-word;}
+  .pass-banner,.not-pass-banner{
+    margin-top:14px;padding:14px 16px;border-radius:14px;font-weight:800;
+  }
+  .pass-banner{
+    background:rgba(43,213,118,.12);border:1px solid rgba(43,213,118,.28);color:#d4f7e3;
+  }
+  .not-pass-banner{
+    background:rgba(255,92,122,.12);border:1px solid rgba(255,92,122,.28);color:#ffd6df;
+  }
+  .footer-note{margin-top:14px;color:var(--muted);font-size:13px;line-height:1.5;}
+  @media (max-width: 900px){ .grid{grid-template-columns:1fr;} }
+  @media (max-width: 640px){
+    .wrap{width:min(94vw,1100px);}
+    .hero,.panel{padding:16px;}
+    .question{font-size:20px;}
+    .ticket-grid{grid-template-columns:1fr;}
+    .top-actions{width:100%;}
+    .top-actions .btn{flex:1 1 auto;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <a class="back-link" href="../index.html">← Back to Hub</a>
+    <div class="top-actions">
+      <button id="restartTopBtn" class="btn secondary">Restart Game</button>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="kicker">Legend Mastery Series • American Studies • Depression/New Deal Block</div>
+    <h1>AMSTUD Basics 11 — Great Depression & New Deal</h1>
+    <p class="sub">
+      Back-to-the-Basics mastery on the causes of the Great Depression, Hoover, FDR,
+      New Deal relief, recovery, reform, and the expanded role of the federal government.
+    </p>
+    <div class="pills">
+      <span class="pill">36 questions</span>
+      <span class="pill">Auto-submit on click</span>
+      <span class="pill">Auto-advance on correct</span>
+      <span class="pill">Hint on incorrect</span>
+      <span class="pill">100% required</span>
+    </div>
+  </section>
+
+  <div class="grid">
+    <aside class="panel">
+      <h2>Start Game</h2>
+      <div id="startScreen">
+        <div class="start-form">
+          <div>
+            <label for="studentName">Student Name</label>
+            <input id="studentName" type="text" placeholder="Enter first and last name"/>
+          </div>
+          <button id="startBtn" class="btn primary">Start Game</button>
+        </div>
+
+        <div class="meta">
+          <div class="meta-row"><span>Topic</span><span>Great Depression & New Deal</span></div>
+          <div class="meta-row"><span>Block</span><span>Depression/New Deal</span></div>
+          <div class="meta-row"><span>Questions</span><span id="questionCountLabel">36</span></div>
+          <div class="meta-row"><span>Passing Requirement</span><span>100%</span></div>
+        </div>
+
+        <p class="mini-note">
+          Students must enter a name before beginning. The game tracks start time, end time, elapsed time,
+          score, and accuracy. Refreshing or pressing restart resets the entire attempt.
+        </p>
+      </div>
+
+      <div id="liveMeta" style="display:none">
+        <div class="meta">
+          <div class="meta-row"><span>Student</span><span id="liveStudent">—</span></div>
+          <div class="meta-row"><span>Started</span><span id="liveStarted">—</span></div>
+          <div class="meta-row"><span>Current Time</span><span id="liveNow">—</span></div>
+          <div class="meta-row"><span>Elapsed</span><span id="liveElapsed">00:00</span></div>
+        </div>
+        <p class="mini-note">
+          Wrong answers do count against accuracy. The game only advances when the correct answer is selected.
+        </p>
+      </div>
+    </aside>
+
+    <main>
+      <section id="gameArea" class="panel game-area">
+        <div class="game-head">
+          <div>
+            <h2 style="margin:0 0 6px;">Game in Progress</h2>
+            <div style="color:var(--muted);font-size:14px;">Choose the best answer. Incorrect answers trigger a hint.</div>
+          </div>
+          <div class="tracker">
+            <div class="chip">Question: <span id="progressText">1 / 36</span></div>
+            <div class="chip">Correct: <span id="correctText">0</span></div>
+            <div class="chip">Attempts: <span id="attemptText">0</span></div>
+            <div class="chip">Accuracy: <span id="accuracyText">100%</span></div>
+          </div>
+        </div>
+
+        <div class="question-card">
+          <div class="q-num" id="qNum">Question 1</div>
+          <h3 class="question" id="questionText"></h3>
+          <div class="choices" id="choicesWrap"></div>
+          <div id="feedbackGood" class="msg good"></div>
+          <div id="feedbackBad" class="msg bad"></div>
+        </div>
+      </section>
+
+      <section id="summaryArea" class="panel summary">
+        <h2 style="margin-top:0;">Completion Ticket</h2>
+        <div id="passBanner" class="pass-banner" style="display:none;">
+          Mastery achieved. This ticket shows a 100% completion.
+        </div>
+        <div id="notPassBanner" class="not-pass-banner" style="display:none;">
+          Game complete, but the attempt did not reach 100% accuracy. Restart and try again for a passing ticket.
+        </div>
+
+        <div class="ticket">
+          <h3>AMSTUD Basics 11 — Great Depression & New Deal</h3>
+          <div class="ticket-grid">
+            <div class="ticket-row"><div class="ticket-label">Student</div><div class="ticket-value" id="ticketStudent"></div></div>
+            <div class="ticket-row"><div class="ticket-label">Passed</div><div class="ticket-value" id="ticketPassed"></div></div>
+            <div class="ticket-row"><div class="ticket-label">Accuracy</div><div class="ticket-value" id="ticketAccuracy"></div></div>
+            <div class="ticket-row"><div class="ticket-label">Correct Answers</div><div class="ticket-value" id="ticketCorrect"></div></div>
+            <div class="ticket-row"><div class="ticket-label">Total Attempts</div><div class="ticket-value" id="ticketAttempts"></div></div>
+            <div class="ticket-row"><div class="ticket-label">Start Time</div><div class="ticket-value" id="ticketStart"></div></div>
+            <div class="ticket-row"><div class="ticket-label">End Time</div><div class="ticket-value" id="ticketEnd"></div></div>
+            <div class="ticket-row"><div class="ticket-label">Elapsed Time</div><div class="ticket-value" id="ticketElapsed"></div></div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button id="restartBottomBtn" class="btn primary">Restart Game</button>
+          <button id="printBtn" class="btn secondary">Print Ticket</button>
+        </div>
+
+        <div class="footer-note">
+          Passing ticket requires 100% accuracy because Back to the Basics is designed as a rote-mastery exercise.
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {question:"The Great Depression began with the stock market crash of",choices:["1929","1919","1933","1941"],answer:0,hint:"Black Tuesday happened in this year."},
+  {question:"Stock speculation means",choices:["buying stocks hoping prices will rise quickly","depositing money in a savings account","paying off debt early","buying only government bonds"],answer:0,hint:"This involves risky investing for profit."},
+  {question:"Buying stock on margin means",choices:["purchasing with borrowed money","buying only bank stocks","selling bonds for cash","paying the full price up front"],answer:0,hint:"Investors borrowed to buy stocks."},
+  {question:"One major cause of the Great Depression was",choices:["bank failures","the end of railroads","the abolition of factories","women’s suffrage"],answer:0,hint:"When banks collapsed, people lost savings."},
+  {question:"Overproduction contributed to the Depression because",choices:["businesses made more goods than people could buy","Americans bought too little land","factories produced no goods at all","all farming ended"],answer:0,hint:"Supply outran consumer demand."},
+  {question:"Another cause of the Depression was",choices:["weak consumer demand","too much prosperity only","the Civil War","Prohibition repeal"],answer:0,hint:"People could not keep buying enough goods."},
+  {question:"During the Great Depression unemployment",choices:["rose dramatically","ended completely","stayed near zero","only affected Europe"],answer:0,hint:"Millions lost their jobs."},
+  {question:"A bank run happens when",choices:["many depositors rush to withdraw money at once","banks make too many loans in one day","the government closes banks forever","farmers buy bank stock"],answer:0,hint:"Fear causes people to pull out deposits."},
+  {question:"Hoover’s response to the Depression is often criticized because he",choices:["did not do enough direct federal relief","created too much Social Security","declared war immediately","nationalized all industry"],answer:0,hint:"He was seen as too limited in his response."},
+  {question:"President during most of the New Deal was",choices:["Franklin D. Roosevelt","Herbert Hoover","Woodrow Wilson","Harry Truman"],answer:0,hint:"FDR led the federal response after Hoover."},
+  {question:"The New Deal was Franklin Roosevelt’s plan for",choices:["relief, recovery, and reform","westward expansion","foreign imperialism","ending World War I"],answer:0,hint:"Think the three R's."},
+  {question:"Relief programs were intended to",choices:["help people suffering immediately","build only military bases","reduce all banking rules","end farming"],answer:0,hint:"These programs gave direct aid."},
+  {question:"Recovery programs were meant to",choices:["restart the economy","fight World War II","expand segregation","create imperial colonies"],answer:0,hint:"These focused on economic revival."},
+  {question:"Reform programs were meant to",choices:["prevent future economic collapse","increase speculation","end all banking","reduce federal involvement"],answer:0,hint:"These changed rules and systems going forward."},
+  {question:"The Social Security Act created",choices:["old-age pensions and aid programs","a wartime draft","the Federal Reserve","agricultural mechanization"],answer:0,hint:"This provided long-term federal support."},
+  {question:"The FDIC was created to",choices:["insure bank deposits","build dams","regulate stockbrokers only","hire unemployed artists"],answer:0,hint:"It helped restore confidence in banks."},
+  {question:"The SEC was created to",choices:["regulate the stock market","manage national parks","fight monopolies in railroads only","draft soldiers"],answer:0,hint:"It was designed to curb stock-market abuses."},
+  {question:"Which program is most closely linked to public works jobs during the New Deal?",choices:["CCC","Zimmermann Telegram","Dawes Act","Volstead Act"],answer:0,hint:"This program employed young men in conservation work."},
+  {question:"The CCC stands for",choices:["Civilian Conservation Corps","Central Credit Commission","Civil Commerce Council","Consumer Control Committee"],answer:0,hint:"It was a New Deal work program."},
+  {question:"The WPA was created mainly to",choices:["provide jobs through public works","insure bank deposits","regulate the stock market","ban alcohol"],answer:0,hint:"This was a major employment program."},
+  {question:"The Tennessee Valley Authority is best known for",choices:["regional development and electric power projects","stock regulation","war mobilization","women’s suffrage"],answer:0,hint:"It built dams and improved a poor region."},
+  {question:"Hoovervilles were",choices:["shantytowns built by homeless people","federal housing projects","new suburban developments","immigrant neighborhoods in the 1920s"],answer:0,hint:"These symbolized hardship during Hoover’s presidency."},
+  {question:"The Dust Bowl mainly affected",choices:["Great Plains farmers","Wall Street bankers","southern textile workers","shipbuilders"],answer:0,hint:"Drought and poor farming practices devastated this region."},
+  {question:"The Dust Bowl worsened the Depression by",choices:["damaging farms and displacing families","raising stock prices","ending unemployment","expanding consumer credit"],answer:0,hint:"It added environmental disaster to economic crisis."},
+  {question:"One major effect of the New Deal was",choices:["expansion of the federal government’s role","return to laissez-faire","elimination of all regulation","the end of political debate"],answer:0,hint:"Washington became much more active in the economy."},
+  {question:"Which of the following is NOT a New Deal reform?",choices:["Plessy v. Ferguson","Social Security","FDIC","SEC"],answer:0,hint:"Three are Depression-era responses; one is a court case from much earlier."},
+  {question:"FDR’s fireside chats were designed to",choices:["reassure and inform the public","replace Congress","declare war on Europe","promote Prohibition"],answer:0,hint:"He used radio to speak directly to Americans."},
+  {question:"The Federal Reserve is connected to the Depression partly because",choices:["monetary policy affected credit and banking","it ran all public works programs","it ended Social Security","it wrote the SEC laws alone"],answer:0,hint:"Banking and money supply were important economic factors."},
+  {question:"The Great Depression demonstrated the dangers of",choices:["unchecked speculation and weak financial safeguards","too much rural farming only","women voting","public sanitation reform"],answer:0,hint:"Risky investing and weak protections helped cause collapse."},
+  {question:"The New Deal did NOT fully end the Depression, but it did",choices:["provide relief and reshape government responsibility","abolish all unemployment immediately","end stock markets forever","remove all taxes"],answer:0,hint:"Its lasting effect was major federal involvement and support."},
+  {question:"Which term best describes government spending to create jobs and stimulate the economy?",choices:["public works","isolationism","imperialism","segregation"],answer:0,hint:"Think roads, bridges, dams, and buildings."},
+  {question:"Which pair is correctly matched?",choices:["FDIC — bank deposit insurance","SEC — military draft","Social Security — stock speculation","CCC — Prohibition enforcement"],answer:0,hint:"Only one pair is correct."},
+  {question:"Which New Deal program is most directly linked to retirement support?",choices:["Social Security","WPA","CCC","TVA"],answer:0,hint:"This still exists today."},
+  {question:"A major contrast between Hoover and Roosevelt was that Roosevelt",choices:["supported more aggressive federal action","opposed all relief","favored isolation from the economy","wanted no banking reform"],answer:0,hint:"FDR expanded federal involvement much more."},
+  {question:"The strongest summary of the Great Depression block is that economic collapse led Americans to accept",choices:["a larger federal role in relief, recovery, and reform","the end of banking regulation","a return to total laissez-faire","the collapse of democracy"],answer:0,hint:"That is the major long-term takeaway."},
+  {question:"Which best captures the purpose of the New Deal?",choices:["to relieve suffering, revive the economy, and prevent another collapse","to expand overseas empire","to restore Prohibition","to reduce all federal influence"],answer:0,hint:"Think relief, recovery, reform."}
+];
+
+const studentNameInput = document.getElementById('studentName');
+const startBtn = document.getElementById('startBtn');
+const startScreen = document.getElementById('startScreen');
+const liveMeta = document.getElementById('liveMeta');
+const gameArea = document.getElementById('gameArea');
+const summaryArea = document.getElementById('summaryArea');
+
+const questionCountLabel = document.getElementById('questionCountLabel');
+questionCountLabel.textContent = String(questions.length);
+
+const liveStudent = document.getElementById('liveStudent');
+const liveStarted = document.getElementById('liveStarted');
+const liveNow = document.getElementById('liveNow');
+const liveElapsed = document.getElementById('liveElapsed');
+
+const progressText = document.getElementById('progressText');
+const correctText = document.getElementById('correctText');
+const attemptText = document.getElementById('attemptText');
+const accuracyText = document.getElementById('accuracyText');
+
+const qNum = document.getElementById('qNum');
+const questionText = document.getElementById('questionText');
+const choicesWrap = document.getElementById('choicesWrap');
+const feedbackGood = document.getElementById('feedbackGood');
+const feedbackBad = document.getElementById('feedbackBad');
+
+const ticketStudent = document.getElementById('ticketStudent');
+const ticketPassed = document.getElementById('ticketPassed');
+const ticketAccuracy = document.getElementById('ticketAccuracy');
+const ticketCorrect = document.getElementById('ticketCorrect');
+const ticketAttempts = document.getElementById('ticketAttempts');
+const ticketStart = document.getElementById('ticketStart');
+const ticketEnd = document.getElementById('ticketEnd');
+const ticketElapsed = document.getElementById('ticketElapsed');
+const passBanner = document.getElementById('passBanner');
+const notPassBanner = document.getElementById('notPassBanner');
+
+const restartTopBtn = document.getElementById('restartTopBtn');
+const restartBottomBtn = document.getElementById('restartBottomBtn');
+const printBtn = document.getElementById('printBtn');
+
+let studentName = "";
+let currentIndex = 0;
+let correctCount = 0;
+let attempts = 0;
+let startTime = null;
+let endTime = null;
+let timer = null;
+let locked = false;
+
+function shuffleArray(arr){
+  const a = arr.map(x => x);
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function prepareQuestions(){
+  return questions.map(q => {
+    const choices = q.choices.map((text, index) => ({ text, isCorrect: index === q.answer }));
+    const shuffled = shuffleArray(choices);
+    return {
+      question: q.question,
+      hint: q.hint,
+      choices: shuffled,
+      answer: shuffled.findIndex(c => c.isCorrect)
+    };
+  });
+}
+
+let gameQuestions = prepareQuestions();
+
+function formatDateTime(date){
+  return date.toLocaleString([], {
+    year:'numeric',
+    month:'2-digit',
+    day:'2-digit',
+    hour:'numeric',
+    minute:'2-digit',
+    second:'2-digit'
+  });
+}
+
+function formatElapsed(ms){
+  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  const hours = Math.floor(minutes / 60);
+  const remMinutes = minutes % 60;
+  if(hours > 0){
+    return `${String(hours).padStart(2,'0')}:${String(remMinutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+  }
+  return `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+}
+
+function updateLiveTime(){
+  if(!startTime) return;
+  const now = new Date();
+  liveNow.textContent = formatDateTime(now);
+  liveElapsed.textContent = formatElapsed(now - startTime);
+}
+
+function getAccuracy(){
+  if(attempts === 0) return 100;
+  return Math.round((correctCount / attempts) * 100);
+}
+
+function updateTracker(){
+  progressText.textContent = `${Math.min(currentIndex + 1, gameQuestions.length)} / ${gameQuestions.length}`;
+  correctText.textContent = String(correctCount);
+  attemptText.textContent = String(attempts);
+  accuracyText.textContent = `${getAccuracy()}%`;
+}
+
+function clearFeedback(){
+  feedbackGood.className = 'msg good';
+  feedbackGood.textContent = '';
+  feedbackBad.className = 'msg bad';
+  feedbackBad.textContent = '';
+}
+
+function renderQuestion(){
+  clearFeedback();
+  locked = false;
+  updateTracker();
+
+  const q = gameQuestions[currentIndex];
+  qNum.textContent = `Question ${currentIndex + 1}`;
+  questionText.textContent = q.question;
+  choicesWrap.innerHTML = '';
+
+  q.choices.forEach((choice, index) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.type = 'button';
+    btn.innerHTML = `<strong>${String.fromCharCode(65 + index)}.</strong> ${choice.text}`;
+    btn.addEventListener('click', () => handleChoice(index, btn));
+    choicesWrap.appendChild(btn);
+  });
+}
+
+function handleChoice(index, btnEl){
+  if(locked) return;
+  locked = true;
+  attempts++;
+
+  const q = gameQuestions[currentIndex];
+  const choiceButtons = [...document.querySelectorAll('.choice')];
+  choiceButtons.forEach(btn => btn.disabled = true);
+  btnEl.classList.add('selected');
+
+  if(index === q.answer){
+    correctCount++;
+    btnEl.classList.add('correct');
+    feedbackGood.textContent = 'Correct. Advancing to the next question...';
+    feedbackGood.classList.add('show');
+    updateTracker();
+
+    setTimeout(() => {
+      currentIndex++;
+      if(currentIndex >= gameQuestions.length){
+        finishGame();
+      } else {
+        renderQuestion();
+      }
+    }, 650);
+  } else {
+    btnEl.classList.add('incorrect');
+    const correctBtn = choiceButtons[q.answer];
+    if(correctBtn) correctBtn.classList.add('correct');
+
+    feedbackBad.innerHTML = `<strong>Hint:</strong> ${q.hint}<br><br>Select the highlighted correct answer to continue.`;
+    feedbackBad.classList.add('show');
+    updateTracker();
+
+    choiceButtons.forEach((btn, i) => {
+      btn.disabled = false;
+      if(i === index) btn.disabled = true;
+    });
+    locked = false;
+  }
+}
+
+function startGame(){
+  const name = studentNameInput.value.trim();
+  if(!name){
+    alert('Please enter a student name before starting.');
+    studentNameInput.focus();
+    return;
+  }
+
+  studentName = name;
+  currentIndex = 0;
+  correctCount = 0;
+  attempts = 0;
+  startTime = new Date();
+  endTime = null;
+
+  gameQuestions = prepareQuestions();
+
+  startScreen.style.display = 'none';
+  liveMeta.style.display = 'block';
+  gameArea.style.display = 'block';
+  summaryArea.style.display = 'none';
+
+  liveStudent.textContent = studentName;
+  liveStarted.textContent = formatDateTime(startTime);
+  updateLiveTime();
+  if(timer) clearInterval(timer);
+  timer = setInterval(updateLiveTime, 1000);
+
+  renderQuestion();
+}
+
+function finishGame(){
+  endTime = new Date();
+  if(timer) clearInterval(timer);
+
+  const accuracy = getAccuracy();
+  const passed = accuracy === 100 && correctCount === gameQuestions.length;
+
+  gameArea.style.display = 'none';
+  summaryArea.style.display = 'block';
+
+  ticketStudent.textContent = studentName;
+  ticketPassed.textContent = passed ? 'YES' : 'NO';
+  ticketAccuracy.textContent = `${accuracy}%`;
+  ticketCorrect.textContent = `${correctCount} / ${gameQuestions.length}`;
+  ticketAttempts.textContent = String(attempts);
+  ticketStart.textContent = formatDateTime(startTime);
+  ticketEnd.textContent = formatDateTime(endTime);
+  ticketElapsed.textContent = formatElapsed(endTime - startTime);
+
+  passBanner.style.display = passed ? 'block' : 'none';
+  notPassBanner.style.display = passed ? 'none' : 'block';
+}
+
+function restartGame(){
+  if(timer) clearInterval(timer);
+  studentName = "";
+  currentIndex = 0;
+  correctCount = 0;
+  attempts = 0;
+  startTime = null;
+  endTime = null;
+  locked = false;
+
+  gameQuestions = prepareQuestions();
+
+  studentNameInput.value = '';
+  startScreen.style.display = 'block';
+  liveMeta.style.display = 'none';
+  gameArea.style.display = 'none';
+  summaryArea.style.display = 'none';
+
+  liveStudent.textContent = '—';
+  liveStarted.textContent = '—';
+  liveNow.textContent = '—';
+  liveElapsed.textContent = '00:00';
+
+  clearFeedback();
+  updateTracker();
+  studentNameInput.focus();
+}
+
+startBtn.addEventListener('click', startGame);
+studentNameInput.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') startGame();
+});
+
+restartTopBtn.addEventListener('click', restartGame);
+restartBottomBtn.addEventListener('click', restartGame);
+printBtn.addEventListener('click', () => window.print());
+
+window.addEventListener('beforeunload', () => {
+  if(timer) clearInterval(timer);
+});
+
+updateTracker();
+</script>
+</body>
+</html>
