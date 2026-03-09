@@ -46,16 +46,18 @@
   .btn{
     appearance:none;border:none;cursor:pointer;text-decoration:none;font-weight:800;font-size:14px;
     border-radius:12px;padding:11px 14px;display:inline-flex;align-items:center;justify-content:center;
-    min-width:120px;transition:transform .14s ease, opacity .14s ease, background .14s ease, border-color .14s ease;
+    min-width:120px;transition:transform .14s ease, background .14s ease, border-color .14s ease;
   }
   .btn:hover{transform:translateY(-1px);}
   .btn.primary{background:var(--accent);color:#fff;}
   .btn.primary:hover{background:var(--accent2);}
   .btn.secondary{
-    background:rgba(255,255,255,.05);color:var(--text);border:1px solid rgba(255,255,255,.10);
+    background:rgba(255,255,255,.05);color:var(--text);
+    border:1px solid rgba(255,255,255,.10);
   }
   .btn.secondary:hover{
-    background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);
+    background:rgba(255,255,255,.08);
+    border-color:rgba(255,255,255,.16);
   }
   .hero{
     background:linear-gradient(180deg, rgba(17,26,47,.96), rgba(15,23,48,.96));
@@ -212,20 +214,17 @@
           </div>
           <button id="startBtn" class="btn primary">Start Game</button>
         </div>
-
         <div class="meta">
           <div class="meta-row"><span>Topic</span><span>Civil Rights & Social Change</span></div>
           <div class="meta-row"><span>Standards</span><span>CS 27–33</span></div>
           <div class="meta-row"><span>Questions</span><span id="questionCountLabel">36</span></div>
           <div class="meta-row"><span>Passing Requirement</span><span>100%</span></div>
         </div>
-
         <p class="mini-note">
           Students must enter a name before beginning. The game tracks start time, end time, elapsed time,
           score, and accuracy. Refreshing or pressing restart resets the entire attempt.
         </p>
       </div>
-
       <div id="liveMeta" style="display:none">
         <div class="meta">
           <div class="meta-row"><span>Student</span><span id="liveStudent">—</span></div>
@@ -265,12 +264,8 @@
 
       <section id="summaryArea" class="panel summary">
         <h2 style="margin-top:0;">Completion Ticket</h2>
-        <div id="passBanner" class="pass-banner" style="display:none;">
-          Mastery achieved. This ticket shows a 100% completion.
-        </div>
-        <div id="notPassBanner" class="not-pass-banner" style="display:none;">
-          Game complete, but the attempt did not reach 100% accuracy. Restart and try again for a passing ticket.
-        </div>
+        <div id="passBanner" class="pass-banner" style="display:none;">Mastery achieved. This ticket shows a 100% completion.</div>
+        <div id="notPassBanner" class="not-pass-banner" style="display:none;">Game complete, but the attempt did not reach 100% accuracy. Restart and try again for a passing ticket.</div>
 
         <div class="ticket">
           <h3>AMSTUD Basics 13 — Civil Rights & Social Change</h3>
@@ -290,10 +285,7 @@
           <button id="restartBottomBtn" class="btn primary">Restart Game</button>
           <button id="printBtn" class="btn secondary">Print Ticket</button>
         </div>
-
-        <div class="footer-note">
-          Passing ticket requires 100% accuracy because Back to the Basics is designed as a rote-mastery exercise.
-        </div>
+        <div class="footer-note">Passing ticket requires 100% accuracy because Back to the Basics is designed as a rote-mastery exercise.</div>
       </section>
     </main>
   </div>
@@ -301,41 +293,41 @@
 
 <script>
 const questions = [
-  {question:"After World War II, the United States experienced a struggle for racial and gender",choices:["equality","imperialism","isolationism","sectionalism"],answer:0,hint:"This is the core of CS 27."},
-  {question:"The NAACP worked primarily to",choices:["fight segregation and secure equal rights","support Prohibition","promote isolationism","rebuild Europe"],answer:0,hint:"This civil rights organization challenged discriminatory laws."},
-  {question:"The SCLC is most associated with",choices:["the Civil Rights Movement","the New Deal","Cold War containment","western settlement"],answer:0,hint:"It was a major civil rights organization led by clergy."},
-  {question:"SNCC stands for",choices:["Student Nonviolent Coordinating Committee","Southern National Commerce Council","Social National Civil Committee","Student New Constitutional Coalition"],answer:0,hint:"It was a student-led civil rights organization."},
+  {question:"After World War II, the United States experienced a struggle for racial and gender",choices:["equality","imperialism","isolationism","sectionalism"],answer:0,hint:"This is the core of the postwar civil rights era."},
+  {question:"The NAACP (National Association for the Advancement of Colored People) worked primarily to",choices:["fight segregation and secure equal rights","support Prohibition","promote isolationism","rebuild Europe"],answer:0,hint:"This civil rights organization challenged discriminatory laws."},
+  {question:"The SCLC (Southern Christian Leadership Conference) is most associated with",choices:["the Civil Rights Movement","the New Deal","Cold War containment","western settlement"],answer:0,hint:"It was a major civil rights organization led by clergy."},
+  {question:"The SNCC (Student Nonviolent Coordinating Committee) was best known for",choices:["student-led civil rights activism","wartime rationing","Cold War diplomacy","suburban housing reform"],answer:0,hint:"This group played a major role in sit-ins, voter registration, and direct action."},
   {question:"The Montgomery Bus Boycott is an example of",choices:["civil rights protest","Cold War diplomacy","wartime rationing","suburbanization"],answer:0,hint:"It challenged segregation in public transportation."},
   {question:"The March on Washington is connected to the demand for",choices:["civil rights and equality","imperial expansion","tariff reform","containment"],answer:0,hint:"Think jobs, freedom, and Martin Luther King Jr."},
   {question:"Freedom Rides were intended to challenge",choices:["segregation in interstate travel","stock market rules","wartime mobilization","suburban housing loans"],answer:0,hint:"Activists tested federal rulings against segregation."},
   {question:"Brown v. Board of Education is most closely tied to",choices:["ending school segregation","creating Medicare","building suburbs","starting the Cold War"],answer:0,hint:"This decision struck down 'separate but equal' in public schools."},
   {question:"The Civil Rights Act is associated with",choices:["federal protection against discrimination","ending NATO","bank deposit insurance","rationing"],answer:0,hint:"It attacked discrimination in public life and employment."},
   {question:"The Voting Rights Act is associated with",choices:["protecting access to the ballot","creating the EPA","starting Prohibition","interstate highways"],answer:0,hint:"It targeted voting discrimination."},
-  {question:"UFW is associated with",choices:["improving conditions for migrant workers","fighting communism abroad","desegregating schools","regulating television"],answer:0,hint:"This group organized Mexican American farm workers."},
-  {question:"NOW stands for",choices:["National Organization for Women","National Office of Welfare","New Order of Workers","Northwest Organization of Women"],answer:0,hint:"This group pushed for women’s equality."},
-  {question:"AIM worked to improve",choices:["conditions for American Indians","suburban mortgage access","Cold War diplomacy","stock market regulation"],answer:0,hint:"It focused on reservation conditions and Native rights."},
+  {question:"The UFW (United Farm Workers) is associated with",choices:["improving conditions for migrant workers","fighting communism abroad","desegregating schools","regulating television"],answer:0,hint:"This group organized Mexican American farm workers."},
+  {question:"The NOW (National Organization for Women) focused on",choices:["expanding women’s rights and equality","supporting segregation","promoting containment","ending Social Security"],answer:0,hint:"This organization pushed for gender equality."},
+  {question:"The AIM (American Indian Movement) worked to improve",choices:["conditions for American Indians","suburban mortgage access","Cold War diplomacy","stock market regulation"],answer:0,hint:"It focused on reservation conditions and Native rights."},
   {question:"The Gay Liberation Movement is closely tied to",choices:["Stonewall Riots","Pearl Harbor","Bay of Pigs","March on Washington"],answer:0,hint:"These riots helped launch a broader movement."},
-  {question:"The postwar economic boom was helped by",choices:["increased demand for goods and services","the Dust Bowl","bank runs","Prohibition"],answer:0,hint:"CS 28 lists this first."},
-  {question:"The Baby Boom refers to",choices:["a rise in births after World War II","a rise in stock prices only","a migration to Europe","a Cold War weapons buildup"],answer:0,hint:"This is a demographic trend of the postwar years."},
+  {question:"The postwar economic boom was helped by",choices:["increased demand for goods and services","the Dust Bowl","bank runs","Prohibition"],answer:0,hint:"Postwar prosperity drove consumer growth."},
+  {question:"The Baby Boom refers to",choices:["a rise in births after World War II","a rise in stock prices only","a migration to Europe","a Cold War weapons buildup"],answer:0,hint:"This is a major postwar demographic trend."},
   {question:"Growth of suburbs is associated with",choices:["postwar prosperity","Jim Crow laws","McCarthyism","wartime rationing"],answer:0,hint:"This was a major feature of postwar life."},
   {question:"One postwar medical advance named in the standards is the",choices:["polio vaccine","atomic bomb","tank engine","telegraph"],answer:0,hint:"This helped combat a major disease."},
-  {question:"Another science/technology advance named in the standards is the",choices:["birth control pill","cotton gin","assembly line","steamboat"],answer:0,hint:"This changed medicine and family life."},
+  {question:"Another science and technology advance named in the standards is the",choices:["birth control pill","cotton gin","assembly line","steamboat"],answer:0,hint:"This changed medicine and family life."},
   {question:"Television changed postwar American life by",choices:["expanding mass media and culture","ending suburbs","stopping immigration","eliminating politics"],answer:0,hint:"It became a defining postwar technology."},
-  {question:"White flight refers to",choices:["movement of many white residents from cities to suburbs","immigration from Europe","African American migration north","military deployment overseas"],answer:0,hint:"CS 29 links this to suburban growth."},
-  {question:"Redlining refers to",choices:["discriminatory loan practices against minorities","anti-war protests","communist infiltration fears","rationing maps"],answer:0,hint:"Banks and lenders used this to deny access to housing loans."},
-  {question:"The Rust Belt to Sun Belt migration was driven partly by",choices:["defense plants and high-tech jobs in the South and California","civil rights protests","farm mechanization in the Midwest","Prohibition enforcement"],answer:0,hint:"CS 29 names these job opportunities directly."},
+  {question:"White flight refers to",choices:["movement of many white residents from cities to suburbs","immigration from Europe","African American migration north","military deployment overseas"],answer:0,hint:"It is tied to postwar suburbanization."},
+  {question:"Redlining refers to",choices:["discriminatory loan practices against minorities","anti-war protests","communist infiltration fears","rationing maps"],answer:0,hint:"Lenders used this to deny equal access to mortgages."},
+  {question:"The Rust Belt to Sun Belt migration was driven partly by",choices:["defense plants and high-tech jobs in the South and California","civil rights protests","farm mechanization in the Midwest","Prohibition enforcement"],answer:0,hint:"New jobs shifted population growth south and west."},
   {question:"The 1965 Immigration Act led to increased immigration from",choices:["Asia, Africa, and Latin America","Western Europe only","Canada only","Australia only"],answer:0,hint:"This changed U.S. demographics."},
-  {question:"After the 1965 Immigration Act, Hispanics became the",choices:["fastest-growing minority group in the U.S.","smallest voting bloc","main Cold War rival","largest suburban-only group"],answer:0,hint:"This is stated in the curriculum."},
-  {question:"The EPA was created because of growing concern about",choices:["pollution and environmental protection","segregation only","bank failures","wartime mobilization"],answer:0,hint:"CS 30 ties this to pesticide, waste, and pollution concerns."},
-  {question:"The Great Society is associated with",choices:["Medicare and Medicaid","containment","the Marshall Plan","the Neutrality Acts"],answer:0,hint:"These programs are named in CS 30."},
-  {question:"Reaganomics is associated with",choices:["supply-side economics and deregulation","the New Deal","civil rights sit-ins","environmentalism"],answer:0,hint:"CS 30 names these exact terms."},
-  {question:"Since the early 1990s, improved global communications have included the",choices:["Internet and social media","telegraph only","silent film","assembly line"],answer:0,hint:"CS 31 lists these directly."},
-  {question:"A major economic shift since the early 1990s has been from",choices:["manufacturing to service industries","service to farming","industry to plantations","trade to isolation"],answer:0,hint:"This is a central idea of CS 31."},
-  {question:"Overseas competition and transnational businesses contributed to",choices:["loss of some manufacturing jobs and plant closings","the end of trade deficits","the disappearance of technology jobs","an end to globalization"],answer:0,hint:"CS 31 describes these effects."},
-  {question:"After September 11, 2001, one national-security debate focused on balancing security with",choices:["civil liberties","women’s suffrage","Prohibition","the gold standard"],answer:0,hint:"The standards mention the USA PATRIOT Act here."},
-  {question:"The TSA was created in response to",choices:["post-9/11 security concerns","the Great Depression","school segregation","the Vietnam War"],answer:0,hint:"This agency is named in CS 32."},
-  {question:"Post-9/11 America saw increases in",choices:["Islamophobia and xenophobia","Prohibition enforcement","westward settlement","internment camps"],answer:0,hint:"CS 32 lists these social effects."},
-  {question:"One purpose of civic participation in the post-Cold War era is to",choices:["identify issues, debate solutions, and act on public problems","avoid all public issues","eliminate government entirely","oppose every law automatically"],answer:0,hint:"CS 33 focuses on participation in finding solutions."},
+  {question:"After the 1965 Immigration Act, Hispanics became the",choices:["fastest-growing minority group in the U.S.","smallest voting bloc","main Cold War rival","largest suburban-only group"],answer:0,hint:"This is a major demographic result."},
+  {question:"The EPA (Environmental Protection Agency) was created mainly to address",choices:["pollution and environmental protection","school segregation","Cold War espionage","bank failures"],answer:0,hint:"This agency is tied to waste, pesticides, and pollution concerns."},
+  {question:"The Great Society is associated with",choices:["Medicare and Medicaid","containment","the Marshall Plan","the Neutrality Acts"],answer:0,hint:"These were major social welfare programs."},
+  {question:"Reaganomics is associated with",choices:["supply-side economics and deregulation","the New Deal","civil rights sit-ins","environmentalism"],answer:0,hint:"This reflects a conservative view of government's role in the economy."},
+  {question:"Since the early 1990s, improved global communications have included the",choices:["Internet and social media","telegraph only","silent film","assembly line"],answer:0,hint:"This transformed communication and globalization."},
+  {question:"A major economic shift since the early 1990s has been from",choices:["manufacturing to service industries","service to farming","industry to plantations","trade to isolation"],answer:0,hint:"The economy changed as globalization expanded."},
+  {question:"Overseas competition and transnational businesses contributed to",choices:["loss of some manufacturing jobs and plant closings","the end of trade deficits","the disappearance of technology jobs","an end to globalization"],answer:0,hint:"This is one major effect of globalization."},
+  {question:"After September 11, 2001, one national-security debate focused on balancing security with",choices:["civil liberties","women’s suffrage","Prohibition","the gold standard"],answer:0,hint:"Think the Patriot Act and expanded security powers."},
+  {question:"The TSA was created in response to",choices:["post-9/11 security concerns","the Great Depression","school segregation","the Vietnam War"],answer:0,hint:"This agency is connected to air travel security."},
+  {question:"Post-9/11 America saw increases in",choices:["Islamophobia and xenophobia","Prohibition enforcement","westward settlement","internment camps"],answer:0,hint:"These were social tensions after the attacks."},
+  {question:"One purpose of civic participation in the post-Cold War era is to",choices:["identify issues, debate solutions, and act on public problems","avoid all public issues","eliminate government entirely","oppose every law automatically"],answer:0,hint:"This is the core of CS 33."},
   {question:"The strongest summary of CS 27–33 is that postwar and post-Cold War America experienced",choices:["civil-rights struggles, technological change, demographic shifts, political debate, and new domestic challenges","only foreign-policy changes with no domestic impact","a return to isolationism and rural life","an end to all political conflict"],answer:0,hint:"This final block is about broad social transformation and civic response."}
 ];
 
@@ -610,10 +602,9 @@ startBtn.addEventListener('click', startGame);
 studentNameInput.addEventListener('keydown', (e) => {
   if(e.key === 'Enter') startGame();
 });
-
 restartTopBtn.addEventListener('click', restartGame);
-restartBottomBtn?.addEventListener('click', restartGame);
-printBtn?.addEventListener('click', () => window.print());
+restartBottomBtn.addEventListener('click', restartGame);
+printBtn.addEventListener('click', () => window.print());
 
 updateTracker();
 </script>
