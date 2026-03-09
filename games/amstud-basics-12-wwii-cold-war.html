@@ -46,16 +46,18 @@
   .btn{
     appearance:none;border:none;cursor:pointer;text-decoration:none;font-weight:800;font-size:14px;
     border-radius:12px;padding:11px 14px;display:inline-flex;align-items:center;justify-content:center;
-    min-width:120px;transition:transform .14s ease, opacity .14s ease, background .14s ease, border-color .14s ease;
+    min-width:120px;transition:transform .14s ease, background .14s ease, border-color .14s ease;
   }
   .btn:hover{transform:translateY(-1px);}
   .btn.primary{background:var(--accent);color:#fff;}
   .btn.primary:hover{background:var(--accent2);}
   .btn.secondary{
-    background:rgba(255,255,255,.05);color:var(--text);border:1px solid rgba(255,255,255,.10);
+    background:rgba(255,255,255,.05);color:var(--text);
+    border:1px solid rgba(255,255,255,.10);
   }
   .btn.secondary:hover{
-    background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);
+    background:rgba(255,255,255,.08);
+    border-color:rgba(255,255,255,.16);
   }
   .hero{
     background:linear-gradient(180deg, rgba(17,26,47,.96), rgba(15,23,48,.96));
@@ -67,7 +69,7 @@
     font-weight:800;margin-bottom:10px;
   }
   h1{margin:0 0 10px;font-size:clamp(28px,4vw,42px);line-height:1.08;}
-  .sub{margin:0;color:var(--muted);line-height:1.6;max-width:900px;}
+  .sub{margin:0;color:var(--muted);line-height:1.6;max-width:920px;}
   .pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
   .pill{
     background:rgba(122,162,255,.12);color:#dce7ff;border:1px solid rgba(122,162,255,.22);
@@ -188,7 +190,7 @@
     <div class="kicker">Legend Mastery Series • American Studies • CS 20–26</div>
     <h1>AMSTUD Basics 12 — WWII & Cold War</h1>
     <p class="sub">
-      Back-to-the-Basics mastery on the transition from isolationism to World War II,
+      Back-to-the-Basics mastery on the transition from isolationism to WWII,
       wartime mobilization, marginalized groups in WWII, atomic weapons, containment,
       McCarthyism, Korea, Vietnam, the Cuban Missile Crisis, and the end of the Cold War.
     </p>
@@ -212,20 +214,17 @@
           </div>
           <button id="startBtn" class="btn primary">Start Game</button>
         </div>
-
         <div class="meta">
           <div class="meta-row"><span>Topic</span><span>WWII & Cold War</span></div>
           <div class="meta-row"><span>Standards</span><span>CS 20–26</span></div>
           <div class="meta-row"><span>Questions</span><span id="questionCountLabel">36</span></div>
           <div class="meta-row"><span>Passing Requirement</span><span>100%</span></div>
         </div>
-
         <p class="mini-note">
           Students must enter a name before beginning. The game tracks start time, end time, elapsed time,
           score, and accuracy. Refreshing or pressing restart resets the entire attempt.
         </p>
       </div>
-
       <div id="liveMeta" style="display:none">
         <div class="meta">
           <div class="meta-row"><span>Student</span><span id="liveStudent">—</span></div>
@@ -265,12 +264,8 @@
 
       <section id="summaryArea" class="panel summary">
         <h2 style="margin-top:0;">Completion Ticket</h2>
-        <div id="passBanner" class="pass-banner" style="display:none;">
-          Mastery achieved. This ticket shows a 100% completion.
-        </div>
-        <div id="notPassBanner" class="not-pass-banner" style="display:none;">
-          Game complete, but the attempt did not reach 100% accuracy. Restart and try again for a passing ticket.
-        </div>
+        <div id="passBanner" class="pass-banner" style="display:none;">Mastery achieved. This ticket shows a 100% completion.</div>
+        <div id="notPassBanner" class="not-pass-banner" style="display:none;">Game complete, but the attempt did not reach 100% accuracy. Restart and try again for a passing ticket.</div>
 
         <div class="ticket">
           <h3>AMSTUD Basics 12 — WWII & Cold War</h3>
@@ -290,10 +285,7 @@
           <button id="restartBottomBtn" class="btn primary">Restart Game</button>
           <button id="printBtn" class="btn secondary">Print Ticket</button>
         </div>
-
-        <div class="footer-note">
-          Passing ticket requires 100% accuracy because Back to the Basics is designed as a rote-mastery exercise.
-        </div>
+        <div class="footer-note">Passing ticket requires 100% accuracy because Back to the Basics is designed as a rote-mastery exercise.</div>
       </section>
     </main>
   </div>
@@ -301,42 +293,42 @@
 
 <script>
 const questions = [
-  {question:"In the 1930s, the United States generally tried to stay out of war through a policy of",choices:["isolationism","containment","imperialism","detente"],answer:0,hint:"CS 20 begins with America distancing itself from interventionist policies."},
+  {question:"In the 1930s, the United States generally tried to stay out of war through a policy of",choices:["isolationism","containment","imperialism","detente"],answer:0,hint:"America tried to distance itself from interventionist policies."},
   {question:"The Neutrality Acts were intended to",choices:["keep the United States out of overseas wars","declare war on Germany","create NATO","end rationing"],answer:0,hint:"These laws reflected isolationist feeling."},
   {question:"Cash-and-carry meant nations could buy U.S. goods if they",choices:["paid cash and transported them themselves","borrowed unlimited money","joined the Allies","allowed U.S. troops on their soil"],answer:0,hint:"This policy avoided direct U.S. shipping into war zones."},
   {question:"Lend-Lease showed that the U.S. was",choices:["moving away from strict isolationism","joining the Axis","ending foreign trade","declaring war immediately"],answer:0,hint:"It let the U.S. aid countries fighting Axis powers."},
-  {question:"Japanese expansionism in Asia helped push the United States toward",choices:["war in the Pacific","joining the Soviet bloc","leaving Hawaii","ending naval operations"],answer:0,hint:"CS 20 ties this to U.S. entry into WWII."},
+  {question:"Japanese expansionism in Asia helped push the United States toward",choices:["war in the Pacific","joining the Soviet bloc","leaving Hawaii","ending naval operations"],answer:0,hint:"This is tied to U.S. entry into WWII."},
   {question:"The event that directly brought the U.S. into World War II was",choices:["Pearl Harbor","Lusitania","Zimmermann Telegram","Bay of Pigs"],answer:0,hint:"This attack happened in 1941."},
-  {question:"During WWII, the U.S. economy shifted from peacetime production to",choices:["wartime production","agricultural isolation","free banking","colonial trade"],answer:0,hint:"CS 21 emphasizes this transition."},
+  {question:"During WWII, the U.S. economy shifted from peacetime production to",choices:["wartime production","agricultural isolation","free banking","colonial trade"],answer:0,hint:"The economy mobilized for war."},
   {question:"The War Production Board is associated with",choices:["wartime industrial mobilization","civil rights protests","stock market regulation","containment"],answer:0,hint:"It helped organize production for war."},
-  {question:"Rationing during World War II was an example of",choices:["personal sacrifice for the war effort","banking reform","containment abroad","antitrust policy"],answer:0,hint:"CS 21 gives rationing and victory gardens as examples."},
+  {question:"Rationing during World War II was an example of",choices:["personal sacrifice for the war effort","banking reform","containment abroad","antitrust policy"],answer:0,hint:"Goods like gasoline and rubber were controlled."},
   {question:"Victory gardens were meant to",choices:["support the war effort by growing food","replace military service","expand suburban housing","fight communism"],answer:0,hint:"They reduced pressure on food supplies."},
   {question:"War bonds and scrap drives were examples of",choices:["civilian contributions to the war effort","Cold War diplomacy","New Deal reform","imperial expansion"],answer:0,hint:"These supported wartime mobilization at home."},
-  {question:"Government propaganda during WWII was used to",choices:["build support for the war effort","oppose all military service","end rationing","promote isolationism"],answer:0,hint:"CS 21 lists propaganda as part of wartime policy."},
-  {question:"The Double V Campaign is associated with",choices:["African Americans during WWII","women’s suffrage","Japanese internment","the Vietnam War"],answer:0,hint:"It called for victory abroad and at home."},
-  {question:"Japanese Americans during WWII are most directly associated with",choices:["internment camps","Double V Campaign","HUAC","NATO"],answer:0,hint:"This was one of the marginalized groups named in CS 21."},
+  {question:"Government propaganda during WWII was used to",choices:["build support for the war effort","oppose all military service","end rationing","promote isolationism"],answer:0,hint:"It helped unify the public behind the war."},
+  {question:"The Double V Campaign is associated with",choices:["African Americans during WWII","women’s suffrage","Japanese internment","the Vietnam War"],answer:0,hint:"It called for victory abroad and equality at home."},
+  {question:"Japanese Americans during WWII are most directly associated with",choices:["internment camps","Double V Campaign","McCarthyism","NATO"],answer:0,hint:"This was a wartime policy aimed at a marginalized group."},
   {question:"Navajo Code Talkers were",choices:["American Indians who contributed to military communications","anti-war protesters","Cold War spies","women factory workers"],answer:0,hint:"They played an important wartime role."},
-  {question:"The Bracero Program involved",choices:["Mexican immigrants contributing labor during WWII","Japanese internment","blacklisting suspected communists","rebuilding Europe"],answer:0,hint:"CS 21 names this group and program."},
-  {question:"The dropping of atomic bombs on Japan",choices:["hastened the end of WWII and began the nuclear age","started the Cold War in Korea","created NATO","caused the Great Depression"],answer:0,hint:"That is the core idea of CS 22."},
-  {question:"Atomic weapons changed warfare because they introduced",choices:["mass destruction on a new scale","trench warfare","naval blockades","nonviolent conflict"],answer:0,hint:"CS 22 focuses on how atomic weapons altered war."},
-  {question:"U.S. possession of atomic weapons contributed to its status as a",choices:["superpower","neutral nation","colony","protectorate"],answer:0,hint:"This is stated directly in CS 22."},
-  {question:"When the Soviet Union developed an atomic bomb in 1949, it intensified the",choices:["nuclear arms race","Great Migration","New Deal","Harlem Renaissance"],answer:0,hint:"CS 22 links this to rising nuclear fears."},
-  {question:"Containment was the U.S. policy of trying to",choices:["stop the spread of communism","expand colonial empire","ban all nuclear research","reduce consumer credit"],answer:0,hint:"This is the heart of CS 23."},
-  {question:"One reason for containment was fear of Soviet expansion in",choices:["Europe","South America only","Africa only","Australia"],answer:0,hint:"CS 23 names this directly."},
+  {question:"The Bracero Program involved",choices:["Mexican immigrants contributing labor during WWII","Japanese internment","blacklisting suspected communists","rebuilding Europe"],answer:0,hint:"It addressed wartime labor needs."},
+  {question:"The dropping of atomic bombs on Japan",choices:["hastened the end of WWII and began the nuclear age","started the Cold War in Korea","created NATO","caused the Great Depression"],answer:0,hint:"This links WWII to the nuclear age."},
+  {question:"Atomic weapons changed warfare because they introduced",choices:["mass destruction on a new scale","trench warfare","naval blockades","nonviolent conflict"],answer:0,hint:"They transformed the nature of war."},
+  {question:"U.S. possession of atomic weapons contributed to its status as a",choices:["superpower","neutral nation","colony","protectorate"],answer:0,hint:"This increased U.S. global influence."},
+  {question:"When the Soviet Union developed an atomic bomb in 1949, it intensified the",choices:["nuclear arms race","Great Migration","New Deal","Harlem Renaissance"],answer:0,hint:"This escalated Cold War rivalry."},
+  {question:"Containment was the U.S. policy of trying to",choices:["stop the spread of communism","expand colonial empire","ban all nuclear research","reduce consumer credit"],answer:0,hint:"This was the heart of U.S. Cold War strategy."},
+  {question:"One reason for containment was fear of Soviet expansion in",choices:["Europe","South America only","Africa only","Australia"],answer:0,hint:"This was an early Cold War concern."},
   {question:"The Truman Doctrine and Marshall Plan were both parts of",choices:["containment","appeasement","isolationism","internment"],answer:0,hint:"Both were anti-communist Cold War policies."},
-  {question:"NATO was created as",choices:["an alliance to support containment","a stock market agency","a rationing board","a labor union"],answer:0,hint:"CS 23 lists NATO among containment alliances."},
-  {question:"Containment in Asia led to U.S. involvement in",choices:["Korea and Vietnam","WWI and WWII","the Civil War and Reconstruction","the Dust Bowl and New Deal"],answer:0,hint:"CS 23 states this explicitly."},
-  {question:"The Second Red Scare reflected American fears of",choices:["communist subversion","imperial Japan","urbanization","western settlement"],answer:0,hint:"CS 24 centers on Cold War fears in American society."},
+  {question:"NATO was created as",choices:["an alliance to support containment","a stock market agency","a rationing board","a labor union"],answer:0,hint:"This alliance united Western nations against Soviet expansion."},
+  {question:"Containment in Asia led to U.S. involvement in",choices:["Korea and Vietnam","WWI and WWII","the Civil War and Reconstruction","the Dust Bowl and New Deal"],answer:0,hint:"These wars were tied to stopping communist expansion."},
+  {question:"The Second Red Scare reflected American fears of",choices:["communist subversion","imperial Japan","urbanization","western settlement"],answer:0,hint:"Cold War anxiety shaped domestic politics."},
   {question:"McCarthyism refers to",choices:["accusations and fear-driven charges of communist infiltration","support for the New Deal","women’s wartime factory work","desegregation protests"],answer:0,hint:"Think Senator McCarthy and anti-communist hysteria."},
-  {question:"HUAC stands for",choices:["House Un-American Activities Committee","Home Utilities and Agriculture Council","Humanitarian Union of American Cities","Housing and Urban Action Commission"],answer:0,hint:"CS 24 names this committee directly."},
-  {question:"Blacklisting during the Second Red Scare meant",choices:["denying people jobs because they were suspected communists","desegregating schools","drafting soldiers","supporting NATO"],answer:0,hint:"This challenged civil liberties."},
-  {question:"The Korean War helped create",choices:["continuing division between North and South Korea","the end of the Cold War","the collapse of the Soviet Union","desegregation of Europe"],answer:0,hint:"CS 25 says this division persisted."},
-  {question:"The Vietnam War is associated with",choices:["massive anti-war protests in the United States","the start of WWII","the creation of the UN","internment camps"],answer:0,hint:"CS 25 emphasizes domestic division and protest."},
+  {question:"HUAC (House Un-American Activities Committee) is most associated with",choices:["investigating suspected communist influence during the Second Red Scare","wartime rationing","civil rights marches","containment in Korea"],answer:0,hint:"This committee became a symbol of anti-communist investigations."},
+  {question:"Blacklisting during the Second Red Scare meant",choices:["denying people jobs because they were suspected communists","desegregating schools","drafting soldiers","supporting NATO"],answer:0,hint:"This raised civil-liberties concerns."},
+  {question:"The Korean War helped create",choices:["continuing division between North and South Korea","the end of the Cold War","the collapse of the Soviet Union","desegregation of Europe"],answer:0,hint:"That division continued long after the war."},
+  {question:"The Vietnam War is associated with",choices:["massive anti-war protests in the United States","the start of WWII","the creation of the UN","internment camps"],answer:0,hint:"This war deeply divided Americans."},
   {question:"The Cuban Missile Crisis was important because it brought the U.S. and Soviet Union close to",choices:["nuclear war","forming an alliance","ending containment","joining the Axis"],answer:0,hint:"It was one of the most dangerous Cold War moments."},
-  {question:"The nuclear arms race was a competition between the U.S. and Soviet Union to",choices:["build larger nuclear arsenals","expand settlement houses","control tenement housing","ban labor unions"],answer:0,hint:"CS 25 names this directly."},
-  {question:"The fall of the Berlin Wall symbolized",choices:["the decline of communist governments in Eastern Europe","the beginning of WWII","the rise of McCarthyism","the Great Depression"],answer:0,hint:"CS 26 ties this to the end of the Cold War."},
-  {question:"The collapse of the Soviet Union helped bring",choices:["an end to the Cold War","the start of Prohibition","the New Deal","the Great Migration"],answer:0,hint:"This is the core of CS 26."},
-  {question:"The strongest summary of CS 20–26 is that the U.S.",choices:["moved from isolationism into global military and ideological conflict against communism","returned to permanent neutrality after Pearl Harbor","withdrew from world affairs after WWII","ended all foreign policy after Vietnam"],answer:0,hint:"Think WWII mobilization plus Cold War containment and superpower rivalry."}
+  {question:"The nuclear arms race was a competition between the U.S. and Soviet Union to",choices:["build larger nuclear arsenals","expand settlement houses","control tenement housing","ban labor unions"],answer:0,hint:"This was a defining Cold War rivalry."},
+  {question:"The United Nations is associated with efforts to",choices:["promote international cooperation and peace","expand the Axis alliance","ban all trade","replace NATO"],answer:0,hint:"It was created after WWII."},
+  {question:"The fall of the Berlin Wall symbolized",choices:["the decline of communist governments in Eastern Europe","the beginning of WWII","the rise of McCarthyism","the Great Depression"],answer:0,hint:"This was a major sign that the Cold War was ending."},
+  {question:"The collapse of the Soviet Union helped bring",choices:["an end to the Cold War","the start of Prohibition","the New Deal","the Great Migration"],answer:0,hint:"This marked the final end of the superpower rivalry."}
 ];
 
 const studentNameInput = document.getElementById('studentName');
@@ -610,10 +602,9 @@ startBtn.addEventListener('click', startGame);
 studentNameInput.addEventListener('keydown', (e) => {
   if(e.key === 'Enter') startGame();
 });
-
 restartTopBtn.addEventListener('click', restartGame);
-restartBottomBtn?.addEventListener('click', restartGame);
-printBtn?.addEventListener('click', () => window.print());
+restartBottomBtn.addEventListener('click', restartGame);
+printBtn.addEventListener('click', () => window.print());
 
 updateTracker();
 </script>
