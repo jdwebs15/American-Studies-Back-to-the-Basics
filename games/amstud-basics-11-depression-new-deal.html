@@ -46,16 +46,18 @@
   .btn{
     appearance:none;border:none;cursor:pointer;text-decoration:none;font-weight:800;font-size:14px;
     border-radius:12px;padding:11px 14px;display:inline-flex;align-items:center;justify-content:center;
-    min-width:120px;transition:transform .14s ease, opacity .14s ease, background .14s ease, border-color .14s ease;
+    min-width:120px;transition:transform .14s ease, background .14s ease, border-color .14s ease;
   }
   .btn:hover{transform:translateY(-1px);}
   .btn.primary{background:var(--accent);color:#fff;}
   .btn.primary:hover{background:var(--accent2);}
   .btn.secondary{
-    background:rgba(255,255,255,.05);color:var(--text);border:1px solid rgba(255,255,255,.10);
+    background:rgba(255,255,255,.05);color:var(--text);
+    border:1px solid rgba(255,255,255,.10);
   }
   .btn.secondary:hover{
-    background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);
+    background:rgba(255,255,255,.08);
+    border-color:rgba(255,255,255,.16);
   }
   .hero{
     background:linear-gradient(180deg, rgba(17,26,47,.96), rgba(15,23,48,.96));
@@ -67,7 +69,7 @@
     font-weight:800;margin-bottom:10px;
   }
   h1{margin:0 0 10px;font-size:clamp(28px,4vw,42px);line-height:1.08;}
-  .sub{margin:0;color:var(--muted);line-height:1.6;max-width:900px;}
+  .sub{margin:0;color:var(--muted);line-height:1.6;max-width:920px;}
   .pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
   .pill{
     background:rgba(122,162,255,.12);color:#dce7ff;border:1px solid rgba(122,162,255,.22);
@@ -177,7 +179,6 @@
 </head>
 <body>
 <div class="wrap">
-
   <div class="topbar">
     <a class="back-link" href="../index.html">← Back to Hub</a>
     <div class="top-actions">
@@ -190,10 +191,10 @@
     <h1>AMSTUD Basics 11 — Great Depression & New Deal</h1>
     <p class="sub">
       Back-to-the-Basics mastery on the causes of the Great Depression, Hoover, FDR,
-      New Deal relief, recovery, reform, and the expanded role of the federal government.
+      relief, recovery, reform, and the expanded role of the federal government.
     </p>
     <div class="pills">
-      <span class="pill">36 questions</span>
+      <span class="pill">35 questions</span>
       <span class="pill">Auto-submit on click</span>
       <span class="pill">Auto-advance on correct</span>
       <span class="pill">Hint on incorrect</span>
@@ -212,20 +213,17 @@
           </div>
           <button id="startBtn" class="btn primary">Start Game</button>
         </div>
-
         <div class="meta">
           <div class="meta-row"><span>Topic</span><span>Great Depression & New Deal</span></div>
           <div class="meta-row"><span>Block</span><span>Depression/New Deal</span></div>
-          <div class="meta-row"><span>Questions</span><span id="questionCountLabel">36</span></div>
+          <div class="meta-row"><span>Questions</span><span id="questionCountLabel">35</span></div>
           <div class="meta-row"><span>Passing Requirement</span><span>100%</span></div>
         </div>
-
         <p class="mini-note">
           Students must enter a name before beginning. The game tracks start time, end time, elapsed time,
           score, and accuracy. Refreshing or pressing restart resets the entire attempt.
         </p>
       </div>
-
       <div id="liveMeta" style="display:none">
         <div class="meta">
           <div class="meta-row"><span>Student</span><span id="liveStudent">—</span></div>
@@ -247,7 +245,7 @@
             <div style="color:var(--muted);font-size:14px;">Choose the best answer. Incorrect answers trigger a hint.</div>
           </div>
           <div class="tracker">
-            <div class="chip">Question: <span id="progressText">1 / 36</span></div>
+            <div class="chip">Question: <span id="progressText">1 / 35</span></div>
             <div class="chip">Correct: <span id="correctText">0</span></div>
             <div class="chip">Attempts: <span id="attemptText">0</span></div>
             <div class="chip">Accuracy: <span id="accuracyText">100%</span></div>
@@ -265,12 +263,8 @@
 
       <section id="summaryArea" class="panel summary">
         <h2 style="margin-top:0;">Completion Ticket</h2>
-        <div id="passBanner" class="pass-banner" style="display:none;">
-          Mastery achieved. This ticket shows a 100% completion.
-        </div>
-        <div id="notPassBanner" class="not-pass-banner" style="display:none;">
-          Game complete, but the attempt did not reach 100% accuracy. Restart and try again for a passing ticket.
-        </div>
+        <div id="passBanner" class="pass-banner" style="display:none;">Mastery achieved. This ticket shows a 100% completion.</div>
+        <div id="notPassBanner" class="not-pass-banner" style="display:none;">Game complete, but the attempt did not reach 100% accuracy. Restart and try again for a passing ticket.</div>
 
         <div class="ticket">
           <h3>AMSTUD Basics 11 — Great Depression & New Deal</h3>
@@ -290,10 +284,7 @@
           <button id="restartBottomBtn" class="btn primary">Restart Game</button>
           <button id="printBtn" class="btn secondary">Print Ticket</button>
         </div>
-
-        <div class="footer-note">
-          Passing ticket requires 100% accuracy because Back to the Basics is designed as a rote-mastery exercise.
-        </div>
+        <div class="footer-note">Passing ticket requires 100% accuracy because Back to the Basics is designed as a rote-mastery exercise.</div>
       </section>
     </main>
   </div>
@@ -316,11 +307,10 @@ const questions = [
   {question:"Recovery programs were meant to",choices:["restart the economy","fight World War II","expand segregation","create imperial colonies"],answer:0,hint:"These focused on economic revival."},
   {question:"Reform programs were meant to",choices:["prevent future economic collapse","increase speculation","end all banking","reduce federal involvement"],answer:0,hint:"These changed rules and systems going forward."},
   {question:"The Social Security Act created",choices:["old-age pensions and aid programs","a wartime draft","the Federal Reserve","agricultural mechanization"],answer:0,hint:"This provided long-term federal support."},
-  {question:"The FDIC was created to",choices:["insure bank deposits","build dams","regulate stockbrokers only","hire unemployed artists"],answer:0,hint:"It helped restore confidence in banks."},
-  {question:"The SEC was created to",choices:["regulate the stock market","manage national parks","fight monopolies in railroads only","draft soldiers"],answer:0,hint:"It was designed to curb stock-market abuses."},
-  {question:"Which program is most closely linked to public works jobs during the New Deal?",choices:["CCC","Zimmermann Telegram","Dawes Act","Volstead Act"],answer:0,hint:"This program employed young men in conservation work."},
-  {question:"The CCC stands for",choices:["Civilian Conservation Corps","Central Credit Commission","Civil Commerce Council","Consumer Control Committee"],answer:0,hint:"It was a New Deal work program."},
-  {question:"The WPA was created mainly to",choices:["provide jobs through public works","insure bank deposits","regulate the stock market","ban alcohol"],answer:0,hint:"This was a major employment program."},
+  {question:"The FDIC (Federal Deposit Insurance Corporation) was created to",choices:["insure bank deposits","build dams","regulate stockbrokers only","hire unemployed artists"],answer:0,hint:"It helped restore confidence in banks."},
+  {question:"The SEC (Securities and Exchange Commission) was created to",choices:["regulate the stock market","manage national parks","fight monopolies in railroads only","draft soldiers"],answer:0,hint:"It was designed to curb stock-market abuses."},
+  {question:"The CCC (Civilian Conservation Corps) is most closely linked to",choices:["public works jobs and conservation projects","the Zimmermann Telegram","the Dawes Act","Prohibition enforcement"],answer:0,hint:"This New Deal program employed many young men in outdoor improvement work."},
+  {question:"The WPA (Works Progress Administration) was created mainly to",choices:["provide jobs through public works","insure bank deposits","regulate the stock market","ban alcohol"],answer:0,hint:"This was one of the biggest New Deal work programs."},
   {question:"The Tennessee Valley Authority is best known for",choices:["regional development and electric power projects","stock regulation","war mobilization","women’s suffrage"],answer:0,hint:"It built dams and improved a poor region."},
   {question:"Hoovervilles were",choices:["shantytowns built by homeless people","federal housing projects","new suburban developments","immigrant neighborhoods in the 1920s"],answer:0,hint:"These symbolized hardship during Hoover’s presidency."},
   {question:"The Dust Bowl mainly affected",choices:["Great Plains farmers","Wall Street bankers","southern textile workers","shipbuilders"],answer:0,hint:"Drought and poor farming practices devastated this region."},
@@ -332,8 +322,8 @@ const questions = [
   {question:"The Great Depression demonstrated the dangers of",choices:["unchecked speculation and weak financial safeguards","too much rural farming only","women voting","public sanitation reform"],answer:0,hint:"Risky investing and weak protections helped cause collapse."},
   {question:"The New Deal did NOT fully end the Depression, but it did",choices:["provide relief and reshape government responsibility","abolish all unemployment immediately","end stock markets forever","remove all taxes"],answer:0,hint:"Its lasting effect was major federal involvement and support."},
   {question:"Which term best describes government spending to create jobs and stimulate the economy?",choices:["public works","isolationism","imperialism","segregation"],answer:0,hint:"Think roads, bridges, dams, and buildings."},
-  {question:"Which pair is correctly matched?",choices:["FDIC — bank deposit insurance","SEC — military draft","Social Security — stock speculation","CCC — Prohibition enforcement"],answer:0,hint:"Only one pair is correct."},
-  {question:"Which New Deal program is most directly linked to retirement support?",choices:["Social Security","WPA","CCC","TVA"],answer:0,hint:"This still exists today."},
+  {question:"Which pair is correctly matched?",choices:["FDIC (Federal Deposit Insurance Corporation) — bank deposit insurance","SEC (Securities and Exchange Commission) — military draft","Social Security — stock speculation","CCC (Civilian Conservation Corps) — Prohibition enforcement"],answer:0,hint:"Only one pair is correct."},
+  {question:"Which New Deal program is most directly linked to retirement support?",choices:["Social Security","WPA (Works Progress Administration)","CCC (Civilian Conservation Corps)","TVA"],answer:0,hint:"This still exists today."},
   {question:"A major contrast between Hoover and Roosevelt was that Roosevelt",choices:["supported more aggressive federal action","opposed all relief","favored isolation from the economy","wanted no banking reform"],answer:0,hint:"FDR expanded federal involvement much more."},
   {question:"The strongest summary of the Great Depression block is that economic collapse led Americans to accept",choices:["a larger federal role in relief, recovery, and reform","the end of banking regulation","a return to total laissez-faire","the collapse of democracy"],answer:0,hint:"That is the major long-term takeaway."},
   {question:"Which best captures the purpose of the New Deal?",choices:["to relieve suffering, revive the economy, and prevent another collapse","to expand overseas empire","to restore Prohibition","to reduce all federal influence"],answer:0,hint:"Think relief, recovery, reform."}
@@ -610,14 +600,9 @@ startBtn.addEventListener('click', startGame);
 studentNameInput.addEventListener('keydown', (e) => {
   if(e.key === 'Enter') startGame();
 });
-
 restartTopBtn.addEventListener('click', restartGame);
 restartBottomBtn.addEventListener('click', restartGame);
 printBtn.addEventListener('click', () => window.print());
-
-window.addEventListener('beforeunload', () => {
-  if(timer) clearInterval(timer);
-});
 
 updateTracker();
 </script>
