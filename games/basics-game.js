@@ -141,11 +141,10 @@ function finish(){
   const {correct,attempts,accuracy}=stats();
   const passed=correct===bank.length&&state.runMisses===0;
   const ended=new Date();
+  $('perfectCertificate').hidden=!passed;
+  $('printBtn').hidden=!passed;
+  $('ticketGame').textContent=document.title;
   $('ticketStudent').textContent=state.name;
-  $('ticketPassed').textContent=passed?'YES':'NO';
-  $('ticketAccuracy').textContent=accuracy+'%';
-  $('ticketCorrect').textContent=correct+' / '+bank.length;
-  $('ticketAttempts').textContent=attempts;
   $('ticketStart').textContent=date(state.startedAtISO);
   $('ticketEnd').textContent=date(ended);
   $('ticketElapsed').textContent=duration(ended-state.startedAtMS);
@@ -178,7 +177,7 @@ $('startBtn').onclick=start;
 $('studentName').addEventListener('keydown',event=>{if(event.key==='Enter')start();});
 $('btnRestoreCloud').onclick=retrieve;
 $('restartTopBtn').onclick=$('restartBottomBtn').onclick=restart;
-$('printBtn').onclick=()=>window.print();
+$('printBtn').onclick=()=>{if(!$('perfectCertificate').hidden)window.print();};
 tracker();
 try{
   const saved=JSON.parse(localStorage.getItem(key));

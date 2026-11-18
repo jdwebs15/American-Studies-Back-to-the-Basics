@@ -178,6 +178,7 @@
 
   #sheetPeriod { color-scheme:dark; }
   #studentName, #sheetEmail, #sheetPeriod { box-sizing:border-box; font-family:inherit; line-height:1.25; }
+  #printBtn[hidden], #perfectCertificate[hidden] { display:none; }
 </style>
 </head>
 <body>
@@ -274,18 +275,15 @@
 
       <section id="summaryArea" class="panel summary">
         <p id="btbFinalStatus" role="status"></p>
-        <h2 style="margin-top:0;">Completion Ticket</h2>
-        <div id="passBanner" class="pass-banner" style="display:none;">Mastery achieved. This ticket shows a 100% completion.</div>
+        <h2 style="margin-top:0;">Game Results</h2>
+        <div id="passBanner" class="pass-banner" style="display:none;">Mastery achieved.</div>
         <div id="notPassBanner" class="not-pass-banner" style="display:none;">Game complete, but the attempt did not reach 100% accuracy. Restart and try again for a passing ticket.</div>
 
-        <div class="ticket">
-          <h3>AMSTUD Basics 12 — WWII & Cold War</h3>
+        <div class="ticket" id="perfectCertificate" hidden>
+          <h3 id="ticketGame"></h3>
+          <p><strong>100% Perfect Run</strong></p>
           <div class="ticket-grid">
             <div class="ticket-row"><div class="ticket-label">Student</div><div class="ticket-value" id="ticketStudent"></div></div>
-            <div class="ticket-row"><div class="ticket-label">Passed</div><div class="ticket-value" id="ticketPassed"></div></div>
-            <div class="ticket-row"><div class="ticket-label">Accuracy</div><div class="ticket-value" id="ticketAccuracy"></div></div>
-            <div class="ticket-row"><div class="ticket-label">Correct Answers</div><div class="ticket-value" id="ticketCorrect"></div></div>
-            <div class="ticket-row"><div class="ticket-label">Total Attempts</div><div class="ticket-value" id="ticketAttempts"></div></div>
             <div class="ticket-row"><div class="ticket-label">Start Time</div><div class="ticket-value" id="ticketStart"></div></div>
             <div class="ticket-row"><div class="ticket-label">End Time</div><div class="ticket-value" id="ticketEnd"></div></div>
             <div class="ticket-row"><div class="ticket-label">Elapsed Time</div><div class="ticket-value" id="ticketElapsed"></div></div>
@@ -294,7 +292,7 @@
 
         <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
           <button id="restartBottomBtn" class="btn primary">Restart Game</button>
-          <button id="printBtn" class="btn secondary">Print Ticket</button>
+          <button id="printBtn" hidden class="btn secondary">Print Ticket</button>
         </div>
         <div class="footer-note">Passing ticket requires 100% accuracy because Back to the Basics is designed as a rote-mastery exercise.</div>
       </section>
