@@ -158,7 +158,7 @@
     color:var(--muted);
     font-weight:700;
   }
-  input[type="text"]{
+  #studentName, #sheetEmail, #sheetPeriod{
     width:100%;
     background:rgba(255,255,255,.04);
     color:var(--text);
@@ -168,7 +168,7 @@
     font-size:15px;
     outline:none;
   }
-  input[type="text"]:focus{
+  #studentName:focus, #sheetEmail:focus, #sheetPeriod:focus{
     border-color:rgba(122,162,255,.55);
     box-shadow:0 0 0 3px rgba(122,162,255,.12);
   }
@@ -361,6 +361,9 @@
     .top-actions{ width:100%; }
     .top-actions .btn{ flex:1 1 auto; }
   }
+
+  #sheetPeriod { color-scheme:dark; }
+  #studentName, #sheetEmail, #sheetPeriod { box-sizing:border-box; font-family:inherit; line-height:1.25; }
 </style>
 </head>
 <body>
@@ -397,8 +400,14 @@
           <div>
             <label for="studentName">Student Name</label>
             <input id="studentName" type="text" placeholder="Enter first and last name"/>
+          <label for="sheetPeriod">Class Period</label>
+          <select id="sheetPeriod" required><option value="">Choose period</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select>
+          <label for="sheetEmail">School Email</label>
+          <input id="sheetEmail" type="email" autocomplete="email" required>
           </div>
           <button id="startBtn" class="btn primary">Start Game</button>
+          <button id="btnRestoreCloud" class="btn" type="button">Load Saved Work</button>
+          <p id="btbRestoreStatus" role="status"></p>
         </div>
 
         <div class="meta">
@@ -429,6 +438,7 @@
 
     <main>
       <section id="gameArea" class="panel game-area">
+        <p id="btbCloudStatus" role="status"></p>
         <div class="game-head">
           <div>
             <h2 style="margin:0 0 6px;">Game in Progress</h2>
@@ -452,6 +462,7 @@
       </section>
 
       <section id="summaryArea" class="panel summary">
+        <p id="btbFinalStatus" role="status"></p>
         <h2 style="margin-top:0;">Completion Ticket</h2>
         <div id="passBanner" class="pass-banner" style="display:none;">
           Mastery achieved. This ticket shows a 100% completion.
@@ -511,687 +522,405 @@
   </div>
 </div>
 
-<script>
-const questions = [
+<script src="basics-audit.js"></script>
+<script>const questions = [
   {
-    question: "What document established the foundations of the American nation and the relationship between the people and their government?",
-    choices: [
+    "question": "What document established the foundations of the American nation and the relationship between the people and their government?",
+    "choices": [
       "Northwest Ordinance",
       "U.S. Constitution",
       "Emancipation Proclamation",
       "Missouri Compromise"
     ],
-    answer: 1,
-    hint: "CS 6 centers on the document that creates the national framework of government."
+    "answer": 1,
+    "hint": "CS 6 centers on the document that creates the national framework of government."
   },
   {
-    question: "Which feature of the Constitution strengthened the national government by dividing power into separate parts?",
-    choices: [
+    "question": "Which feature of the Constitution strengthened the national government by dividing power into separate parts?",
+    "choices": [
       "Three branches of government",
       "Nullification",
       "Popular election of governors",
       "Protective tariffs"
     ],
-    answer: 0,
-    hint: "Think legislative, executive, and judicial."
+    "answer": 0,
+    "hint": "Think legislative, executive, and judicial."
   },
   {
-    question: "Federalism is the constitutional principle that divides power between",
-    choices: [
+    "question": "Federalism is the constitutional principle that divides power between",
+    "choices": [
       "the president and Congress only",
       "the national government and state governments",
       "courts and citizens only",
       "the military and Congress"
     ],
-    answer: 1,
-    hint: "This principle shares power across two levels of government."
+    "answer": 1,
+    "hint": "This principle shares power across two levels of government."
   },
   {
-    question: "The Constitution gives Congress the power to levy taxes, raise armies, and regulate",
-    choices: [
+    "question": "The Constitution gives Congress the power to levy taxes, raise armies, and regulate",
+    "choices": [
       "religion",
       "commerce",
       "education only",
       "state constitutions"
     ],
-    answer: 1,
-    hint: "This is one of the listed powers in CS 6."
+    "answer": 1,
+    "hint": "This is one of the listed powers in CS 6."
   },
   {
-    question: "Which part of the Constitution allows the national government to formally change the document?",
-    choices: [
+    "question": "Which part of the Constitution allows the national government to formally change the document?",
+    "choices": [
       "The amendment process",
       "The spoils system",
       "Judicial appointments only",
       "State nullification"
     ],
-    answer: 0,
-    hint: "CS 6 says the Constitution includes the ability to amend itself."
+    "answer": 0,
+    "hint": "CS 6 says the Constitution includes the ability to amend itself."
   },
   {
-    question: "According to CS 6, the Constitution protects the rights of the people by establishing",
-    choices: [
+    "question": "According to CS 6, the Constitution protects the rights of the people by establishing",
+    "choices": [
       "limited government",
       "unlimited presidential power",
       "rule by state governors",
       "military oversight of elections"
     ],
-    answer: 0,
-    hint: "Government is restricted so it cannot do whatever it wants."
+    "answer": 0,
+    "hint": "Government is restricted so it cannot do whatever it wants."
   },
   {
-    question: "Which statement best reflects the Constitution's relationship between the people and government?",
-    choices: [
+    "question": "Which statement best reflects the Constitution's relationship between the people and government?",
+    "choices": [
       "Government gets its power from the consent of the people",
       "Government receives its power from hereditary rulers",
       "Government has no limits if Congress approves",
       "Government does not need elections"
     ],
-    answer: 0,
-    hint: "This echoes the idea that people are the source of political authority."
+    "answer": 0,
+    "hint": "This echoes the idea that people are the source of political authority."
   },
   {
-    question: "The Constitution ensures that people have a role in government by",
-    choices: [
+    "question": "The Constitution ensures that people have a role in government by",
+    "choices": [
       "allowing them to elect representatives",
       "requiring military service for voting",
       "appointing all legislators for life",
       "letting judges write all laws"
     ],
-    answer: 0,
-    hint: "Representative government is explicitly named in CS 6."
+    "answer": 0,
+    "hint": "Representative government is explicitly named in CS 6."
   },
   {
-    question: "Which branch of government makes laws under the constitutional structure?",
-    choices: [
+    "question": "Which branch of government makes laws under the constitutional structure?",
+    "choices": [
       "Judicial",
       "Executive",
       "Legislative",
       "Military"
     ],
-    answer: 2,
-    hint: "This is Congress's branch."
+    "answer": 2,
+    "hint": "This is Congress's branch."
   },
   {
-    question: "Which constitutional principle helps prevent one branch from controlling the entire government?",
-    choices: [
+    "question": "Which constitutional principle helps prevent one branch from controlling the entire government?",
+    "choices": [
       "Separation of powers",
       "Isolationism",
       "Mercantilism",
       "Popular election of judges"
     ],
-    answer: 0,
-    hint: "The Constitution spreads authority across branches."
+    "answer": 0,
+    "hint": "The Constitution spreads authority across branches."
   },
   {
-    question: "The Federalists supported ratification of the Constitution because they wanted",
-    choices: [
+    "question": "The Federalists supported ratification of the Constitution because they wanted",
+    "choices": [
       "a stronger national government",
       "complete state supremacy",
       "no national taxation",
       "no executive branch"
     ],
-    answer: 0,
-    hint: "They believed the Articles were too weak."
+    "answer": 0,
+    "hint": "They believed the Articles were too weak."
   },
   {
-    question: "Which concern did Federalists say justified giving more power to the national government?",
-    choices: [
+    "question": "Which concern did Federalists say justified giving more power to the national government?",
+    "choices": [
       "Weaknesses of the Articles of Confederation",
       "Too much power in the Supreme Court",
       "Too many state constitutions",
       "Lack of local school boards"
     ],
-    answer: 0,
-    hint: "They wanted to fix problems such as no power to tax and weak national structure."
+    "answer": 0,
+    "hint": "They wanted to fix problems such as no power to tax and weak national structure."
   },
   {
-    question: "Federalists supported the supremacy of",
-    choices: [
+    "question": "Federalists supported the supremacy of",
+    "choices": [
       "state governments",
       "county governments",
       "the national government",
       "military governors"
     ],
-    answer: 2,
-    hint: "They favored national over state supremacy."
+    "answer": 2,
+    "hint": "They favored national over state supremacy."
   },
   {
-    question: "Which clause did Federalists support because it helped the national government address national problems?",
-    choices: [
+    "question": "Which clause did Federalists support because it helped the national government address national problems?",
+    "choices": [
       "Necessary and Proper Clause",
       "Fugitive Slave Clause only",
       "Three-Fifths Clause",
       "Ex Post Facto Clause"
     ],
-    answer: 0,
-    hint: "It helped Congress carry out its enumerated powers."
+    "answer": 0,
+    "hint": "It helped Congress carry out its enumerated powers."
   },
   {
-    question: "Federalists favored national taxation because it would",
-    choices: [
+    "question": "Federalists favored national taxation because it would",
+    "choices": [
       "fund the central government",
       "eliminate the judicial branch",
       "weaken national defense",
       "end the need for Congress"
     ],
-    answer: 0,
-    hint: "They believed the national government needed stable revenue."
+    "answer": 0,
+    "hint": "They believed the national government needed stable revenue."
   },
   {
-    question: "Federalists supported a standing army because they wanted",
-    choices: [
+    "question": "Federalists supported a standing army because they wanted",
+    "choices": [
       "strong national defense",
       "state control of war policy",
       "to weaken the executive branch",
       "to replace Congress"
     ],
-    answer: 0,
-    hint: "They saw national defense as a national responsibility."
+    "answer": 0,
+    "hint": "They saw national defense as a national responsibility."
   },
   {
-    question: "Anti-Federalists opposed ratification mainly because they feared",
-    choices: [
+    "question": "Anti-Federalists opposed ratification mainly because they feared",
+    "choices": [
       "a strong central government would threaten liberty and state power",
       "Congress was too weak to print money",
       "the Constitution created too many town councils",
       "the states had too little independence from counties"
     ],
-    answer: 0,
-    hint: "Their core worry was centralized power."
+    "answer": 0,
+    "hint": "Their core worry was centralized power."
   },
   {
-    question: "Anti-Federalists believed national taxation could become",
-    choices: [
+    "question": "Anti-Federalists believed national taxation could become",
+    "choices": [
       "repressive",
       "unnecessary for government",
       "a power of the courts only",
       "a state legislative duty only"
     ],
-    answer: 0,
-    hint: "They feared abuse by a distant central government."
+    "answer": 0,
+    "hint": "They feared abuse by a distant central government."
   },
   {
-    question: "What did Anti-Federalists fear about a standing army?",
-    choices: [
+    "question": "What did Anti-Federalists fear about a standing army?",
+    "choices": [
       "It could be used against citizens",
       "It would make states stronger",
       "It would reduce federal power",
       "It would create more local elections"
     ],
-    answer: 0,
-    hint: "They worried about military force being turned inward."
+    "answer": 0,
+    "hint": "They worried about military force being turned inward."
   },
   {
-    question: "Anti-Federalists wanted to maintain a balance of power between",
-    choices: [
+    "question": "Anti-Federalists wanted to maintain a balance of power between",
+    "choices": [
       "cities and counties",
       "the national government and the states",
       "voters and judges only",
       "the army and courts"
     ],
-    answer: 1,
-    hint: "They opposed too much power moving upward to the center."
+    "answer": 1,
+    "hint": "They opposed too much power moving upward to the center."
   },
   {
-    question: "Which position was most closely associated with Anti-Federalists?",
-    choices: [
+    "question": "Which position was most closely associated with Anti-Federalists?",
+    "choices": [
       "A Bill of Rights is necessary to protect individual liberty",
       "No Bill of Rights is needed because the Constitution already protects liberty enough",
       "National government should always dominate state governments",
       "Standing armies should be expanded to police citizens"
     ],
-    answer: 0,
-    hint: "This was one of their biggest ratification arguments."
+    "answer": 0,
+    "hint": "This was one of their biggest ratification arguments."
   },
   {
-    question: "One result of the Federalist and Anti-Federalist debate was the adoption of the",
-    choices: [
+    "question": "One result of the Federalist and Anti-Federalist debate was the adoption of the",
+    "choices": [
       "Monroe Doctrine",
       "Bill of Rights",
       "Emancipation Proclamation",
       "Homestead Act"
     ],
-    answer: 1,
-    hint: "This was the Anti-Federalists' major success."
+    "answer": 1,
+    "hint": "This was the Anti-Federalists' major success."
   },
   {
-    question: "The Bill of Rights was added primarily to",
-    choices: [
+    "question": "The Bill of Rights was added primarily to",
+    "choices": [
       "increase presidential term length",
-      "protect individual liberties and limit government power",
+      "protect liberties and limit power",
       "expand Congress's power to tax",
       "create state supreme courts"
     ],
-    answer: 1,
-    hint: "This is nearly the exact language of CS 7."
+    "answer": 1,
+    "hint": "This is nearly the exact language of CS 7."
   },
   {
-    question: "Which freedom is specifically included in the Bill of Rights?",
-    choices: [
+    "question": "Which freedom is specifically included in the Bill of Rights?",
+    "choices": [
       "Freedom of speech",
       "Freedom from voting",
       "Freedom from paying any taxes",
       "Freedom to ignore court orders"
     ],
-    answer: 0,
-    hint: "Think First Amendment."
+    "answer": 0,
+    "hint": "Think First Amendment."
   },
   {
-    question: "Which protection is part of the Bill of Rights?",
-    choices: [
+    "question": "Which protection is part of the Bill of Rights?",
+    "choices": [
       "Due process of law",
       "Unlimited taxation",
       "A national religion",
       "Military control of state elections"
     ],
-    answer: 0,
-    hint: "This protects fairness in legal proceedings."
+    "answer": 0,
+    "hint": "This protects fairness in legal proceedings."
   },
   {
-    question: "Which protection in the Bill of Rights limits government search power?",
-    choices: [
+    "question": "Which protection in the Bill of Rights limits government search power?",
+    "choices": [
       "Protection against illegal search and seizure",
       "The power to declare war",
       "The right to amend the Constitution",
       "The power to levy tariffs"
     ],
-    answer: 0,
-    hint: "This is a Fourth Amendment idea."
+    "answer": 0,
+    "hint": "This is a Fourth Amendment idea."
   },
   {
-    question: "Constitutional government changes over time through amendments to the",
-    choices: [
+    "question": "Constitutional government changes over time through amendments to the",
+    "choices": [
       "Articles of Confederation",
       "U.S. Constitution",
       "Declaration of Independence",
       "Northwest Ordinance only"
     ],
-    answer: 1,
-    hint: "CS 7 begins by saying the Constitution has been amended in many ways."
+    "answer": 1,
+    "hint": "CS 7 begins by saying the Constitution has been amended in many ways."
   },
   {
-    question: "When the Supreme Court interprets the Constitution to clarify or extend its meaning, it changes government through",
-    choices: [
+    "question": "When the Supreme Court interprets the Constitution to clarify or extend its meaning, it changes government through",
+    "choices": [
       "judicial decisions",
       "county ordinances",
       "military orders",
       "party platforms"
     ],
-    answer: 0,
-    hint: "CS 7 names Supreme Court decisions as one source of change."
+    "answer": 0,
+    "hint": "CS 7 names Supreme Court decisions as one source of change."
   },
   {
-    question: "The power of judicial review allows the Supreme Court to",
-    choices: [
+    "question": "The power of judicial review allows the Supreme Court to",
+    "choices": [
       "declare actions unconstitutional",
       "write constitutional amendments by itself",
       "collect national taxes",
       "command the armed forces"
     ],
-    answer: 0,
-    hint: "It can strike down actions of branches or states."
+    "answer": 0,
+    "hint": "It can strike down actions of branches or states."
   },
   {
-    question: "Congress can change how constitutional government operates by passing",
-    choices: [
+    "question": "Congress can change how constitutional government operates by passing",
+    "choices": [
       "legislation",
       "foreign treaties only",
       "state constitutions only",
       "judicial opinions"
     ],
-    answer: 0,
-    hint: "CS 7 says legislation builds on the constitutional framework."
+    "answer": 0,
+    "hint": "CS 7 says legislation builds on the constitutional framework."
   },
   {
-    question: "Which is an example of legislation building on constitutional principles?",
-    choices: [
+    "question": "Which is an example of legislation building on constitutional principles?",
+    "choices": [
       "Civil rights acts",
       "Royal charters",
       "Colonial boycotts",
       "Cabinet customs only"
     ],
-    answer: 0,
-    hint: "The model curriculum gives this exact type of example."
+    "answer": 0,
+    "hint": "The model curriculum gives this exact type of example."
   },
   {
-    question: "Which informal practice are students specifically expected to know under CS 7?",
-    choices: [
+    "question": "Which informal practice are students specifically expected to know under CS 7?",
+    "choices": [
       "Legislative oversight",
       "Judicial activism",
       "Filibuster reform",
       "Direct primary elections"
     ],
-    answer: 0,
-    hint: "The standards name one informal practice to know."
+    "answer": 0,
+    "hint": "The standards name one informal practice to know."
   },
   {
-    question: "Legislative oversight refers to Congress",
-    choices: [
-      "monitoring the executive branch for information and accountability",
+    "question": "Legislative oversight refers to Congress",
+    "choices": [
+      "holding the executive accountable",
       "appointing all federal judges directly",
       "controlling state constitutions",
       "serving as the nation's highest court"
     ],
-    answer: 0,
-    hint: "It grew from Congress's need for information when drafting laws."
+    "answer": 0,
+    "hint": "It grew from Congress's need for information when drafting laws."
   },
   {
-    question: "Which statement best summarizes CS 7?",
-    choices: [
+    "question": "Which statement best summarizes CS 7?",
+    "choices": [
       "Constitutional government has stayed exactly the same since 1787",
-      "Constitutional government changes through amendments, court decisions, legislation, and informal practices",
+      "Amendments, rulings, laws, and informal practices change government",
       "Only states can change constitutional meaning",
       "The Bill of Rights ended all debate about government power"
     ],
-    answer: 1,
-    hint: "This is the four-part list at the center of the standard."
+    "answer": 1,
+    "hint": "This is the four-part list at the center of the standard."
   },
   {
-    question: "Which group originally argued that no Bill of Rights was necessary because the Constitution already limited power?",
-    choices: [
+    "question": "Which group originally argued that no Bill of Rights was necessary because the Constitution already limited power?",
+    "choices": [
       "Federalists",
       "Anti-Federalists",
       "Abolitionists",
       "Populists"
     ],
-    answer: 0,
-    hint: "They prioritized ratification first."
+    "answer": 0,
+    "hint": "They prioritized ratification first."
   },
   {
-    question: "Which statement best ties CS 6 and CS 7 together?",
-    choices: [
-      "The Constitution created the government, and later debates and developments shaped how that government protected rights and applied power over time",
+    "question": "Which statement best ties CS 6 and CS 7 together?",
+    "choices": [
+      "The Constitution set the framework; later changes shaped its powers and rights.",
       "The Constitution replaced all need for later interpretation",
       "Federalists and Anti-Federalists agreed on every issue immediately",
       "The Bill of Rights ended constitutional change forever"
     ],
-    answer: 0,
-    hint: "One standard is about the structure; the next is about debate and change."
+    "answer": 0,
+    "hint": "One standard is about the structure; the next is about debate and change."
   }
-];
-
-const studentNameInput = document.getElementById('studentName');
-const startBtn = document.getElementById('startBtn');
-const startScreen = document.getElementById('startScreen');
-const liveMeta = document.getElementById('liveMeta');
-const gameArea = document.getElementById('gameArea');
-const summaryArea = document.getElementById('summaryArea');
-
-const questionCountLabel = document.getElementById('questionCountLabel');
-questionCountLabel.textContent = String(questions.length);
-
-const liveStudent = document.getElementById('liveStudent');
-const liveStarted = document.getElementById('liveStarted');
-const liveNow = document.getElementById('liveNow');
-const liveElapsed = document.getElementById('liveElapsed');
-
-const progressText = document.getElementById('progressText');
-const correctText = document.getElementById('correctText');
-const attemptText = document.getElementById('attemptText');
-const accuracyText = document.getElementById('accuracyText');
-
-const qNum = document.getElementById('qNum');
-const questionText = document.getElementById('questionText');
-const choicesWrap = document.getElementById('choicesWrap');
-const feedbackGood = document.getElementById('feedbackGood');
-const feedbackBad = document.getElementById('feedbackBad');
-
-const ticketStudent = document.getElementById('ticketStudent');
-const ticketPassed = document.getElementById('ticketPassed');
-const ticketAccuracy = document.getElementById('ticketAccuracy');
-const ticketCorrect = document.getElementById('ticketCorrect');
-const ticketAttempts = document.getElementById('ticketAttempts');
-const ticketStart = document.getElementById('ticketStart');
-const ticketEnd = document.getElementById('ticketEnd');
-const ticketElapsed = document.getElementById('ticketElapsed');
-const passBanner = document.getElementById('passBanner');
-const notPassBanner = document.getElementById('notPassBanner');
-
-const restartTopBtn = document.getElementById('restartTopBtn');
-const restartBottomBtn = document.getElementById('restartBottomBtn');
-const printBtn = document.getElementById('printBtn');
-
-let studentName = "";
-let currentIndex = 0;
-let correctCount = 0;
-let attempts = 0;
-let startTime = null;
-let endTime = null;
-let timer = null;
-let locked = false;
-
-function shuffleArray(arr){
-  const a = arr.map(x => x);
-  for(let i = a.length - 1; i > 0; i--){
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function prepareQuestions(){
-  return questions.map(q => {
-    const choices = q.choices.map((text, index) => ({ text, isCorrect: index === q.answer }));
-    const shuffled = shuffleArray(choices);
-    return {
-      question: q.question,
-      hint: q.hint,
-      choices: shuffled,
-      answer: shuffled.findIndex(c => c.isCorrect)
-    };
-  });
-}
-
-let gameQuestions = prepareQuestions();
-
-function formatDateTime(date){
-  return date.toLocaleString([], {
-    year:'numeric',
-    month:'2-digit',
-    day:'2-digit',
-    hour:'numeric',
-    minute:'2-digit',
-    second:'2-digit'
-  });
-}
-
-function formatElapsed(ms){
-  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  const hours = Math.floor(minutes / 60);
-  const remMinutes = minutes % 60;
-  if(hours > 0){
-    return `${String(hours).padStart(2,'0')}:${String(remMinutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-  }
-  return `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-}
-
-function updateLiveTime(){
-  if(!startTime) return;
-  const now = new Date();
-  liveNow.textContent = formatDateTime(now);
-  liveElapsed.textContent = formatElapsed(now - startTime);
-}
-
-function getAccuracy(){
-  if(attempts === 0) return 100;
-  return Math.round((correctCount / attempts) * 100);
-}
-
-function updateTracker(){
-  progressText.textContent = `${Math.min(currentIndex + 1, gameQuestions.length)} / ${gameQuestions.length}`;
-  correctText.textContent = String(correctCount);
-  attemptText.textContent = String(attempts);
-  accuracyText.textContent = `${getAccuracy()}%`;
-}
-
-function clearFeedback(){
-  feedbackGood.className = 'msg good';
-  feedbackGood.textContent = '';
-  feedbackBad.className = 'msg bad';
-  feedbackBad.textContent = '';
-}
-
-function renderQuestion(){
-  clearFeedback();
-  locked = false;
-  updateTracker();
-
-  const q = gameQuestions[currentIndex];
-  qNum.textContent = `Question ${currentIndex + 1}`;
-  questionText.textContent = q.question;
-  choicesWrap.innerHTML = '';
-
-  q.choices.forEach((choice, index) => {
-    const btn = document.createElement('button');
-    btn.className = 'choice';
-    btn.type = 'button';
-    btn.innerHTML = `<strong>${String.fromCharCode(65 + index)}.</strong> ${choice.text}`;
-    btn.addEventListener('click', () => handleChoice(index, btn));
-    choicesWrap.appendChild(btn);
-  });
-}
-
-function handleChoice(index, btnEl){
-  if(locked) return;
-  locked = true;
-  attempts++;
-
-  const q = gameQuestions[currentIndex];
-  const choiceButtons = [...document.querySelectorAll('.choice')];
-  choiceButtons.forEach(btn => btn.disabled = true);
-  btnEl.classList.add('selected');
-
-  if(index === q.answer){
-    correctCount++;
-    btnEl.classList.add('correct');
-    feedbackGood.textContent = 'Correct. Advancing to the next question...';
-    feedbackGood.classList.add('show');
-    updateTracker();
-
-    setTimeout(() => {
-      currentIndex++;
-      if(currentIndex >= gameQuestions.length){
-        finishGame();
-      } else {
-        renderQuestion();
-      }
-    }, 650);
-  } else {
-    btnEl.classList.add('incorrect');
-    const correctBtn = choiceButtons[q.answer];
-    if(correctBtn) correctBtn.classList.add('correct');
-
-    feedbackBad.innerHTML = `<strong>Hint:</strong> ${q.hint}<br><br>Select the highlighted correct answer to continue.`;
-    feedbackBad.classList.add('show');
-    updateTracker();
-
-    choiceButtons.forEach((btn, i) => {
-      btn.disabled = false;
-      if(i === index) btn.disabled = true;
-    });
-    locked = false;
-  }
-}
-
-function startGame(){
-  const name = studentNameInput.value.trim();
-  if(!name){
-    alert('Please enter a student name before starting.');
-    studentNameInput.focus();
-    return;
-  }
-
-  studentName = name;
-  currentIndex = 0;
-  correctCount = 0;
-  attempts = 0;
-  startTime = new Date();
-  endTime = null;
-
-  gameQuestions = prepareQuestions();
-
-  startScreen.style.display = 'none';
-  liveMeta.style.display = 'block';
-  gameArea.style.display = 'block';
-  summaryArea.style.display = 'none';
-
-  liveStudent.textContent = studentName;
-  liveStarted.textContent = formatDateTime(startTime);
-  updateLiveTime();
-  if(timer) clearInterval(timer);
-  timer = setInterval(updateLiveTime, 1000);
-
-  renderQuestion();
-}
-
-function finishGame(){
-  endTime = new Date();
-  if(timer) clearInterval(timer);
-
-  const accuracy = getAccuracy();
-  const passed = accuracy === 100 && correctCount === gameQuestions.length;
-
-  gameArea.style.display = 'none';
-  summaryArea.style.display = 'block';
-
-  ticketStudent.textContent = studentName;
-  ticketPassed.textContent = passed ? 'YES' : 'NO';
-  ticketAccuracy.textContent = `${accuracy}%`;
-  ticketCorrect.textContent = `${correctCount} / ${gameQuestions.length}`;
-  ticketAttempts.textContent = String(attempts);
-  ticketStart.textContent = formatDateTime(startTime);
-  ticketEnd.textContent = formatDateTime(endTime);
-  ticketElapsed.textContent = formatElapsed(endTime - startTime);
-
-  passBanner.style.display = passed ? 'block' : 'none';
-  notPassBanner.style.display = passed ? 'none' : 'block';
-}
-
-function restartGame(){
-  if(timer) clearInterval(timer);
-  studentName = "";
-  currentIndex = 0;
-  correctCount = 0;
-  attempts = 0;
-  startTime = null;
-  endTime = null;
-  locked = false;
-
-  gameQuestions = prepareQuestions();
-
-  studentNameInput.value = '';
-  startScreen.style.display = 'block';
-  liveMeta.style.display = 'none';
-  gameArea.style.display = 'none';
-  summaryArea.style.display = 'none';
-
-  liveStudent.textContent = '—';
-  liveStarted.textContent = '—';
-  liveNow.textContent = '—';
-  liveElapsed.textContent = '00:00';
-
-  clearFeedback();
-  updateTracker();
-  studentNameInput.focus();
-}
-
-startBtn.addEventListener('click', startGame);
-studentNameInput.addEventListener('keydown', (e) => {
-  if(e.key === 'Enter') startGame();
-});
-
-restartTopBtn.addEventListener('click', restartGame);
-restartBottomBtn.addEventListener('click', restartGame);
-printBtn.addEventListener('click', () => window.print());
-
-window.addEventListener('beforeunload', () => {
-  if(timer) clearInterval(timer);
-});
-
-updateTracker();
-</script>
+];</script>
+<script src="basics-game.js"></script>
 </body>
 </html>

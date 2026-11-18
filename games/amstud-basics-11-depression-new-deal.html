@@ -83,11 +83,11 @@
   .panel h2{margin:0 0 12px;font-size:22px;}
   .start-form{display:grid;gap:12px;}
   label{font-size:13px;color:var(--muted);font-weight:700;}
-  input[type="text"]{
+  #studentName, #sheetEmail, #sheetPeriod{
     width:100%;background:rgba(255,255,255,.04);color:var(--text);
     border:1px solid var(--line2);border-radius:14px;padding:12px 14px;font-size:15px;outline:none;
   }
-  input[type="text"]:focus{
+  #studentName:focus, #sheetEmail:focus, #sheetPeriod:focus{
     border-color:rgba(122,162,255,.55);box-shadow:0 0 0 3px rgba(122,162,255,.12);
   }
   .meta{display:grid;gap:10px;margin-top:12px;}
@@ -175,6 +175,9 @@
     .top-actions{width:100%;}
     .top-actions .btn{flex:1 1 auto;}
   }
+
+  #sheetPeriod { color-scheme:dark; }
+  #studentName, #sheetEmail, #sheetPeriod { box-sizing:border-box; font-family:inherit; line-height:1.25; }
 </style>
 </head>
 <body>
@@ -210,8 +213,14 @@
           <div>
             <label for="studentName">Student Name</label>
             <input id="studentName" type="text" placeholder="Enter first and last name"/>
+          <label for="sheetPeriod">Class Period</label>
+          <select id="sheetPeriod" required><option value="">Choose period</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select>
+          <label for="sheetEmail">School Email</label>
+          <input id="sheetEmail" type="email" autocomplete="email" required>
           </div>
           <button id="startBtn" class="btn primary">Start Game</button>
+          <button id="btnRestoreCloud" class="btn" type="button">Load Saved Work</button>
+          <p id="btbRestoreStatus" role="status"></p>
         </div>
         <div class="meta">
           <div class="meta-row"><span>Topic</span><span>Great Depression & New Deal</span></div>
@@ -239,6 +248,7 @@
 
     <main>
       <section id="gameArea" class="panel game-area">
+        <p id="btbCloudStatus" role="status"></p>
         <div class="game-head">
           <div>
             <h2 style="margin:0 0 6px;">Game in Progress</h2>
@@ -262,6 +272,7 @@
       </section>
 
       <section id="summaryArea" class="panel summary">
+        <p id="btbFinalStatus" role="status"></p>
         <h2 style="margin-top:0;">Completion Ticket</h2>
         <div id="passBanner" class="pass-banner" style="display:none;">Mastery achieved. This ticket shows a 100% completion.</div>
         <div id="notPassBanner" class="not-pass-banner" style="display:none;">Game complete, but the attempt did not reach 100% accuracy. Restart and try again for a passing ticket.</div>
@@ -290,321 +301,394 @@
   </div>
 </div>
 
-<script>
-const questions = [
-  {question:"The Great Depression began with the stock market crash of",choices:["1929","1919","1933","1941"],answer:0,hint:"Black Tuesday happened in this year."},
-  {question:"Stock speculation means",choices:["buying stocks hoping prices will rise quickly","depositing money in a savings account","paying off debt early","buying only government bonds"],answer:0,hint:"This involves risky investing for profit."},
-  {question:"Buying stock on margin means",choices:["purchasing with borrowed money","buying only bank stocks","selling bonds for cash","paying the full price up front"],answer:0,hint:"Investors borrowed to buy stocks."},
-  {question:"One major cause of the Great Depression was",choices:["bank failures","the end of railroads","the abolition of factories","women’s suffrage"],answer:0,hint:"When banks collapsed, people lost savings."},
-  {question:"Overproduction contributed to the Depression because",choices:["businesses made more goods than people could buy","Americans bought too little land","factories produced no goods at all","all farming ended"],answer:0,hint:"Supply outran consumer demand."},
-  {question:"Another cause of the Depression was",choices:["weak consumer demand","too much prosperity only","the Civil War","Prohibition repeal"],answer:0,hint:"People could not keep buying enough goods."},
-  {question:"During the Great Depression unemployment",choices:["rose dramatically","ended completely","stayed near zero","only affected Europe"],answer:0,hint:"Millions lost their jobs."},
-  {question:"A bank run happens when",choices:["many depositors rush to withdraw money at once","banks make too many loans in one day","the government closes banks forever","farmers buy bank stock"],answer:0,hint:"Fear causes people to pull out deposits."},
-  {question:"Hoover’s response to the Depression is often criticized because he",choices:["did not do enough direct federal relief","created too much Social Security","declared war immediately","nationalized all industry"],answer:0,hint:"He was seen as too limited in his response."},
-  {question:"President during most of the New Deal was",choices:["Franklin D. Roosevelt","Herbert Hoover","Woodrow Wilson","Harry Truman"],answer:0,hint:"FDR led the federal response after Hoover."},
-  {question:"The New Deal was Franklin Roosevelt’s plan for",choices:["relief, recovery, and reform","westward expansion","foreign imperialism","ending World War I"],answer:0,hint:"Think the three R's."},
-  {question:"Relief programs were intended to",choices:["help people suffering immediately","build only military bases","reduce all banking rules","end farming"],answer:0,hint:"These programs gave direct aid."},
-  {question:"Recovery programs were meant to",choices:["restart the economy","fight World War II","expand segregation","create imperial colonies"],answer:0,hint:"These focused on economic revival."},
-  {question:"Reform programs were meant to",choices:["prevent future economic collapse","increase speculation","end all banking","reduce federal involvement"],answer:0,hint:"These changed rules and systems going forward."},
-  {question:"The Social Security Act created",choices:["old-age pensions and aid programs","a wartime draft","the Federal Reserve","agricultural mechanization"],answer:0,hint:"This provided long-term federal support."},
-  {question:"The FDIC (Federal Deposit Insurance Corporation) was created to",choices:["insure bank deposits","build dams","regulate stockbrokers only","hire unemployed artists"],answer:0,hint:"It helped restore confidence in banks."},
-  {question:"The SEC (Securities and Exchange Commission) was created to",choices:["regulate the stock market","manage national parks","fight monopolies in railroads only","draft soldiers"],answer:0,hint:"It was designed to curb stock-market abuses."},
-  {question:"The CCC (Civilian Conservation Corps) is most closely linked to",choices:["public works jobs and conservation projects","the Zimmermann Telegram","the Dawes Act","Prohibition enforcement"],answer:0,hint:"This New Deal program employed many young men in outdoor improvement work."},
-  {question:"The WPA (Works Progress Administration) was created mainly to",choices:["provide jobs through public works","insure bank deposits","regulate the stock market","ban alcohol"],answer:0,hint:"This was one of the biggest New Deal work programs."},
-  {question:"The Tennessee Valley Authority is best known for",choices:["regional development and electric power projects","stock regulation","war mobilization","women’s suffrage"],answer:0,hint:"It built dams and improved a poor region."},
-  {question:"Hoovervilles were",choices:["shantytowns built by homeless people","federal housing projects","new suburban developments","immigrant neighborhoods in the 1920s"],answer:0,hint:"These symbolized hardship during Hoover’s presidency."},
-  {question:"The Dust Bowl mainly affected",choices:["Great Plains farmers","Wall Street bankers","southern textile workers","shipbuilders"],answer:0,hint:"Drought and poor farming practices devastated this region."},
-  {question:"The Dust Bowl worsened the Depression by",choices:["damaging farms and displacing families","raising stock prices","ending unemployment","expanding consumer credit"],answer:0,hint:"It added environmental disaster to economic crisis."},
-  {question:"One major effect of the New Deal was",choices:["expansion of the federal government’s role","return to laissez-faire","elimination of all regulation","the end of political debate"],answer:0,hint:"Washington became much more active in the economy."},
-  {question:"Which of the following is NOT a New Deal reform?",choices:["Plessy v. Ferguson","Social Security","FDIC","SEC"],answer:0,hint:"Three are Depression-era responses; one is a court case from much earlier."},
-  {question:"FDR’s fireside chats were designed to",choices:["reassure and inform the public","replace Congress","declare war on Europe","promote Prohibition"],answer:0,hint:"He used radio to speak directly to Americans."},
-  {question:"The Federal Reserve is connected to the Depression partly because",choices:["monetary policy affected credit and banking","it ran all public works programs","it ended Social Security","it wrote the SEC laws alone"],answer:0,hint:"Banking and money supply were important economic factors."},
-  {question:"The Great Depression demonstrated the dangers of",choices:["unchecked speculation and weak financial safeguards","too much rural farming only","women voting","public sanitation reform"],answer:0,hint:"Risky investing and weak protections helped cause collapse."},
-  {question:"The New Deal did NOT fully end the Depression, but it did",choices:["provide relief and reshape government responsibility","abolish all unemployment immediately","end stock markets forever","remove all taxes"],answer:0,hint:"Its lasting effect was major federal involvement and support."},
-  {question:"Which term best describes government spending to create jobs and stimulate the economy?",choices:["public works","isolationism","imperialism","segregation"],answer:0,hint:"Think roads, bridges, dams, and buildings."},
-  {question:"Which pair is correctly matched?",choices:["FDIC (Federal Deposit Insurance Corporation) — bank deposit insurance","SEC (Securities and Exchange Commission) — military draft","Social Security — stock speculation","CCC (Civilian Conservation Corps) — Prohibition enforcement"],answer:0,hint:"Only one pair is correct."},
-  {question:"Which New Deal program is most directly linked to retirement support?",choices:["Social Security","WPA (Works Progress Administration)","CCC (Civilian Conservation Corps)","TVA"],answer:0,hint:"This still exists today."},
-  {question:"A major contrast between Hoover and Roosevelt was that Roosevelt",choices:["supported more aggressive federal action","opposed all relief","favored isolation from the economy","wanted no banking reform"],answer:0,hint:"FDR expanded federal involvement much more."},
-  {question:"The strongest summary of the Great Depression block is that economic collapse led Americans to accept",choices:["a larger federal role in relief, recovery, and reform","the end of banking regulation","a return to total laissez-faire","the collapse of democracy"],answer:0,hint:"That is the major long-term takeaway."},
-  {question:"Which best captures the purpose of the New Deal?",choices:["to relieve suffering, revive the economy, and prevent another collapse","to expand overseas empire","to restore Prohibition","to reduce all federal influence"],answer:0,hint:"Think relief, recovery, reform."}
-];
-
-const studentNameInput = document.getElementById('studentName');
-const startBtn = document.getElementById('startBtn');
-const startScreen = document.getElementById('startScreen');
-const liveMeta = document.getElementById('liveMeta');
-const gameArea = document.getElementById('gameArea');
-const summaryArea = document.getElementById('summaryArea');
-
-const questionCountLabel = document.getElementById('questionCountLabel');
-questionCountLabel.textContent = String(questions.length);
-
-const liveStudent = document.getElementById('liveStudent');
-const liveStarted = document.getElementById('liveStarted');
-const liveNow = document.getElementById('liveNow');
-const liveElapsed = document.getElementById('liveElapsed');
-
-const progressText = document.getElementById('progressText');
-const correctText = document.getElementById('correctText');
-const attemptText = document.getElementById('attemptText');
-const accuracyText = document.getElementById('accuracyText');
-
-const qNum = document.getElementById('qNum');
-const questionText = document.getElementById('questionText');
-const choicesWrap = document.getElementById('choicesWrap');
-const feedbackGood = document.getElementById('feedbackGood');
-const feedbackBad = document.getElementById('feedbackBad');
-
-const ticketStudent = document.getElementById('ticketStudent');
-const ticketPassed = document.getElementById('ticketPassed');
-const ticketAccuracy = document.getElementById('ticketAccuracy');
-const ticketCorrect = document.getElementById('ticketCorrect');
-const ticketAttempts = document.getElementById('ticketAttempts');
-const ticketStart = document.getElementById('ticketStart');
-const ticketEnd = document.getElementById('ticketEnd');
-const ticketElapsed = document.getElementById('ticketElapsed');
-const passBanner = document.getElementById('passBanner');
-const notPassBanner = document.getElementById('notPassBanner');
-
-const restartTopBtn = document.getElementById('restartTopBtn');
-const restartBottomBtn = document.getElementById('restartBottomBtn');
-const printBtn = document.getElementById('printBtn');
-
-let studentName = "";
-let currentIndex = 0;
-let correctCount = 0;
-let attempts = 0;
-let startTime = null;
-let endTime = null;
-let timer = null;
-let locked = false;
-
-function shuffleArray(arr){
-  const a = arr.map(x => x);
-  for(let i = a.length - 1; i > 0; i--){
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+<script src="basics-audit.js"></script>
+<script>const questions = [
+  {
+    "question": "The Great Depression began with the stock market crash of",
+    "choices": [
+      "1929",
+      "1919",
+      "1933",
+      "1941"
+    ],
+    "answer": 0,
+    "hint": "Black Tuesday happened in this year."
+  },
+  {
+    "question": "Stock speculation means",
+    "choices": [
+      "buying stocks hoping prices will rise quickly",
+      "depositing money in a savings account",
+      "paying off debt early",
+      "buying only government bonds"
+    ],
+    "answer": 0,
+    "hint": "This involves risky investing for profit."
+  },
+  {
+    "question": "Buying stock on margin means",
+    "choices": [
+      "purchasing with borrowed money",
+      "buying only bank stocks",
+      "selling bonds for cash",
+      "paying the full price up front"
+    ],
+    "answer": 0,
+    "hint": "Investors borrowed to buy stocks."
+  },
+  {
+    "question": "One major cause of the Great Depression was",
+    "choices": [
+      "bank failures",
+      "the end of railroads",
+      "the abolition of factories",
+      "women’s suffrage"
+    ],
+    "answer": 0,
+    "hint": "When banks collapsed, people lost savings."
+  },
+  {
+    "question": "Overproduction contributed to the Depression because",
+    "choices": [
+      "businesses made more goods than people could buy",
+      "Americans bought too little land",
+      "factories produced no goods at all",
+      "all farming ended"
+    ],
+    "answer": 0,
+    "hint": "Supply outran consumer demand."
+  },
+  {
+    "question": "Another cause of the Depression was",
+    "choices": [
+      "weak consumer demand",
+      "too much prosperity only",
+      "the Civil War",
+      "Prohibition repeal"
+    ],
+    "answer": 0,
+    "hint": "People could not keep buying enough goods."
+  },
+  {
+    "question": "During the Great Depression unemployment",
+    "choices": [
+      "rose dramatically",
+      "ended completely",
+      "stayed near zero",
+      "only affected Europe"
+    ],
+    "answer": 0,
+    "hint": "Millions lost their jobs."
+  },
+  {
+    "question": "A bank run happens when",
+    "choices": [
+      "many depositors rush to withdraw money at once",
+      "banks make too many loans in one day",
+      "the government closes banks forever",
+      "farmers buy bank stock"
+    ],
+    "answer": 0,
+    "hint": "Fear causes people to pull out deposits."
+  },
+  {
+    "question": "Hoover’s response to the Depression is often criticized because he",
+    "choices": [
+      "did not do enough direct federal relief",
+      "created too much Social Security",
+      "declared war immediately",
+      "nationalized all industry"
+    ],
+    "answer": 0,
+    "hint": "He was seen as too limited in his response."
+  },
+  {
+    "question": "President during most of the New Deal was",
+    "choices": [
+      "Franklin D. Roosevelt",
+      "Herbert Hoover",
+      "Woodrow Wilson",
+      "Harry Truman"
+    ],
+    "answer": 0,
+    "hint": "FDR led the federal response after Hoover."
+  },
+  {
+    "question": "The New Deal was Franklin Roosevelt’s plan for",
+    "choices": [
+      "relief, recovery, and reform",
+      "westward expansion",
+      "foreign imperialism",
+      "ending World War I"
+    ],
+    "answer": 0,
+    "hint": "Think the three R's."
+  },
+  {
+    "question": "Relief programs were intended to",
+    "choices": [
+      "help people suffering immediately",
+      "build only military bases",
+      "reduce all banking rules",
+      "end farming"
+    ],
+    "answer": 0,
+    "hint": "These programs gave direct aid."
+  },
+  {
+    "question": "Recovery programs were meant to",
+    "choices": [
+      "restart the economy",
+      "fight World War II",
+      "expand segregation",
+      "create imperial colonies"
+    ],
+    "answer": 0,
+    "hint": "These focused on economic revival."
+  },
+  {
+    "question": "Reform programs were meant to",
+    "choices": [
+      "prevent future economic collapse",
+      "increase speculation",
+      "end all banking",
+      "reduce federal involvement"
+    ],
+    "answer": 0,
+    "hint": "These changed rules and systems going forward."
+  },
+  {
+    "question": "The Social Security Act created",
+    "choices": [
+      "old-age pensions and aid programs",
+      "a wartime draft",
+      "the Federal Reserve",
+      "agricultural mechanization"
+    ],
+    "answer": 0,
+    "hint": "This provided long-term federal support."
+  },
+  {
+    "question": "The FDIC (Federal Deposit Insurance Corporation) was created to",
+    "choices": [
+      "insure bank deposits",
+      "build dams",
+      "regulate stockbrokers only",
+      "hire unemployed artists"
+    ],
+    "answer": 0,
+    "hint": "It helped restore confidence in banks."
+  },
+  {
+    "question": "The SEC (Securities and Exchange Commission) was created to",
+    "choices": [
+      "regulate the stock market",
+      "manage national parks",
+      "fight monopolies in railroads only",
+      "draft soldiers"
+    ],
+    "answer": 0,
+    "hint": "It was designed to curb stock-market abuses."
+  },
+  {
+    "question": "The CCC (Civilian Conservation Corps) is most closely linked to",
+    "choices": [
+      "public works jobs and conservation projects",
+      "the Zimmermann Telegram",
+      "the Dawes Act",
+      "Prohibition enforcement"
+    ],
+    "answer": 0,
+    "hint": "This New Deal program employed many young men in outdoor improvement work."
+  },
+  {
+    "question": "The WPA (Works Progress Administration) was created mainly to",
+    "choices": [
+      "provide jobs through public works",
+      "insure bank deposits",
+      "regulate the stock market",
+      "ban alcohol"
+    ],
+    "answer": 0,
+    "hint": "This was one of the biggest New Deal work programs."
+  },
+  {
+    "question": "The Tennessee Valley Authority is best known for",
+    "choices": [
+      "regional development and electricity",
+      "stock regulation",
+      "war mobilization",
+      "women’s suffrage"
+    ],
+    "answer": 0,
+    "hint": "It built dams and improved a poor region."
+  },
+  {
+    "question": "Hoovervilles were",
+    "choices": [
+      "shantytowns built by homeless people",
+      "federal housing projects",
+      "new suburban developments",
+      "immigrant neighborhoods in the 1920s"
+    ],
+    "answer": 0,
+    "hint": "These symbolized hardship during Hoover’s presidency."
+  },
+  {
+    "question": "The Dust Bowl mainly affected",
+    "choices": [
+      "Great Plains farmers",
+      "Wall Street bankers",
+      "southern textile workers",
+      "shipbuilders"
+    ],
+    "answer": 0,
+    "hint": "Drought and poor farming practices devastated this region."
+  },
+  {
+    "question": "The Dust Bowl worsened the Depression by",
+    "choices": [
+      "damaging farms and displacing families",
+      "raising stock prices",
+      "ending unemployment",
+      "expanding consumer credit"
+    ],
+    "answer": 0,
+    "hint": "It added environmental disaster to economic crisis."
+  },
+  {
+    "question": "One major effect of the New Deal was",
+    "choices": [
+      "expansion of the federal government’s role",
+      "return to laissez-faire",
+      "elimination of all regulation",
+      "the end of political debate"
+    ],
+    "answer": 0,
+    "hint": "Washington became much more active in the economy."
+  },
+  {
+    "question": "Which of the following is NOT a New Deal reform?",
+    "choices": [
+      "Plessy v. Ferguson",
+      "Social Security",
+      "FDIC",
+      "SEC"
+    ],
+    "answer": 0,
+    "hint": "Three are Depression-era responses; one is a court case from much earlier."
+  },
+  {
+    "question": "FDR’s fireside chats were designed to",
+    "choices": [
+      "reassure and inform the public",
+      "replace Congress",
+      "declare war on Europe",
+      "promote Prohibition"
+    ],
+    "answer": 0,
+    "hint": "He used radio to speak directly to Americans."
+  },
+  {
+    "question": "The Federal Reserve is connected to the Depression partly because",
+    "choices": [
+      "monetary policy affected credit and banking",
+      "it ran all public works programs",
+      "it ended Social Security",
+      "it wrote the SEC laws alone"
+    ],
+    "answer": 0,
+    "hint": "Banking and money supply were important economic factors."
+  },
+  {
+    "question": "The Great Depression demonstrated the dangers of",
+    "choices": [
+      "speculation and weak safeguards",
+      "too much rural farming only",
+      "women voting",
+      "public sanitation reform"
+    ],
+    "answer": 0,
+    "hint": "Risky investing and weak protections helped cause collapse."
+  },
+  {
+    "question": "The New Deal did NOT fully end the Depression, but it did",
+    "choices": [
+      "provide relief and reshape government responsibility",
+      "abolish all unemployment immediately",
+      "end stock markets forever",
+      "remove all taxes"
+    ],
+    "answer": 0,
+    "hint": "Its lasting effect was major federal involvement and support."
+  },
+  {
+    "question": "Which term best describes government spending to create jobs and stimulate the economy?",
+    "choices": [
+      "public works",
+      "isolationism",
+      "imperialism",
+      "segregation"
+    ],
+    "answer": 0,
+    "hint": "Think roads, bridges, dams, and buildings."
+  },
+  {
+    "question": "Which pair is correctly matched?",
+    "choices": [
+      "FDIC (Federal Deposit Insurance Corporation) — bank deposit insurance",
+      "SEC (Securities and Exchange Commission) — military draft",
+      "Social Security — stock speculation",
+      "CCC (Civilian Conservation Corps) — Prohibition enforcement"
+    ],
+    "answer": 0,
+    "hint": "Only one pair is correct."
+  },
+  {
+    "question": "Which New Deal program is most directly linked to retirement support?",
+    "choices": [
+      "Social Security",
+      "WPA (Works Progress Administration)",
+      "CCC (Civilian Conservation Corps)",
+      "TVA"
+    ],
+    "answer": 0,
+    "hint": "This still exists today."
+  },
+  {
+    "question": "A major contrast between Hoover and Roosevelt was that Roosevelt",
+    "choices": [
+      "supported more aggressive federal action",
+      "opposed all relief",
+      "favored isolation from the economy",
+      "wanted no banking reform"
+    ],
+    "answer": 0,
+    "hint": "FDR expanded federal involvement much more."
+  },
+  {
+    "question": "The strongest summary of the Great Depression block is that economic collapse led Americans to accept",
+    "choices": [
+      "expanded federal relief, recovery, and reform",
+      "the end of banking regulation",
+      "a return to total laissez-faire",
+      "the collapse of democracy"
+    ],
+    "answer": 0,
+    "hint": "That is the major long-term takeaway."
+  },
+  {
+    "question": "Which best captures the purpose of the New Deal?",
+    "choices": [
+      "to provide relief, recovery, and reform",
+      "to expand overseas empire",
+      "to restore Prohibition",
+      "to reduce all federal influence"
+    ],
+    "answer": 0,
+    "hint": "Think relief, recovery, reform."
   }
-  return a;
-}
-
-function prepareQuestions(){
-  return questions.map(q => {
-    const choices = q.choices.map((text, index) => ({ text, isCorrect: index === q.answer }));
-    const shuffled = shuffleArray(choices);
-    return {
-      question: q.question,
-      hint: q.hint,
-      choices: shuffled,
-      answer: shuffled.findIndex(c => c.isCorrect)
-    };
-  });
-}
-
-let gameQuestions = prepareQuestions();
-
-function formatDateTime(date){
-  return date.toLocaleString([], {
-    year:'numeric',
-    month:'2-digit',
-    day:'2-digit',
-    hour:'numeric',
-    minute:'2-digit',
-    second:'2-digit'
-  });
-}
-
-function formatElapsed(ms){
-  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  const hours = Math.floor(minutes / 60);
-  const remMinutes = minutes % 60;
-  if(hours > 0){
-    return `${String(hours).padStart(2,'0')}:${String(remMinutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-  }
-  return `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-}
-
-function updateLiveTime(){
-  if(!startTime) return;
-  const now = new Date();
-  liveNow.textContent = formatDateTime(now);
-  liveElapsed.textContent = formatElapsed(now - startTime);
-}
-
-function getAccuracy(){
-  if(attempts === 0) return 100;
-  return Math.round((correctCount / attempts) * 100);
-}
-
-function updateTracker(){
-  progressText.textContent = `${Math.min(currentIndex + 1, gameQuestions.length)} / ${gameQuestions.length}`;
-  correctText.textContent = String(correctCount);
-  attemptText.textContent = String(attempts);
-  accuracyText.textContent = `${getAccuracy()}%`;
-}
-
-function clearFeedback(){
-  feedbackGood.className = 'msg good';
-  feedbackGood.textContent = '';
-  feedbackBad.className = 'msg bad';
-  feedbackBad.textContent = '';
-}
-
-function renderQuestion(){
-  clearFeedback();
-  locked = false;
-  updateTracker();
-
-  const q = gameQuestions[currentIndex];
-  qNum.textContent = `Question ${currentIndex + 1}`;
-  questionText.textContent = q.question;
-  choicesWrap.innerHTML = '';
-
-  q.choices.forEach((choice, index) => {
-    const btn = document.createElement('button');
-    btn.className = 'choice';
-    btn.type = 'button';
-    btn.innerHTML = `<strong>${String.fromCharCode(65 + index)}.</strong> ${choice.text}`;
-    btn.addEventListener('click', () => handleChoice(index, btn));
-    choicesWrap.appendChild(btn);
-  });
-}
-
-function handleChoice(index, btnEl){
-  if(locked) return;
-  locked = true;
-  attempts++;
-
-  const q = gameQuestions[currentIndex];
-  const choiceButtons = [...document.querySelectorAll('.choice')];
-  choiceButtons.forEach(btn => btn.disabled = true);
-  btnEl.classList.add('selected');
-
-  if(index === q.answer){
-    correctCount++;
-    btnEl.classList.add('correct');
-    feedbackGood.textContent = 'Correct. Advancing to the next question...';
-    feedbackGood.classList.add('show');
-    updateTracker();
-
-    setTimeout(() => {
-      currentIndex++;
-      if(currentIndex >= gameQuestions.length){
-        finishGame();
-      } else {
-        renderQuestion();
-      }
-    }, 650);
-  } else {
-    btnEl.classList.add('incorrect');
-    const correctBtn = choiceButtons[q.answer];
-    if(correctBtn) correctBtn.classList.add('correct');
-
-    feedbackBad.innerHTML = `<strong>Hint:</strong> ${q.hint}<br><br>Select the highlighted correct answer to continue.`;
-    feedbackBad.classList.add('show');
-    updateTracker();
-
-    choiceButtons.forEach((btn, i) => {
-      btn.disabled = false;
-      if(i === index) btn.disabled = true;
-    });
-    locked = false;
-  }
-}
-
-function startGame(){
-  const name = studentNameInput.value.trim();
-  if(!name){
-    alert('Please enter a student name before starting.');
-    studentNameInput.focus();
-    return;
-  }
-
-  studentName = name;
-  currentIndex = 0;
-  correctCount = 0;
-  attempts = 0;
-  startTime = new Date();
-  endTime = null;
-
-  gameQuestions = prepareQuestions();
-
-  startScreen.style.display = 'none';
-  liveMeta.style.display = 'block';
-  gameArea.style.display = 'block';
-  summaryArea.style.display = 'none';
-
-  liveStudent.textContent = studentName;
-  liveStarted.textContent = formatDateTime(startTime);
-  updateLiveTime();
-  if(timer) clearInterval(timer);
-  timer = setInterval(updateLiveTime, 1000);
-
-  renderQuestion();
-}
-
-function finishGame(){
-  endTime = new Date();
-  if(timer) clearInterval(timer);
-
-  const accuracy = getAccuracy();
-  const passed = accuracy === 100 && correctCount === gameQuestions.length;
-
-  gameArea.style.display = 'none';
-  summaryArea.style.display = 'block';
-
-  ticketStudent.textContent = studentName;
-  ticketPassed.textContent = passed ? 'YES' : 'NO';
-  ticketAccuracy.textContent = `${accuracy}%`;
-  ticketCorrect.textContent = `${correctCount} / ${gameQuestions.length}`;
-  ticketAttempts.textContent = String(attempts);
-  ticketStart.textContent = formatDateTime(startTime);
-  ticketEnd.textContent = formatDateTime(endTime);
-  ticketElapsed.textContent = formatElapsed(endTime - startTime);
-
-  passBanner.style.display = passed ? 'block' : 'none';
-  notPassBanner.style.display = passed ? 'none' : 'block';
-}
-
-function restartGame(){
-  if(timer) clearInterval(timer);
-  studentName = "";
-  currentIndex = 0;
-  correctCount = 0;
-  attempts = 0;
-  startTime = null;
-  endTime = null;
-  locked = false;
-
-  gameQuestions = prepareQuestions();
-
-  studentNameInput.value = '';
-  startScreen.style.display = 'block';
-  liveMeta.style.display = 'none';
-  gameArea.style.display = 'none';
-  summaryArea.style.display = 'none';
-
-  liveStudent.textContent = '—';
-  liveStarted.textContent = '—';
-  liveNow.textContent = '—';
-  liveElapsed.textContent = '00:00';
-
-  clearFeedback();
-  updateTracker();
-  studentNameInput.focus();
-}
-
-startBtn.addEventListener('click', startGame);
-studentNameInput.addEventListener('keydown', (e) => {
-  if(e.key === 'Enter') startGame();
-});
-restartTopBtn.addEventListener('click', restartGame);
-restartBottomBtn.addEventListener('click', restartGame);
-printBtn.addEventListener('click', () => window.print());
-
-updateTracker();
-</script>
+];</script>
+<script src="basics-game.js"></script>
 </body>
 </html>

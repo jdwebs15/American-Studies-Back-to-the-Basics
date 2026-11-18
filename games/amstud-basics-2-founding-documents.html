@@ -158,7 +158,7 @@
     color:var(--muted);
     font-weight:700;
   }
-  input[type="text"]{
+  #studentName, #sheetEmail, #sheetPeriod{
     width:100%;
     background:rgba(255,255,255,.04);
     color:var(--text);
@@ -168,7 +168,7 @@
     font-size:15px;
     outline:none;
   }
-  input[type="text"]:focus{
+  #studentName:focus, #sheetEmail:focus, #sheetPeriod:focus{
     border-color:rgba(122,162,255,.55);
     box-shadow:0 0 0 3px rgba(122,162,255,.12);
   }
@@ -361,6 +361,9 @@
     .top-actions{ width:100%; }
     .top-actions .btn{ flex:1 1 auto; }
   }
+
+  #sheetPeriod { color-scheme:dark; }
+  #studentName, #sheetEmail, #sheetPeriod { box-sizing:border-box; font-family:inherit; line-height:1.25; }
 </style>
 </head>
 <body>
@@ -397,8 +400,14 @@
           <div>
             <label for="studentName">Student Name</label>
             <input id="studentName" type="text" placeholder="Enter first and last name"/>
+          <label for="sheetPeriod">Class Period</label>
+          <select id="sheetPeriod" required><option value="">Choose period</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select>
+          <label for="sheetEmail">School Email</label>
+          <input id="sheetEmail" type="email" autocomplete="email" required>
           </div>
           <button id="startBtn" class="btn primary">Start Game</button>
+          <button id="btnRestoreCloud" class="btn" type="button">Load Saved Work</button>
+          <p id="btbRestoreStatus" role="status"></p>
         </div>
 
         <div class="meta">
@@ -429,6 +438,7 @@
 
     <main>
       <section id="gameArea" class="panel game-area">
+        <p id="btbCloudStatus" role="status"></p>
         <div class="game-head">
           <div>
             <h2 style="margin:0 0 6px;">Game in Progress</h2>
@@ -452,6 +462,7 @@
       </section>
 
       <section id="summaryArea" class="panel summary">
+        <p id="btbFinalStatus" role="status"></p>
         <h2 style="margin-top:0;">Completion Ticket</h2>
         <div id="passBanner" class="pass-banner" style="display:none;">
           Mastery achieved. This ticket shows a 100% completion.
@@ -511,687 +522,405 @@
   </div>
 </div>
 
-<script>
-const questions = [
+<script src="basics-audit.js"></script>
+<script>const questions = [
   {
-    question: "Which principle in the Declaration of Independence says people are born with rights that cannot be taken away?",
-    choices: [
+    "question": "Which principle in the Declaration of Independence says people are born with rights that cannot be taken away?",
+    "choices": [
       "Mercantilism",
       "Unalienable rights",
       "Popular election of judges",
       "Protective tariffs"
     ],
-    answer: 1,
-    hint: "Think life, liberty, and the pursuit of happiness."
+    "answer": 1,
+    "hint": "Think life, liberty, and the pursuit of happiness."
   },
   {
-    question: "According to the Declaration of Independence, governments get their just powers from",
-    choices: [
+    "question": "According to the Declaration of Independence, governments get their just powers from",
+    "choices": [
       "inheritance",
       "military conquest",
       "the consent of the governed",
       "wealthy landowners only"
     ],
-    answer: 2,
-    hint: "The people are the source of legitimate government power."
+    "answer": 2,
+    "hint": "The people are the source of legitimate government power."
   },
   {
-    question: "Which phrase best reflects the idea of unalienable rights?",
-    choices: [
+    "question": "Which phrase best reflects the idea of unalienable rights?",
+    "choices": [
       "Rights granted only by a king",
       "Rights that can be taken away by Congress",
       "Rights that belong to people by nature",
       "Rights limited to property owners"
     ],
-    answer: 2,
-    hint: "These rights exist before government."
+    "answer": 2,
+    "hint": "These rights exist before government."
   },
   {
-    question: "The Declaration of Independence argues that government has what responsibility?",
-    choices: [
+    "question": "The Declaration of Independence argues that government has what responsibility?",
+    "choices": [
       "To protect the rights of its citizens",
       "To expand territory at all costs",
       "To enforce religious unity",
       "To ban public education"
     ],
-    answer: 0,
-    hint: "Government exists to secure rights, not violate them."
+    "answer": 0,
+    "hint": "Government exists to secure rights, not violate them."
   },
   {
-    question: "Which ideal is directly emphasized in the Declaration of Independence?",
-    choices: [
+    "question": "Which ideal is directly emphasized in the Declaration of Independence?",
+    "choices": [
       "Equality of rights for all citizens",
       "Unlimited power of Parliament",
       "State control of foreign policy",
       "Rule by aristocracy"
     ],
-    answer: 0,
-    hint: "The document emphasizes natural equality and rights."
+    "answer": 0,
+    "hint": "The document emphasizes natural equality and rights."
   },
   {
-    question: "Which complaint in the Declaration supports the idea that government must protect rights rather than abuse them?",
-    choices: [
+    "question": "Which complaint in the Declaration supports the idea that government must protect rights rather than abuse them?",
+    "choices": [
       "The king violated the colonists' rights",
       "The colonies wanted a stronger monarchy",
       "The colonists opposed all written laws",
       "The king supported colonial self-rule"
     ],
-    answer: 0,
-    hint: "The grievances show government failing in its duty."
+    "answer": 0,
+    "hint": "The grievances show government failing in its duty."
   },
   {
-    question: "The Declaration of Independence was written primarily to",
-    choices: [
+    "question": "The Declaration of Independence was written primarily to",
+    "choices": [
       "create the Articles of Confederation",
       "justify separation from British rule and express founding ideals",
       "establish a national bank",
       "write the Bill of Rights"
     ],
-    answer: 1,
-    hint: "It explains why the colonies were breaking away and what ideals they believed in."
+    "answer": 1,
+    "hint": "It explains why the colonies were breaking away and what ideals they believed in."
   },
   {
-    question: "Which statement best matches the Declaration's view of government?",
-    choices: [
+    "question": "Which statement best matches the Declaration's view of government?",
+    "choices": [
       "Government should exist without the approval of the people",
       "Government should protect rights and reflect the will of the people",
       "Government should serve only wealthy citizens",
       "Government should not be limited by rights"
     ],
-    answer: 1,
-    hint: "The document ties power to the people and rights protection."
+    "answer": 1,
+    "hint": "The document ties power to the people and rights protection."
   },
   {
-    question: "If a government repeatedly violates the people's rights, the Declaration suggests the people may",
-    choices: [
+    "question": "If a government repeatedly violates the people's rights, the Declaration suggests the people may",
+    "choices": [
       "never question authority",
       "abolish or alter that government",
       "give more power to the ruler",
       "ignore all laws permanently"
     ],
-    answer: 1,
-    hint: "The people may change a government that destroys their rights."
+    "answer": 1,
+    "hint": "The people may change a government that destroys their rights."
   },
   {
-    question: "Which Enlightenment-based idea is reflected in the Declaration of Independence?",
-    choices: [
+    "question": "Which Enlightenment-based idea is reflected in the Declaration of Independence?",
+    "choices": [
       "Divine right of kings",
       "Natural rights",
       "Absolute monarchy",
       "Hereditary privilege"
     ],
-    answer: 1,
-    hint: "This idea says people possess rights by nature."
+    "answer": 1,
+    "hint": "This idea says people possess rights by nature."
   },
   {
-    question: "Life, liberty, and the pursuit of happiness are examples of",
-    choices: [
+    "question": "Life, liberty, and the pursuit of happiness are examples of",
+    "choices": [
       "economic regulations",
       "territorial claims",
       "unalienable rights",
       "military powers"
     ],
-    answer: 2,
-    hint: "These are the rights named in the document."
+    "answer": 2,
+    "hint": "These are the rights named in the document."
   },
   {
-    question: "Which best explains consent of the people?",
-    choices: [
+    "question": "Which best explains consent of the people?",
+    "choices": [
       "Government is legitimate only if it has the approval of the governed",
       "Government rules because of bloodline",
       "Government power belongs only to judges",
       "Government is strongest when citizens cannot vote"
     ],
-    answer: 0,
-    hint: "Consent means power comes from the people."
+    "answer": 0,
+    "hint": "Consent means power comes from the people."
   },
   {
-    question: "The Declaration's list of grievances against King George III was meant to show that",
-    choices: [
+    "question": "The Declaration's list of grievances against King George III was meant to show that",
+    "choices": [
       "the colonies opposed trade",
       "the government had failed to protect colonial rights",
       "the colonists rejected liberty",
       "Parliament was too weak"
     ],
-    answer: 1,
-    hint: "The complaints were evidence of rights violations."
+    "answer": 1,
+    "hint": "The complaints were evidence of rights violations."
   },
   {
-    question: "Which statement would most agree with the Declaration of Independence?",
-    choices: [
+    "question": "Which statement would most agree with the Declaration of Independence?",
+    "choices": [
       "Government should exist mainly to control speech",
       "Rights come from government and can be removed at will",
       "People possess rights and government must protect them",
       "Only one class of people deserves liberty"
     ],
-    answer: 2,
-    hint: "The Declaration centers rights first, government second."
+    "answer": 2,
+    "hint": "The Declaration centers rights first, government second."
   },
   {
-    question: "The Declaration helped lay the foundation of the American nation by emphasizing",
-    choices: [
+    "question": "The Declaration helped lay the foundation of the American nation by emphasizing",
+    "choices": [
       "public education and trial by jury only",
       "unalienable rights and consent of the people",
       "territorial expansion and industrialization",
       "judicial review and checks and balances"
     ],
-    answer: 1,
-    hint: "This is the heart of CS 4."
+    "answer": 1,
+    "hint": "This is the heart of CS 4."
   },
   {
-    question: "Which document provided a plan for governing the Northwest Territory?",
-    choices: [
+    "question": "Which document provided a plan for governing the Northwest Territory?",
+    "choices": [
       "Declaration of Independence",
       "Northwest Ordinance",
       "Monroe Doctrine",
       "Kansas-Nebraska Act"
     ],
-    answer: 1,
-    hint: "This document organized western territory north of the Ohio River."
+    "answer": 1,
+    "hint": "This document organized western territory north of the Ohio River."
   },
   {
-    question: "The Northwest Ordinance established a precedent that public education should be",
-    choices: [
+    "question": "The Northwest Ordinance established a precedent that public education should be",
+    "choices": [
       "discouraged in new territories",
       "encouraged",
       "left entirely to foreign governments",
       "limited to military academies"
     ],
-    answer: 1,
-    hint: "The ordinance says schools and the means of education should be encouraged."
+    "answer": 1,
+    "hint": "The ordinance says schools and the means of education should be encouraged."
   },
   {
-    question: "Which civil liberty was encouraged by the Northwest Ordinance?",
-    choices: [
+    "question": "Which civil liberty was encouraged by the Northwest Ordinance?",
+    "choices": [
       "Religious liberty",
       "Quartering soldiers in homes",
       "Censorship of newspapers",
       "Arbitrary arrest without review"
     ],
-    answer: 0,
-    hint: "The ordinance included protections like this."
+    "answer": 0,
+    "hint": "The ordinance included protections like this."
   },
   {
-    question: "Which legal protection was included in the Northwest Ordinance?",
-    choices: [
+    "question": "Which legal protection was included in the Northwest Ordinance?",
+    "choices": [
       "No elections in territories",
       "Trial by jury",
       "Absolute rule by governors",
       "Abolition of all courts"
     ],
-    answer: 1,
-    hint: "This liberty is specifically listed in the standards."
+    "answer": 1,
+    "hint": "This liberty is specifically listed in the standards."
   },
   {
-    question: "The Northwest Ordinance protected people by recognizing the writ of",
-    choices: [
+    "question": "The Northwest Ordinance protected people by recognizing the writ of",
+    "choices": [
       "nullification",
       "secession",
       "habeas corpus",
       "impeachment"
     ],
-    answer: 2,
-    hint: "This protection guards against unlawful detention."
+    "answer": 2,
+    "hint": "This protection guards against unlawful detention."
   },
   {
-    question: "Which policy did the Northwest Ordinance establish for the Northwest Territory?",
-    choices: [
+    "question": "Which policy did the Northwest Ordinance establish for the Northwest Territory?",
+    "choices": [
       "Expansion of slavery into all territories",
       "Prohibition of slavery there",
       "Creation of a national monarchy",
       "Direct election of a president"
     ],
-    answer: 1,
-    hint: "It banned slavery in that territory."
+    "answer": 1,
+    "hint": "It banned slavery in that territory."
   },
   {
-    question: "The Northwest Ordinance said that new state governments should be republican in",
-    choices: [
+    "question": "The Northwest Ordinance said that new state governments should be republican in",
+    "choices": [
       "population only",
       "tax structure",
       "structure",
       "religion"
     ],
-    answer: 2,
-    hint: "This precedent later appeared in the U.S. Constitution."
+    "answer": 2,
+    "hint": "This precedent later appeared in the U.S. Constitution."
   },
   {
-    question: "One major purpose of the Northwest Ordinance was to",
-    choices: [
-      "govern the Northwest Territory temporarily and guide new states into the Union",
+    "question": "One major purpose of the Northwest Ordinance was to",
+    "choices": [
+      "govern the territory and guide statehood",
       "declare independence from Britain",
       "establish a national court system for all time",
       "abolish all state governments"
     ],
-    answer: 0,
-    hint: "It created a framework for territory to become states."
+    "answer": 0,
+    "hint": "It created a framework for territory to become states."
   },
   {
-    question: "Which precedent from the Northwest Ordinance was later reflected in the U.S. Constitution?",
-    choices: [
+    "question": "Which precedent from the Northwest Ordinance was later reflected in the U.S. Constitution?",
+    "choices": [
       "Republican state governments",
       "A king as chief executive",
       "No role for education",
       "Unlimited slavery in territories"
     ],
-    answer: 0,
-    hint: "Think about the guarantee of republican government."
+    "answer": 0,
+    "hint": "Think about the guarantee of republican government."
   },
   {
-    question: "Which statement best describes the Northwest Ordinance's approach to rights?",
-    choices: [
+    "question": "Which statement best describes the Northwest Ordinance's approach to rights?",
+    "choices": [
       "It ignored civil liberties",
-      "It established civil liberties such as religious liberty and trial by jury",
+      "It protected religious liberty and jury trials",
       "It banned court protections",
       "It gave all power to military officials"
     ],
-    answer: 1,
-    hint: "The ordinance set several liberties and legal protections."
+    "answer": 1,
+    "hint": "The ordinance set several liberties and legal protections."
   },
   {
-    question: "Why is the Northwest Ordinance important in early U.S. history?",
-    choices: [
-      "It set precedents for governing territories and admitting states",
+    "question": "Why is the Northwest Ordinance important in early U.S. history?",
+    "choices": [
+      "It guided territorial rule and statehood",
       "It created the Federal Reserve",
       "It ended World War I",
       "It passed the Bill of Rights"
     ],
-    answer: 0,
-    hint: "Its importance lies in how it guided expansion and government."
+    "answer": 0,
+    "hint": "Its importance lies in how it guided expansion and government."
   },
   {
-    question: "Which answer names a Northwest Ordinance precedent tied to education?",
-    choices: [
+    "question": "Which answer names a Northwest Ordinance precedent tied to education?",
+    "choices": [
       "Schools and the means of education should be encouraged",
       "Education should be controlled by the army",
       "Only private tutors should be allowed",
       "Territories should avoid public schools"
     ],
-    answer: 0,
-    hint: "This is nearly the exact standard language."
+    "answer": 0,
+    "hint": "This is nearly the exact standard language."
   },
   {
-    question: "Which of the following was NOT a precedent established by the Northwest Ordinance?",
-    choices: [
+    "question": "Which of the following was NOT a precedent established by the Northwest Ordinance?",
+    "choices": [
       "Public education encouraged",
       "Religious liberty protected",
       "Slavery prohibited in the territory",
       "A president elected by the Electoral College"
     ],
-    answer: 3,
-    hint: "Three are from the ordinance; one belongs to the Constitution."
+    "answer": 3,
+    "hint": "Three are from the ordinance; one belongs to the Constitution."
   },
   {
-    question: "The Northwest Ordinance helped shape the United States by showing how territories could",
-    choices: [
+    "question": "The Northwest Ordinance helped shape the United States by showing how territories could",
+    "choices": [
       "remain permanently ungoverned",
       "be governed temporarily and later admitted as states",
       "ignore republican principles",
       "operate independently as foreign nations"
     ],
-    answer: 1,
-    hint: "It was a roadmap from territory to statehood."
+    "answer": 1,
+    "hint": "It was a roadmap from territory to statehood."
   },
   {
-    question: "Which liberty protected by the Northwest Ordinance relates most directly to freedom of belief?",
-    choices: [
+    "question": "Which liberty protected by the Northwest Ordinance relates most directly to freedom of belief?",
+    "choices": [
       "Religious liberty",
       "Standing armies",
       "Protective tariffs",
       "Judicial review"
     ],
-    answer: 0,
-    hint: "This liberty concerns faith and conscience."
+    "answer": 0,
+    "hint": "This liberty concerns faith and conscience."
   },
   {
-    question: "Which pair correctly matches the document to its main standard focus?",
-    choices: [
+    "question": "Which pair correctly matches the document to its main standard focus?",
+    "choices": [
       "Declaration of Independence - industrial growth; Northwest Ordinance - immigration",
       "Declaration of Independence - unalienable rights; Northwest Ordinance - precedents for governing",
       "Declaration of Independence - bank policy; Northwest Ordinance - foreign alliances",
       "Declaration of Independence - judicial review; Northwest Ordinance - direct democracy only"
     ],
-    answer: 1,
-    hint: "One focuses on rights and consent; the other on governance precedents."
+    "answer": 1,
+    "hint": "One focuses on rights and consent; the other on governance precedents."
   },
   {
-    question: "Which principle is shared by both the Declaration of Independence and the Northwest Ordinance?",
-    choices: [
+    "question": "Which principle is shared by both the Declaration of Independence and the Northwest Ordinance?",
+    "choices": [
       "Support for protecting rights and liberties",
       "Support for absolute monarchy",
       "Support for slavery everywhere",
       "Support for hereditary office-holding"
     ],
-    answer: 0,
-    hint: "Both documents include a rights-based view of government."
+    "answer": 0,
+    "hint": "Both documents include a rights-based view of government."
   },
   {
-    question: "If a student says the Northwest Ordinance only dealt with land sales, the best correction is that it also",
-    choices: [
-      "set major precedents for rights, education, slavery policy, and republican government",
+    "question": "If a student says the Northwest Ordinance only dealt with land sales, the best correction is that it also",
+    "choices": [
+      "Set precedents for rights, education, slavery, and statehood",
       "abolished the Constitution",
       "created presidential term limits",
       "required states to leave the Union"
     ],
-    answer: 0,
-    hint: "Its significance goes beyond land; it established governance norms."
+    "answer": 0,
+    "hint": "Its significance goes beyond land; it established governance norms."
   },
   {
-    question: "Which phrase best summarizes the role of the people in the Declaration of Independence?",
-    choices: [
+    "question": "Which phrase best summarizes the role of the people in the Declaration of Independence?",
+    "choices": [
       "People exist to obey without question",
       "People are the source of legitimate governmental power",
       "People should not participate in politics",
       "People only matter during wartime"
     ],
-    answer: 1,
-    hint: "Think consent of the governed."
+    "answer": 1,
+    "hint": "Think consent of the governed."
   },
   {
-    question: "Which best explains why the Northwest Ordinance is part of the Founding Documents topic?",
-    choices: [
+    "question": "Which best explains why the Northwest Ordinance is part of the Founding Documents topic?",
+    "choices": [
       "It helped build early governing principles of the United States",
       "It created the first labor union",
       "It began the Progressive Era",
       "It ended segregation"
     ],
-    answer: 0,
-    hint: "It established early precedents for how the nation would govern territory."
+    "answer": 0,
+    "hint": "It established early precedents for how the nation would govern territory."
   },
   {
-    question: "The strongest summary of CS 4-5 together is that both documents helped define",
-    choices: [
+    "question": "The strongest summary of CS 4-5 together is that both documents helped define",
+    "choices": [
       "how industrialization changed farming",
       "the rights of people and the principles of governing the new nation",
       "how the United States fought in World War II",
       "how political machines controlled cities"
     ],
-    answer: 1,
-    hint: "Both are foundation documents about rights and governance."
+    "answer": 1,
+    "hint": "Both are foundation documents about rights and governance."
   }
-];
-
-const studentNameInput = document.getElementById('studentName');
-const startBtn = document.getElementById('startBtn');
-const startScreen = document.getElementById('startScreen');
-const liveMeta = document.getElementById('liveMeta');
-const gameArea = document.getElementById('gameArea');
-const summaryArea = document.getElementById('summaryArea');
-
-const questionCountLabel = document.getElementById('questionCountLabel');
-questionCountLabel.textContent = String(questions.length);
-
-const liveStudent = document.getElementById('liveStudent');
-const liveStarted = document.getElementById('liveStarted');
-const liveNow = document.getElementById('liveNow');
-const liveElapsed = document.getElementById('liveElapsed');
-
-const progressText = document.getElementById('progressText');
-const correctText = document.getElementById('correctText');
-const attemptText = document.getElementById('attemptText');
-const accuracyText = document.getElementById('accuracyText');
-
-const qNum = document.getElementById('qNum');
-const questionText = document.getElementById('questionText');
-const choicesWrap = document.getElementById('choicesWrap');
-const feedbackGood = document.getElementById('feedbackGood');
-const feedbackBad = document.getElementById('feedbackBad');
-
-const ticketStudent = document.getElementById('ticketStudent');
-const ticketPassed = document.getElementById('ticketPassed');
-const ticketAccuracy = document.getElementById('ticketAccuracy');
-const ticketCorrect = document.getElementById('ticketCorrect');
-const ticketAttempts = document.getElementById('ticketAttempts');
-const ticketStart = document.getElementById('ticketStart');
-const ticketEnd = document.getElementById('ticketEnd');
-const ticketElapsed = document.getElementById('ticketElapsed');
-const passBanner = document.getElementById('passBanner');
-const notPassBanner = document.getElementById('notPassBanner');
-
-const restartTopBtn = document.getElementById('restartTopBtn');
-const restartBottomBtn = document.getElementById('restartBottomBtn');
-const printBtn = document.getElementById('printBtn');
-
-let studentName = "";
-let currentIndex = 0;
-let correctCount = 0;
-let attempts = 0;
-let startTime = null;
-let endTime = null;
-let timer = null;
-let locked = false;
-
-function shuffleArray(arr){
-  const a = arr.map(x => x);
-  for(let i = a.length - 1; i > 0; i--){
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function prepareQuestions(){
-  return questions.map(q => {
-    const choices = q.choices.map((text, index) => ({ text, isCorrect: index === q.answer }));
-    const shuffled = shuffleArray(choices);
-    return {
-      question: q.question,
-      hint: q.hint,
-      choices: shuffled,
-      answer: shuffled.findIndex(c => c.isCorrect)
-    };
-  });
-}
-
-let gameQuestions = prepareQuestions();
-
-function formatDateTime(date){
-  return date.toLocaleString([], {
-    year:'numeric',
-    month:'2-digit',
-    day:'2-digit',
-    hour:'numeric',
-    minute:'2-digit',
-    second:'2-digit'
-  });
-}
-
-function formatElapsed(ms){
-  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  const hours = Math.floor(minutes / 60);
-  const remMinutes = minutes % 60;
-  if(hours > 0){
-    return `${String(hours).padStart(2,'0')}:${String(remMinutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-  }
-  return `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-}
-
-function updateLiveTime(){
-  if(!startTime) return;
-  const now = new Date();
-  liveNow.textContent = formatDateTime(now);
-  liveElapsed.textContent = formatElapsed(now - startTime);
-}
-
-function getAccuracy(){
-  if(attempts === 0) return 100;
-  return Math.round((correctCount / attempts) * 100);
-}
-
-function updateTracker(){
-  progressText.textContent = `${Math.min(currentIndex + 1, gameQuestions.length)} / ${gameQuestions.length}`;
-  correctText.textContent = String(correctCount);
-  attemptText.textContent = String(attempts);
-  accuracyText.textContent = `${getAccuracy()}%`;
-}
-
-function clearFeedback(){
-  feedbackGood.className = 'msg good';
-  feedbackGood.textContent = '';
-  feedbackBad.className = 'msg bad';
-  feedbackBad.textContent = '';
-}
-
-function renderQuestion(){
-  clearFeedback();
-  locked = false;
-  updateTracker();
-
-  const q = gameQuestions[currentIndex];
-  qNum.textContent = `Question ${currentIndex + 1}`;
-  questionText.textContent = q.question;
-  choicesWrap.innerHTML = '';
-
-  q.choices.forEach((choice, index) => {
-    const btn = document.createElement('button');
-    btn.className = 'choice';
-    btn.type = 'button';
-    btn.innerHTML = `<strong>${String.fromCharCode(65 + index)}.</strong> ${choice.text}`;
-    btn.addEventListener('click', () => handleChoice(index, btn));
-    choicesWrap.appendChild(btn);
-  });
-}
-
-function handleChoice(index, btnEl){
-  if(locked) return;
-  locked = true;
-  attempts++;
-
-  const q = gameQuestions[currentIndex];
-  const choiceButtons = [...document.querySelectorAll('.choice')];
-  choiceButtons.forEach(btn => btn.disabled = true);
-  btnEl.classList.add('selected');
-
-  if(index === q.answer){
-    correctCount++;
-    btnEl.classList.add('correct');
-    feedbackGood.textContent = 'Correct. Advancing to the next question...';
-    feedbackGood.classList.add('show');
-    updateTracker();
-
-    setTimeout(() => {
-      currentIndex++;
-      if(currentIndex >= gameQuestions.length){
-        finishGame();
-      } else {
-        renderQuestion();
-      }
-    }, 650);
-  } else {
-    btnEl.classList.add('incorrect');
-    const correctBtn = choiceButtons[q.answer];
-    if(correctBtn) correctBtn.classList.add('correct');
-
-    feedbackBad.innerHTML = `<strong>Hint:</strong> ${q.hint}<br><br>Select the highlighted correct answer to continue.`;
-    feedbackBad.classList.add('show');
-    updateTracker();
-
-    choiceButtons.forEach((btn, i) => {
-      btn.disabled = false;
-      if(i === index) btn.disabled = true;
-    });
-    locked = false;
-  }
-}
-
-function startGame(){
-  const name = studentNameInput.value.trim();
-  if(!name){
-    alert('Please enter a student name before starting.');
-    studentNameInput.focus();
-    return;
-  }
-
-  studentName = name;
-  currentIndex = 0;
-  correctCount = 0;
-  attempts = 0;
-  startTime = new Date();
-  endTime = null;
-
-  gameQuestions = prepareQuestions();
-
-  startScreen.style.display = 'none';
-  liveMeta.style.display = 'block';
-  gameArea.style.display = 'block';
-  summaryArea.style.display = 'none';
-
-  liveStudent.textContent = studentName;
-  liveStarted.textContent = formatDateTime(startTime);
-  updateLiveTime();
-  if(timer) clearInterval(timer);
-  timer = setInterval(updateLiveTime, 1000);
-
-  renderQuestion();
-}
-
-function finishGame(){
-  endTime = new Date();
-  if(timer) clearInterval(timer);
-
-  const accuracy = getAccuracy();
-  const passed = accuracy === 100 && correctCount === gameQuestions.length;
-
-  gameArea.style.display = 'none';
-  summaryArea.style.display = 'block';
-
-  ticketStudent.textContent = studentName;
-  ticketPassed.textContent = passed ? 'YES' : 'NO';
-  ticketAccuracy.textContent = `${accuracy}%`;
-  ticketCorrect.textContent = `${correctCount} / ${gameQuestions.length}`;
-  ticketAttempts.textContent = String(attempts);
-  ticketStart.textContent = formatDateTime(startTime);
-  ticketEnd.textContent = formatDateTime(endTime);
-  ticketElapsed.textContent = formatElapsed(endTime - startTime);
-
-  passBanner.style.display = passed ? 'block' : 'none';
-  notPassBanner.style.display = passed ? 'none' : 'block';
-}
-
-function restartGame(){
-  if(timer) clearInterval(timer);
-  studentName = "";
-  currentIndex = 0;
-  correctCount = 0;
-  attempts = 0;
-  startTime = null;
-  endTime = null;
-  locked = false;
-
-  gameQuestions = prepareQuestions();
-
-  studentNameInput.value = '';
-  startScreen.style.display = 'block';
-  liveMeta.style.display = 'none';
-  gameArea.style.display = 'none';
-  summaryArea.style.display = 'none';
-
-  liveStudent.textContent = '—';
-  liveStarted.textContent = '—';
-  liveNow.textContent = '—';
-  liveElapsed.textContent = '00:00';
-
-  clearFeedback();
-  updateTracker();
-  studentNameInput.focus();
-}
-
-startBtn.addEventListener('click', startGame);
-studentNameInput.addEventListener('keydown', (e) => {
-  if(e.key === 'Enter') startGame();
-});
-
-restartTopBtn.addEventListener('click', restartGame);
-restartBottomBtn.addEventListener('click', restartGame);
-printBtn.addEventListener('click', () => window.print());
-
-window.addEventListener('beforeunload', () => {
-  if(timer) clearInterval(timer);
-});
-
-updateTracker();
-</script>
+];</script>
+<script src="basics-game.js"></script>
 </body>
 </html>

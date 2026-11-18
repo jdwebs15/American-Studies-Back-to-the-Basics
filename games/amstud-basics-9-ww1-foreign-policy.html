@@ -81,11 +81,11 @@
   .panel h2{margin:0 0 12px;font-size:22px;}
   .start-form{display:grid;gap:12px;}
   label{font-size:13px;color:var(--muted);font-weight:700;}
-  input[type="text"]{
+  #studentName, #sheetEmail, #sheetPeriod{
     width:100%;background:rgba(255,255,255,.04);color:var(--text);
     border:1px solid var(--line2);border-radius:14px;padding:12px 14px;font-size:15px;outline:none;
   }
-  input[type="text"]:focus{
+  #studentName:focus, #sheetEmail:focus, #sheetPeriod:focus{
     border-color:rgba(122,162,255,.55);box-shadow:0 0 0 3px rgba(122,162,255,.12);
   }
   .meta{display:grid;gap:10px;margin-top:12px;}
@@ -173,6 +173,9 @@
     .top-actions{width:100%;}
     .top-actions .btn{flex:1 1 auto;}
   }
+
+  #sheetPeriod { color-scheme:dark; }
+  #studentName, #sheetEmail, #sheetPeriod { box-sizing:border-box; font-family:inherit; line-height:1.25; }
 </style>
 </head>
 <body>
@@ -210,8 +213,14 @@
           <div>
             <label for="studentName">Student Name</label>
             <input id="studentName" type="text" placeholder="Enter first and last name"/>
+          <label for="sheetPeriod">Class Period</label>
+          <select id="sheetPeriod" required><option value="">Choose period</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select>
+          <label for="sheetEmail">School Email</label>
+          <input id="sheetEmail" type="email" autocomplete="email" required>
           </div>
           <button id="startBtn" class="btn primary">Start Game</button>
+          <button id="btnRestoreCloud" class="btn" type="button">Load Saved Work</button>
+          <p id="btbRestoreStatus" role="status"></p>
         </div>
 
         <div class="meta">
@@ -242,6 +251,7 @@
 
     <main>
       <section id="gameArea" class="panel game-area">
+        <p id="btbCloudStatus" role="status"></p>
         <div class="game-head">
           <div>
             <h2 style="margin:0 0 6px;">Game in Progress</h2>
@@ -265,6 +275,7 @@
       </section>
 
       <section id="summaryArea" class="panel summary">
+        <p id="btbFinalStatus" role="status"></p>
         <h2 style="margin-top:0;">Completion Ticket</h2>
         <div id="passBanner" class="pass-banner" style="display:none;">
           Mastery achieved. This ticket shows a 100% completion.
@@ -300,502 +311,394 @@
   </div>
 </div>
 
-<script>
-const questions = [
+<script src="basics-audit.js"></script>
+<script>const questions = [
   {
-    question:"After World War I, the United States moved toward which foreign-policy position?",
-    choices:["isolationism","imperial conquest","containment","collective security through the UN"],
-    answer:0,
-    hint:"Think: avoiding future foreign entanglements."
+    "question": "After World War I, the United States moved toward which foreign-policy position?",
+    "choices": [
+      "isolationism",
+      "imperial conquest",
+      "containment",
+      "collective security through the UN"
+    ],
+    "answer": 0,
+    "hint": "Think: avoiding future foreign entanglements."
   },
   {
-    question:"The debate over which agreement helped push the United States away from acting as a world peacekeeper?",
-    choices:["Treaty of Versailles","Open Door Policy","Treaty of Paris ending the Spanish-American War","Camp David Accords"],
-    answer:0,
-    hint:"It was the peace treaty ending World War I."
+    "question": "The debate over which agreement helped push the United States away from acting as a world peacekeeper?",
+    "choices": [
+      "Treaty of Versailles",
+      "Open Door Policy",
+      "Treaty of Paris ending the Spanish-American War",
+      "Camp David Accords"
+    ],
+    "answer": 0,
+    "hint": "It was the peace treaty ending World War I."
   },
   {
-    question:"A major reason the U.S. Senate rejected the Treaty of Versailles was concern over",
-    choices:["foreign entanglements through the League of Nations","giving women the right to vote","tariffs on Latin America","Prohibition enforcement"],
-    answer:0,
-    hint:"Many senators feared obligations that could draw the nation into future wars."
+    "question": "A major reason the U.S. Senate rejected the Treaty of Versailles was concern over",
+    "choices": [
+      "foreign entanglements through the League of Nations",
+      "giving women the right to vote",
+      "tariffs on Latin America",
+      "Prohibition enforcement"
+    ],
+    "answer": 0,
+    "hint": "Many senators feared obligations that could draw the nation into future wars."
   },
   {
-    question:"Which organization did the United States decide not to join after World War I?",
-    choices:["League of Nations","NATO","Warsaw Pact","United Nations"],
-    answer:0,
-    hint:"This body was proposed to keep the peace after WWI."
+    "question": "Which organization did the United States decide not to join after World War I?",
+    "choices": [
+      "League of Nations",
+      "NATO",
+      "Warsaw Pact",
+      "United Nations"
+    ],
+    "answer": 0,
+    "hint": "This body was proposed to keep the peace after WWI."
   },
   {
-    question:"The League of Nations was created mainly to",
-    choices:["prevent future wars through international cooperation","promote communism","expand colonial empires","enforce Prohibition"],
-    answer:0,
-    hint:"Its goal was peacekeeping after the Great War."
+    "question": "The League of Nations was created mainly to",
+    "choices": [
+      "prevent future wars through international cooperation",
+      "promote communism",
+      "expand colonial empires",
+      "enforce Prohibition"
+    ],
+    "answer": 0,
+    "hint": "Its goal was peacekeeping after the Great War."
   },
   {
-    question:"Which statement best describes U.S. foreign policy after World War I?",
-    choices:["The nation pursued peace efforts but also limited involvement in international affairs.","The nation immediately joined every major international alliance.","The nation adopted a policy of military expansion in Europe.","The nation focused on containing Soviet communism."],
-    answer:0,
-    hint:"CS 15 includes both peace efforts and withdrawal from foreign commitments."
+    "question": "Which statement best describes U.S. foreign policy after World War I?",
+    "choices": [
+      "The nation pursued peace efforts but also limited involvement in international affairs.",
+      "The nation immediately joined every major international alliance.",
+      "The nation adopted a policy of military expansion in Europe.",
+      "The nation focused on containing Soviet communism."
+    ],
+    "answer": 0,
+    "hint": "CS 15 includes both peace efforts and withdrawal from foreign commitments."
   },
   {
-    question:"Why did many Americans support isolationism in the 1920s?",
-    choices:["They wanted to avoid another costly overseas war.","They wanted to annex more territory.","They wanted to expand the League of Nations.","They wanted to promote imperialism in Asia."],
-    answer:0,
-    hint:"The memory of World War I mattered."
+    "question": "Why did many Americans support isolationism in the 1920s?",
+    "choices": [
+      "They wanted to avoid another costly overseas war.",
+      "They wanted to annex more territory.",
+      "They wanted to expand the League of Nations.",
+      "They wanted to promote imperialism in Asia."
+    ],
+    "answer": 0,
+    "hint": "The memory of World War I mattered."
   },
   {
-    question:"Which type of treaties reflected a desire to avoid another major war after World War I?",
-    choices:["arms-limitation treaties","civil rights treaties","Reconstruction amendments","containment agreements"],
-    answer:0,
-    hint:"These agreements tried to reduce military competition."
+    "question": "Which type of treaties reflected a desire to avoid another major war after World War I?",
+    "choices": [
+      "arms-limitation treaties",
+      "civil rights treaties",
+      "Reconstruction amendments",
+      "containment agreements"
+    ],
+    "answer": 0,
+    "hint": "These agreements tried to reduce military competition."
   },
   {
-    question:"The Kellogg-Briand Pact of 1928 attempted to",
-    choices:["prohibit war as an instrument of national policy","create a standing world army","end immigration to the United States","force the U.S. into the League of Nations"],
-    answer:0,
-    hint:"It was a peace agreement, not a military alliance."
+    "question": "The Kellogg-Briand Pact of 1928 attempted to",
+    "choices": [
+      "prohibit war as an instrument of national policy",
+      "create a standing world army",
+      "end immigration to the United States",
+      "force the U.S. into the League of Nations"
+    ],
+    "answer": 0,
+    "hint": "It was a peace agreement, not a military alliance."
   },
   {
-    question:"Which phrase best summarizes the Kellogg-Briand Pact?",
-    choices:["war should not be used to settle national disputes","all nations must join the League of Nations","the U.S. must intervene in Europe","the federal government should restrict immigration"],
-    answer:0,
-    hint:"It tried to outlaw war itself."
+    "question": "Which phrase best summarizes the Kellogg-Briand Pact?",
+    "choices": [
+      "war should not be used to settle national disputes",
+      "all nations must join the League of Nations",
+      "the U.S. must intervene in Europe",
+      "the federal government should restrict immigration"
+    ],
+    "answer": 0,
+    "hint": "It tried to outlaw war itself."
   },
   {
-    question:"In later legislative acts, the United States sought to",
-    choices:["limit its involvement in international affairs","increase colonial rule in Africa","join every alliance in Europe","fight the Cold War"],
-    answer:0,
-    hint:"This is directly tied to the isolationist trend."
+    "question": "In later legislative acts, the United States sought to",
+    "choices": [
+      "limit its involvement in international affairs",
+      "increase colonial rule in Africa",
+      "join every alliance in Europe",
+      "fight the Cold War"
+    ],
+    "answer": 0,
+    "hint": "This is directly tied to the isolationist trend."
   },
   {
-    question:"Which development best illustrates that the United States wanted peace but also avoided deep foreign commitments after World War I?",
-    choices:["signing the Kellogg-Briand Pact but staying out of the League of Nations","declaring war on Germany in 1917","annexing Hawaii","adopting the Marshall Plan"],
-    answer:0,
-    hint:"One action shows peacekeeping, the other shows caution about entanglement."
+    "question": "Which development best illustrates that the United States wanted peace but also avoided deep foreign commitments after World War I?",
+    "choices": [
+      "joining the Kellogg–Briand Pact but avoiding the League",
+      "declaring war on Germany in 1917",
+      "annexing Hawaii",
+      "adopting the Marshall Plan"
+    ],
+    "answer": 0,
+    "hint": "One action shows peacekeeping, the other shows caution about entanglement."
   },
   {
-    question:"A historian says, “The U.S. wanted to shape peace without being permanently tied to overseas obligations.” This statement best describes",
-    choices:["the move toward isolationism after World War I","Manifest Destiny","containment during the Cold War","Big Stick Diplomacy"],
-    answer:0,
-    hint:"Think CS 15."
+    "question": "A historian says, “The U.S. wanted to shape peace without being permanently tied to overseas obligations.” This statement best describes",
+    "choices": [
+      "the move toward isolationism after World War I",
+      "Manifest Destiny",
+      "containment during the Cold War",
+      "Big Stick Diplomacy"
+    ],
+    "answer": 0,
+    "hint": "Think CS 15."
   },
   {
-    question:"What was one major consequence of the U.S. decision not to join the League of Nations?",
-    choices:["The United States limited its formal involvement in international peacekeeping.","The United States entered the Cold War early.","The United States annexed Germany.","The United States repealed the 19th Amendment."],
-    answer:0,
-    hint:"It reflects withdrawal, not expansion."
+    "question": "What was one major consequence of the U.S. decision not to join the League of Nations?",
+    "choices": [
+      "It limited formal peacekeeping commitments.",
+      "The United States entered the Cold War early.",
+      "The United States annexed Germany.",
+      "The United States repealed the 19th Amendment."
+    ],
+    "answer": 0,
+    "hint": "It reflects withdrawal, not expansion."
   },
   {
-    question:"Which event contributed to fears that the U.S. might be drawn into future conflicts if it joined international organizations?",
-    choices:["the destruction and costs of World War I","the repeal of Prohibition","the New Deal","the Moon landing"],
-    answer:0,
-    hint:"Americans were reacting to the recent world war."
+    "question": "Which event contributed to fears that the U.S. might be drawn into future conflicts if it joined international organizations?",
+    "choices": [
+      "the destruction and costs of World War I",
+      "the repeal of Prohibition",
+      "the New Deal",
+      "the Moon landing"
+    ],
+    "answer": 0,
+    "hint": "Americans were reacting to the recent world war."
   },
   {
-    question:"The Great Migration increased racial tensions in northern cities mainly because of competition for",
-    choices:["jobs, housing, and public services","western farmland and gold","voting rights in Congress","control of overseas colonies"],
-    answer:0,
-    hint:"CS 16 names three specific areas of competition."
+    "question": "The Great Migration increased racial tensions in northern cities mainly because of competition for",
+    "choices": [
+      "jobs, housing, and public services",
+      "western farmland and gold",
+      "voting rights in Congress",
+      "control of overseas colonies"
+    ],
+    "answer": 0,
+    "hint": "CS 16 names three specific areas of competition."
   },
   {
-    question:"Which movement involved many African Americans leaving the rural South for northern cities?",
-    choices:["Great Migration","Dust Bowl migration","Oregon Trail movement","Sun Belt migration"],
-    answer:0,
-    hint:"This migration intensified after job opportunities opened in northern cities."
+    "question": "Which movement involved many African Americans leaving the rural South for northern cities?",
+    "choices": [
+      "Great Migration",
+      "Dust Bowl migration",
+      "Oregon Trail movement",
+      "Sun Belt migration"
+    ],
+    "answer": 0,
+    "hint": "This migration intensified after job opportunities opened in northern cities."
   },
   {
-    question:"Which condition continued in the South during the postwar era and showed ongoing racial intolerance?",
-    choices:["Jim Crow laws","containment","cash-and-carry","detente"],
-    answer:0,
-    hint:"These laws enforced segregation and discrimination."
+    "question": "Which condition continued in the South during the postwar era and showed ongoing racial intolerance?",
+    "choices": [
+      "Jim Crow laws",
+      "containment",
+      "cash-and-carry",
+      "detente"
+    ],
+    "answer": 0,
+    "hint": "These laws enforced segregation and discrimination."
   },
   {
-    question:"Which of the following was evidence of racial tension after World War I?",
-    choices:["urban race riots","the Marshall Plan","the New Frontier","civil service reform"],
-    answer:0,
-    hint:"CS 16 lists this explicitly."
+    "question": "Which of the following was evidence of racial tension after World War I?",
+    "choices": [
+      "urban race riots",
+      "the Marshall Plan",
+      "the New Frontier",
+      "civil service reform"
+    ],
+    "answer": 0,
+    "hint": "CS 16 lists this explicitly."
   },
   {
-    question:"The revival of which group reflected racial intolerance, nativism, and hostility toward immigrants, Catholics, and Jews in the 1920s?",
-    choices:["Ku Klux Klan","AFL-CIO","Black Panthers","Know-Nothing Party"],
-    answer:0,
-    hint:"This group expanded beyond anti-Black terror."
+    "question": "The revival of which group reflected racial intolerance, nativism, and hostility toward immigrants, Catholics, and Jews in the 1920s?",
+    "choices": [
+      "Ku Klux Klan",
+      "AFL-CIO",
+      "Black Panthers",
+      "Know-Nothing Party"
+    ],
+    "answer": 0,
+    "hint": "This group expanded beyond anti-Black terror."
   },
   {
-    question:"Which term best describes hostility toward immigrants and a preference for native-born Americans?",
-    choices:["nativism","federalism","isolationism","appeasement"],
-    answer:0,
-    hint:"It is central to immigration quotas in CS 16."
+    "question": "Which term best describes hostility toward immigrants and a preference for native-born Americans?",
+    "choices": [
+      "nativism",
+      "federalism",
+      "isolationism",
+      "appeasement"
+    ],
+    "answer": 0,
+    "hint": "It is central to immigration quotas in CS 16."
   },
   {
-    question:"Postwar nativism was reflected most clearly in the passage of",
-    choices:["immigration quotas","the Homestead Act","the 21st Amendment","the Lend-Lease Act"],
-    answer:0,
-    hint:"These laws restricted arrivals from certain regions."
+    "question": "Postwar nativism was reflected most clearly in the passage of",
+    "choices": [
+      "immigration quotas",
+      "the Homestead Act",
+      "the 21st Amendment",
+      "the Lend-Lease Act"
+    ],
+    "answer": 0,
+    "hint": "These laws restricted arrivals from certain regions."
   },
   {
-    question:"Immigration quotas after World War I were mainly aimed at limiting immigrants from",
-    choices:["southern and eastern Europe","Canada and Mexico","Latin America only","western Europe only"],
-    answer:0,
-    hint:"These groups were often targets of 1920s nativism."
+    "question": "Immigration quotas after World War I were mainly aimed at limiting immigrants from",
+    "choices": [
+      "southern and eastern Europe",
+      "Canada and Mexico",
+      "Latin America only",
+      "western Europe only"
+    ],
+    "answer": 0,
+    "hint": "These groups were often targets of 1920s nativism."
   },
   {
-    question:"Which statement best explains how anti-immigrant attitudes contributed to social unrest after World War I?",
-    choices:["Immigrants were blamed for radicalism and faced quotas, arrests, and deportations.","Immigrants were immediately granted full political equality.","Immigration ended completely after 1918.","Immigrants were encouraged to lead the League of Nations."],
-    answer:0,
-    hint:"Think Red Scare plus nativism."
+    "question": "Which statement best explains how anti-immigrant attitudes contributed to social unrest after World War I?",
+    "choices": [
+      "Immigrants were blamed for radicalism and faced quotas, arrests, and deportations.",
+      "Immigrants were immediately granted full political equality.",
+      "Immigration ended completely after 1918.",
+      "Immigrants were encouraged to lead the League of Nations."
+    ],
+    "answer": 0,
+    "hint": "Think Red Scare plus nativism."
   },
   {
-    question:"The Red Scare of 1919–1920 was a reaction to fears of",
-    choices:["communist revolution and radical unrest","southern secession","Japanese imperialism","British taxation"],
-    answer:0,
-    hint:"The Russian Revolution and labor violence fed these fears."
+    "question": "The Red Scare of 1919–1920 was a reaction to fears of",
+    "choices": [
+      "communist revolution and radical unrest",
+      "southern secession",
+      "Japanese imperialism",
+      "British taxation"
+    ],
+    "answer": 0,
+    "hint": "The Russian Revolution and labor violence fed these fears."
   },
   {
-    question:"Which foreign event helped intensify American fears during the Red Scare?",
-    choices:["the rise of Communism in Russia","the annexation of Hawaii","the fall of the Berlin Wall","the invasion of Kuwait"],
-    answer:0,
-    hint:"This revolution made many Americans fear radical change at home."
+    "question": "Which foreign event helped intensify American fears during the Red Scare?",
+    "choices": [
+      "the rise of Communism in Russia",
+      "the annexation of Hawaii",
+      "the fall of the Berlin Wall",
+      "the invasion of Kuwait"
+    ],
+    "answer": 0,
+    "hint": "This revolution made many Americans fear radical change at home."
   },
   {
-    question:"Postwar labor strikes and violence contributed to the Red Scare because many Americans",
-    choices:["feared revolution inside the United States","wanted to join the League of Nations","supported unrestricted immigration","expected immediate world peace"],
-    answer:0,
-    hint:"Fear of radical upheaval mattered."
+    "question": "Postwar labor strikes and violence contributed to the Red Scare because many Americans",
+    "choices": [
+      "feared revolution inside the United States",
+      "wanted to join the League of Nations",
+      "supported unrestricted immigration",
+      "expected immediate world peace"
+    ],
+    "answer": 0,
+    "hint": "Fear of radical upheaval mattered."
   },
   {
-    question:"One result of the Red Scare of 1919–1920 was the",
-    choices:["incarceration and deportation of many immigrants","creation of the League of Nations","passage of the 19th Amendment","annexation of Puerto Rico"],
-    answer:0,
-    hint:"Civil liberties suffered during the crackdown."
+    "question": "One result of the Red Scare of 1919–1920 was the",
+    "choices": [
+      "incarceration and deportation of many immigrants",
+      "creation of the League of Nations",
+      "passage of the 19th Amendment",
+      "annexation of Puerto Rico"
+    ],
+    "answer": 0,
+    "hint": "Civil liberties suffered during the crackdown."
   },
   {
-    question:"Which combination best matches evidence of social unrest after World War I?",
-    choices:["race riots, lynchings, KKK revival, and deportations during the Red Scare","Marshall Plan, NATO, and the Berlin Airlift","muckraking, settlement houses, and trust-busting","cash-and-carry, Lend-Lease, and Pearl Harbor"],
-    answer:0,
-    hint:"Only one set belongs to CS 16."
+    "question": "Which combination best matches evidence of social unrest after World War I?",
+    "choices": [
+      "race riots, lynchings, KKK revival, and deportations during the Red Scare",
+      "Marshall Plan, NATO, and the Berlin Airlift",
+      "muckraking, settlement houses, and trust-busting",
+      "cash-and-carry, Lend-Lease, and Pearl Harbor"
+    ],
+    "answer": 0,
+    "hint": "Only one set belongs to CS 16."
   },
   {
-    question:"If a city experienced race riots after many African Americans moved north for work, that situation would best connect to",
-    choices:["Great Migration tensions after World War I","the Cold War containment policy","westward expansion","the Progressive conservation movement"],
-    answer:0,
-    hint:"Think jobs, housing, and migration."
+    "question": "If a city experienced race riots after many African Americans moved north for work, that situation would best connect to",
+    "choices": [
+      "Great Migration tensions after World War I",
+      "the Cold War containment policy",
+      "westward expansion",
+      "the Progressive conservation movement"
+    ],
+    "answer": 0,
+    "hint": "Think jobs, housing, and migration."
   },
   {
-    question:"Which statement best describes the Ku Klux Klan of the 1920s?",
-    choices:["It targeted African Americans and also expressed hostility toward immigrants, Catholics, and Jews.","It promoted racial equality and civil rights.","It supported open immigration and religious tolerance.","It worked to bring the U.S. into the League of Nations."],
-    answer:0,
-    hint:"The 1920s Klan widened its targets."
+    "question": "Which statement best describes the Ku Klux Klan of the 1920s?",
+    "choices": [
+      "It targeted Black people, immigrants, Catholics, and Jews.",
+      "It promoted racial equality and civil rights.",
+      "It supported open immigration and religious tolerance.",
+      "It worked to bring the U.S. into the League of Nations."
+    ],
+    "answer": 0,
+    "hint": "The 1920s Klan widened its targets."
   },
   {
-    question:"How did racial intolerance and nativism combine in the 1920s?",
-    choices:["Both fed violence, exclusion, and support for groups like the KKK.","Both encouraged broader democratic reform.","Both ended segregation in the South.","Both reduced social conflict in northern cities."],
-    answer:0,
-    hint:"Think shared hostility toward different groups."
+    "question": "How did racial intolerance and nativism combine in the 1920s?",
+    "choices": [
+      "Both fed violence, exclusion, and support for groups like the KKK.",
+      "Both encouraged broader democratic reform.",
+      "Both ended segregation in the South.",
+      "Both reduced social conflict in northern cities."
+    ],
+    "answer": 0,
+    "hint": "Think shared hostility toward different groups."
   },
   {
-    question:"Which of the following is the best cause-and-effect relationship?",
-    choices:["Fear of radicalism led to the Red Scare and deportations.","The Kellogg-Briand Pact caused urban race riots.","The League of Nations caused Jim Crow.","The Great Migration caused the Treaty of Versailles."],
-    answer:0,
-    hint:"Only one option makes historical sense."
+    "question": "Which of the following is the best cause-and-effect relationship?",
+    "choices": [
+      "Fear of radicalism led to the Red Scare and deportations.",
+      "The Kellogg-Briand Pact caused urban race riots.",
+      "The League of Nations caused Jim Crow.",
+      "The Great Migration caused the Treaty of Versailles."
+    ],
+    "answer": 0,
+    "hint": "Only one option makes historical sense."
   },
   {
-    question:"A newspaper headline reads, “Congress restricts immigration as fears of foreigners and radical politics rise.” This headline most directly reflects",
-    choices:["nativism and the Red Scare","Big Stick Diplomacy","containment and detente","Progressive trust-busting"],
-    answer:0,
-    hint:"Connect immigration quotas to fear of immigrants and radicals."
+    "question": "A newspaper headline reads, “Congress restricts immigration as fears of foreigners and radical politics rise.” This headline most directly reflects",
+    "choices": [
+      "nativism and the Red Scare",
+      "Big Stick Diplomacy",
+      "containment and detente",
+      "Progressive trust-busting"
+    ],
+    "answer": 0,
+    "hint": "Connect immigration quotas to fear of immigrants and radicals."
   },
   {
-    question:"Which statement best contrasts CS 15 and CS 16?",
-    choices:["CS 15 focuses on foreign-policy withdrawal after WWI, while CS 16 focuses on social unrest, intolerance, and anti-immigrant fears at home.","CS 15 focuses on Reconstruction, while CS 16 focuses on westward expansion.","CS 15 focuses on imperialism, while CS 16 focuses on the New Deal.","CS 15 focuses on the Civil War, while CS 16 focuses on the Cold War."],
-    answer:0,
-    hint:"One is foreign affairs; the other is postwar domestic tension."
+    "question": "Which statement best contrasts CS 15 and CS 16?",
+    "choices": [
+      "CS 15 addresses overseas withdrawal; CS 16 addresses domestic unrest and nativism.",
+      "CS 15 focuses on Reconstruction, while CS 16 focuses on westward expansion.",
+      "CS 15 focuses on imperialism, while CS 16 focuses on the New Deal.",
+      "CS 15 focuses on the Civil War, while CS 16 focuses on the Cold War."
+    ],
+    "answer": 0,
+    "hint": "One is foreign affairs; the other is postwar domestic tension."
   }
-];
-
-const studentNameInput = document.getElementById('studentName');
-const startBtn = document.getElementById('startBtn');
-const startScreen = document.getElementById('startScreen');
-const liveMeta = document.getElementById('liveMeta');
-const gameArea = document.getElementById('gameArea');
-const summaryArea = document.getElementById('summaryArea');
-
-const questionCountLabel = document.getElementById('questionCountLabel');
-questionCountLabel.textContent = String(questions.length);
-
-const liveStudent = document.getElementById('liveStudent');
-const liveStarted = document.getElementById('liveStarted');
-const liveNow = document.getElementById('liveNow');
-const liveElapsed = document.getElementById('liveElapsed');
-
-const progressText = document.getElementById('progressText');
-const correctText = document.getElementById('correctText');
-const attemptText = document.getElementById('attemptText');
-const accuracyText = document.getElementById('accuracyText');
-
-const qNum = document.getElementById('qNum');
-const questionText = document.getElementById('questionText');
-const choicesWrap = document.getElementById('choicesWrap');
-const feedbackGood = document.getElementById('feedbackGood');
-const feedbackBad = document.getElementById('feedbackBad');
-
-const ticketStudent = document.getElementById('ticketStudent');
-const ticketPassed = document.getElementById('ticketPassed');
-const ticketAccuracy = document.getElementById('ticketAccuracy');
-const ticketCorrect = document.getElementById('ticketCorrect');
-const ticketAttempts = document.getElementById('ticketAttempts');
-const ticketStart = document.getElementById('ticketStart');
-const ticketEnd = document.getElementById('ticketEnd');
-const ticketElapsed = document.getElementById('ticketElapsed');
-const passBanner = document.getElementById('passBanner');
-const notPassBanner = document.getElementById('notPassBanner');
-
-const restartTopBtn = document.getElementById('restartTopBtn');
-const restartBottomBtn = document.getElementById('restartBottomBtn');
-const printBtn = document.getElementById('printBtn');
-
-let studentName = "";
-let currentIndex = 0;
-let correctCount = 0;
-let attempts = 0;
-let startTime = null;
-let endTime = null;
-let timer = null;
-let locked = false;
-
-function shuffleArray(arr){
-  const a = arr.map(x => x);
-  for(let i = a.length - 1; i > 0; i--){
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function prepareQuestions(){
-  const shuffledQuestions = shuffleArray(questions);
-  return shuffledQuestions.map(q => {
-    const choices = q.choices.map((text, index) => ({ text, isCorrect: index === q.answer }));
-    const shuffledChoices = shuffleArray(choices);
-    return {
-      question: q.question,
-      hint: q.hint,
-      choices: shuffledChoices,
-      answer: shuffledChoices.findIndex(c => c.isCorrect)
-    };
-  });
-}
-
-let gameQuestions = prepareQuestions();
-
-function formatDateTime(date){
-  return date.toLocaleString([], {
-    year:'numeric',
-    month:'2-digit',
-    day:'2-digit',
-    hour:'numeric',
-    minute:'2-digit',
-    second:'2-digit'
-  });
-}
-
-function formatElapsed(ms){
-  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  const hours = Math.floor(minutes / 60);
-  const remMinutes = minutes % 60;
-  if(hours > 0){
-    return `${String(hours).padStart(2,'0')}:${String(remMinutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-  }
-  return `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-}
-
-function updateLiveTime(){
-  if(!startTime) return;
-  const now = new Date();
-  liveNow.textContent = formatDateTime(now);
-  liveElapsed.textContent = formatElapsed(now - startTime);
-}
-
-function getAccuracy(){
-  if(attempts === 0) return 100;
-  return Math.round((correctCount / attempts) * 100);
-}
-
-function updateTracker(){
-  progressText.textContent = `${Math.min(currentIndex + 1, gameQuestions.length)} / ${gameQuestions.length}`;
-  correctText.textContent = String(correctCount);
-  attemptText.textContent = String(attempts);
-  accuracyText.textContent = `${getAccuracy()}%`;
-}
-
-function clearFeedback(){
-  feedbackGood.className = 'msg good';
-  feedbackGood.textContent = '';
-  feedbackBad.className = 'msg bad';
-  feedbackBad.textContent = '';
-}
-
-function renderQuestion(){
-  clearFeedback();
-  locked = false;
-  updateTracker();
-
-  const q = gameQuestions[currentIndex];
-  qNum.textContent = `Question ${currentIndex + 1}`;
-  questionText.textContent = q.question;
-  choicesWrap.innerHTML = '';
-
-  q.choices.forEach((choice, index) => {
-    const btn = document.createElement('button');
-    btn.className = 'choice';
-    btn.type = 'button';
-    btn.innerHTML = `<strong>${String.fromCharCode(65 + index)}.</strong> ${choice.text}`;
-    btn.addEventListener('click', () => handleChoice(index, btn));
-    choicesWrap.appendChild(btn);
-  });
-}
-
-function handleChoice(index, btnEl){
-  if(locked) return;
-  locked = true;
-  attempts++;
-
-  const q = gameQuestions[currentIndex];
-  const choiceButtons = [...document.querySelectorAll('.choice')];
-  choiceButtons.forEach(btn => btn.disabled = true);
-  btnEl.classList.add('selected');
-
-  if(index === q.answer){
-    correctCount++;
-    btnEl.classList.add('correct');
-    feedbackGood.textContent = 'Correct. Advancing to the next question...';
-    feedbackGood.classList.add('show');
-    updateTracker();
-
-    setTimeout(() => {
-      currentIndex++;
-      if(currentIndex >= gameQuestions.length){
-        finishGame();
-      } else {
-        renderQuestion();
-      }
-    }, 700);
-  } else {
-    btnEl.classList.add('incorrect');
-    const correctBtn = choiceButtons[q.answer];
-    if(correctBtn) correctBtn.classList.add('correct');
-
-    feedbackBad.innerHTML = `<strong>Hint:</strong> ${q.hint}<br><br>Select the highlighted correct answer to continue.`;
-    feedbackBad.classList.add('show');
-    updateTracker();
-
-    choiceButtons.forEach((btn, i) => {
-      btn.disabled = false;
-      if(i === index) btn.disabled = true;
-    });
-    locked = false;
-  }
-}
-
-function startGame(){
-  const name = studentNameInput.value.trim();
-  if(!name){
-    alert('Please enter a student name before starting.');
-    studentNameInput.focus();
-    return;
-  }
-
-  studentName = name;
-  currentIndex = 0;
-  correctCount = 0;
-  attempts = 0;
-  startTime = new Date();
-  endTime = null;
-
-  gameQuestions = prepareQuestions();
-
-  startScreen.style.display = 'none';
-  liveMeta.style.display = 'block';
-  gameArea.style.display = 'block';
-  summaryArea.style.display = 'none';
-
-  liveStudent.textContent = studentName;
-  liveStarted.textContent = formatDateTime(startTime);
-  updateLiveTime();
-  if(timer) clearInterval(timer);
-  timer = setInterval(updateLiveTime, 1000);
-
-  renderQuestion();
-}
-
-function finishGame(){
-  endTime = new Date();
-  if(timer) clearInterval(timer);
-
-  const accuracy = getAccuracy();
-  const passed = accuracy === 100 && correctCount === gameQuestions.length;
-
-  gameArea.style.display = 'none';
-  summaryArea.style.display = 'block';
-
-  ticketStudent.textContent = studentName;
-  ticketPassed.textContent = passed ? 'YES' : 'NO';
-  ticketAccuracy.textContent = `${accuracy}%`;
-  ticketCorrect.textContent = `${correctCount} / ${gameQuestions.length}`;
-  ticketAttempts.textContent = String(attempts);
-  ticketStart.textContent = formatDateTime(startTime);
-  ticketEnd.textContent = formatDateTime(endTime);
-  ticketElapsed.textContent = formatElapsed(endTime - startTime);
-
-  passBanner.style.display = passed ? 'block' : 'none';
-  notPassBanner.style.display = passed ? 'none' : 'block';
-}
-
-function restartGame(){
-  if(timer) clearInterval(timer);
-  studentName = "";
-  currentIndex = 0;
-  correctCount = 0;
-  attempts = 0;
-  startTime = null;
-  endTime = null;
-  locked = false;
-
-  gameQuestions = prepareQuestions();
-
-  studentNameInput.value = '';
-  startScreen.style.display = 'block';
-  liveMeta.style.display = 'none';
-  gameArea.style.display = 'none';
-  summaryArea.style.display = 'none';
-
-  liveStudent.textContent = '—';
-  liveStarted.textContent = '—';
-  liveNow.textContent = '—';
-  liveElapsed.textContent = '00:00';
-
-  clearFeedback();
-  updateTracker();
-  studentNameInput.focus();
-}
-
-startBtn.addEventListener('click', startGame);
-studentNameInput.addEventListener('keydown', (e) => {
-  if(e.key === 'Enter') startGame();
-});
-
-restartTopBtn.addEventListener('click', restartGame);
-restartBottomBtn.addEventListener('click', restartGame);
-printBtn.addEventListener('click', () => window.print());
-
-window.addEventListener('beforeunload', () => {
-  if(timer) clearInterval(timer);
-});
-
-updateTracker();
-</script>
+];</script>
+<script src="basics-game.js"></script>
 </body>
 </html>
