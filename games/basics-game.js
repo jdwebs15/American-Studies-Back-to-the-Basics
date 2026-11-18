@@ -1,7 +1,8 @@
 (function(){
 'use strict';
 const $=id=>document.getElementById(id);
-const key='AS_BASICS_V1:'+location.pathname;
+const version=Number(document.currentScript?.dataset.bankVersion || 1);
+const key='AS_BASICS_V'+version+':'+location.pathname;
 const bank=questions.map((q,index)=>({id:'q'+(index+1),options:q.choices,answerIndex:q.answer}));
 let state, advanceTimer, liveTimer, locked=false, loading=false;
 const date=value=>new Date(value).toLocaleString();
@@ -78,7 +79,7 @@ function render(){
   if(meta.done)continueAfterFeedback();
 }
 function valid(draft,email){
-  return draft?.version===1&&draft.email===email&&draft.name&&draft.startedAtISO&&
+  return draft?.version===version&&draft.email===email&&draft.name&&draft.startedAtISO&&
     Number.isFinite(draft.startedAtMS)&&Number.isInteger(draft.idx)&&draft.idx>=0&&draft.idx<bank.length&&
     Array.isArray(draft.qOrder)&&draft.qOrder.length===bank.length&&new Set(draft.qOrder).size===bank.length&&
     draft.qOrder.every(id=>Number.isInteger(id)&&id>=0&&id<bank.length&&
@@ -114,7 +115,7 @@ function start(){
   const order=()=>BasicsAudit.shuffle(bank.map((_,i)=>i));
   const layout=BasicsAudit.start(key,bank,order(),order);
   const now=Date.now();
-  enterGame({version:1,name,email,period,idx:0,startedAtISO:new Date(now).toISOString(),startedAtMS:now,
+  enterGame({version,name,email,period,idx:0,startedAtISO:new Date(now).toISOString(),startedAtMS:now,
     qOrder:layout.order,auditOptions:layout.options,runMisses:0,
     qmeta:bank.map(()=>({done:false,missed:false,missCount:0,wrong:[]}))});
 }
